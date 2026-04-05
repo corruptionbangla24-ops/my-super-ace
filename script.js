@@ -90,8 +90,9 @@ function stopReels() {
             cells.forEach(cell => {
     const randomImg = images[Math.floor(Math.random() * images.length)];
     // নিচে 'images/' মুছে দেওয়া হয়েছে
-    cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
-    reelImages.push(randomImg);
+    cell.innerHTML = `<img src="${randomImg}">`;
+reelImages.push(randomImg);
+                
 });
 
             finalBoard.push(reelImages);

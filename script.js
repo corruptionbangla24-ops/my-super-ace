@@ -42,7 +42,8 @@ function init() {
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const div = document.createElement('div');
             div.className = 'slot-cell';
-            div.innerHTML = `<img src="images/${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+            // নিচে 'images/' মুছে দেওয়া হয়েছে
+            div.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
             reel.appendChild(div);
         }
     });
@@ -85,12 +86,14 @@ function stopReels() {
             
             let reelImages = [];
             const cells = reel.querySelectorAll('.slot-cell');
-            cells.forEach(cell => {
-                const randomImg = images[Math.floor(Math.random() * images.length)];
-                cell.innerHTML = `<img src="images/${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
-                reelImages.push(randomImg);
-            });
             
+            cells.forEach(cell => {
+    const randomImg = images[Math.floor(Math.random() * images.length)];
+    // নিচে 'images/' মুছে দেওয়া হয়েছে
+    cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+    reelImages.push(randomImg);
+});
+
             finalBoard.push(reelImages);
 
             // শেষ রীল থামলে উইন চেক করো
@@ -104,33 +107,31 @@ function stopReels() {
 }
 
 // ৫. ১০২৪ ওয়েজ উইনিং লজিক (The Core Engine)
+// ৫. ১০২৪ ওয়েজ উইনিং লজিক (সঠিক ভার্সন)
 function check1024WaysWin(board) {
     let totalWin = 0;
 
-    // প্রতিটি আলাদা ছবির জন্য চেক করা
     images.forEach(symbol => {
-        let counts = []; // প্রতিটি রীলে ওই প্রতীকটি কতবার আছে
-
+        let counts = []; 
         for (let i = 0; i < 5; i++) {
             let count = board[i].filter(s => s === symbol).length;
             counts.push(count);
         }
 
-        // নিয়ম: বাম থেকে ডানে অন্তত প্রথম ৩টি রীলে ছবি থাকতে হবে
+        // বাম থেকে ডানে অন্তত প্রথম ৩টি রীলে ছবি থাকতে হবে
         if (counts[0] > 0 && counts[1] > 0 && counts[2] > 0) {
             let ways = counts[0] * counts[1] * counts[2];
-            let multiplier = 3; // ৩টি রীল মিললে
+            let multiplier = 2; // ৩টি রীল মিললে ২ গুণ বোনাস
 
             if (counts[3] > 0) {
                 ways *= counts[3];
-                multiplier = 4; // ৪টি রীল মিললে
+                multiplier = 5; // ৪টি রীল মিললে ৫ গুণ বোনাস
                 if (counts[4] > 0) {
                     ways *= counts[4];
-                    multiplier = 5; // ৫টি রীল মিললে
+                    multiplier = 10; // ৫টি রীল মিললে ১০ গুণ বোনাস
                 }
             }
 
-            // ক্যালকুলেশন: (বেট / ২০ লাইন) * সিম্বল ভ্যালু * ওয়েজ * মাল্টিপ্লায়ার
             let win = (currentBet / 20) * symbolValues[symbol] * ways * multiplier;
             totalWin += win;
         }
@@ -139,7 +140,6 @@ function check1024WaysWin(board) {
     if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
-        // এখানে চাইলে কোনো সাউন্ড বা স্পেশাল এনিমেশন দিতে পারেন
     }
     updateUI();
 }

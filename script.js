@@ -218,11 +218,11 @@ document.getElementById('bet-plus').onclick = () => {
         else if(currentBet < 100) currentBet += 10;
         else if(currentBet < 1000) currentBet += 50;
         updateUI();
-        clickSound.play();
+                clickSound.play();
     }
 };
 
-document.getElementById('bet-minus').onclick = () => {
+document.getElementById('bet-minus').onclick = function() {
     if(!isSpinning && currentBet > 0.5) {
         if(currentBet <= 10) currentBet -= 0.5;
         else if(currentBet <= 100) currentBet -= 10;
@@ -233,12 +233,14 @@ document.getElementById('bet-minus').onclick = () => {
 };
 
 document.getElementById('turbo-btn').onclick = function() {
-    isTurbo = !isTurbo; this.classList.toggle('active');
+    isTurbo = !isTurbo;
+    this.classList.toggle('active');
     clickSound.play();
 };
 
 document.getElementById('auto-btn').onclick = function() {
-    isAuto = !isAuto; this.classList.toggle('active');
+    isAuto = !isAuto;
+    this.classList.toggle('active');
     clickSound.play();
     if(isAuto && !isSpinning) startSpin();
 };

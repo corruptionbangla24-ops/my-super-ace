@@ -126,14 +126,39 @@ function check1024WaysWin(board) {
         }
     });
 
+    // আপনার check1024WaysWin ফাংশনের একদম শেষের অংশ
     if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
+        
+        // জেতার সাউন্ড
         winSound.currentTime = 0;
-        winSound.play().catch(() => {});
+        winSound.play();
+        
+        // বড় জয়ের সময় কয়েন ওড়ানো (২.৫০ টাকার বেশি জিতলে)
+        if (totalWin >= currentBet * 5) {
+            startCoinShower();
+        }
     }
     updateUI();
 }
+
+// কয়েন ওড়ানোর ফাংশন (ফাইলের একদম শেষে যোগ করুন)
+function startCoinShower() {
+    const container = document.getElementById('coin-container');
+    if(!container) return;
+    for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.style.left = Math.random() * 100 + 'vw';
+            coin.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            container.appendChild(coin);
+            setTimeout(() => coin.remove(), 2500);
+        }, i * 60);
+    }
+}
+
 
 // ৬. ইউজার ইন্টারফেস এবং বাটন
 function updateUI() {

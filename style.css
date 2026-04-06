@@ -37,12 +37,14 @@
 }
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
-.slot-cell {
-    padding: 0 !important; /* চারপাশের ফাঁকা জায়গা মুছে ফেলা */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* ছবি যেন বর্ডারের বাইরে না যায় */
+.slot-cell { 
+    min-height: 72px; /* প্রতিটি কার্ডের উচ্চতা */
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    background: #111; 
+    border: 1px solid #222;
 }
 
 .slot-cell img {

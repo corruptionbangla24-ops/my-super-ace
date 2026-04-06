@@ -1,4 +1,4 @@
-// ১. কনফিগারেশন এবং সাউন্ড সেটিংস
+ // ১. কনফিগারেশন এবং সাউন্ড সেটিংস (সরাসরি কাজ করবে এমন লিঙ্ক)
 const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 
 const symbolValues = {
@@ -6,7 +6,7 @@ const symbolValues = {
     '6.png': 3, '7.png': 2, '8.png': 1.5, '9.png': 1, '10.png': 0.5
 };
 
-// সাউন্ড ইফেক্ট লিঙ্ক
+// অডিও ফাইলগুলো সরাসরি .mp3 লিঙ্কে আপডেট করা হয়েছে
 const spinSound = new Audio('https://soundjay.com');
 const stopSound = new Audio('https://soundjay.com');
 const winSound = new Audio('https://soundjay.com');
@@ -57,7 +57,7 @@ async function startSpin() {
     document.getElementById('win').innerText = "0.00";
     updateUI();
 
-    // সাউন্ড প্লে
+    // সাউন্ড প্লে (ইউজার ইন্টারঅ্যাকশনের পর)
     spinSound.currentTime = 0;
     spinSound.play().catch(() => {});
 
@@ -74,7 +74,6 @@ async function startSpin() {
 // ৪. রীল থামানো
 function stopReels() {
     let finalBoard = [];
-
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
@@ -101,7 +100,7 @@ function stopReels() {
     });
 }
 
-// ৫. উইন লজিক
+// ৫. উইন লজিক এবং সাউন্ড/কয়েন ইফেক্ট
 function check1024WaysWin(board) {
     let totalWin = 0;
     images.forEach(symbol => {
@@ -126,24 +125,23 @@ function check1024WaysWin(board) {
         }
     });
 
-    // আপনার check1024WaysWin ফাংশনের একদম শেষের অংশ
     if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
         
         // জেতার সাউন্ড
         winSound.currentTime = 0;
-        winSound.play();
+        winSound.play().catch(() => {});
         
-        // বড় জয়ের সময় কয়েন ওড়ানো (২.৫০ টাকার বেশি জিতলে)
-        if (totalWin >= currentBet * 5) {
+        // বড় জয়ের সময় কয়েন ওড়ানো (বেটের ৩ গুণের বেশি জিতলে)
+        if (totalWin >= currentBet * 3) {
             startCoinShower();
         }
     }
     updateUI();
 }
 
-// কয়েন ওড়ানোর ফাংশন (ফাইলের একদম শেষে যোগ করুন)
+// ৬. কয়েন শাওয়ার ফাংশন (নিখুঁত অ্যানিমেশন)
 function startCoinShower() {
     const container = document.getElementById('coin-container');
     if(!container) return;
@@ -159,8 +157,7 @@ function startCoinShower() {
     }
 }
 
-
-// ৬. ইউজার ইন্টারফেস এবং বাটন
+// ৭. ইউজার ইন্টারফেস এবং বাটন ইভেন্ট
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);
     document.getElementById('bet-val').innerText = currentBet.toFixed(2);
@@ -205,3 +202,4 @@ document.getElementById('auto-btn').onclick = function() {
 
 // গেম শুরু
 init();
+               

@@ -43,15 +43,13 @@
         
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
-.slot-cell { 
-    min-height: 72px; /* প্রতিটি কার্ডের উচ্চতা */
-    width: 100%; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    background: #111; 
-    border: 1px solid #222;
+.slot-cell img {
+    width: 100%;       /* ৮৫% থেকে বাড়িয়ে ১০০% করা হয়েছে */
+    height: 100%;      /* ৮৫% থেকে বাড়িয়ে ১০০% করা হয়েছে */
+    object-fit: cover; /* এটি ছবিকে পুরো বক্সে ফিট করে দেবে */
+    display: block;
 }
+
 
 .slot-cell img {
     width: 90%; 

@@ -15,11 +15,13 @@
             background-size: cover; background-position: center; filter: brightness(0.4) blur(4px); z-index: -1;
         }
 
-        .game-container { 
+       .game-container { 
     width: 95%; 
     max-width: 370px; 
-    margin: auto; /* এটি যোগ করুন */
+    height: auto; /* উচ্চতা অটো রাখুন */
+    margin: auto; 
 }
+ 
 .slot-machine { 
     border: 2px solid #b8860b; /* গোল্ডেন বর্ডার */
     border-radius: 10px;

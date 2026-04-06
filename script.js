@@ -1,14 +1,14 @@
 /**
- * SuperAce Ultimate Slot - Full Sound & 1024 Ways Logic
+ * SuperAce Ultimate Slot - Fixed Full Code
+ * Features: 1024 Ways, 12 Free Spins, 6 Sounds, Full Images
  */
 
-// ১. কনফিগারেশন: ১০টি ছবির নাম ও পে-আউট মান
+// ১. কনফিগারেশন
 const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
-
 const symbolValues = {
     '1.png': 15, '2.png': 12, '3.png': 10, '4.png': 8, '5.png': 5, 
     '6.png': 3, '7.png': 2, '8.png': 1.5, '9.png': 0, '10.png': 0.5 
-}; // ৯ নম্বর কার্ড (9.png) হলো SCATTER
+};
 
 const reels = [
     document.getElementById('r1'), document.getElementById('r2'), 
@@ -16,17 +16,19 @@ const reels = [
     document.getElementById('r5')
 ];
 
-// ২. ৬টি সাউন্ড ইফেক্ট লোড করা
+// ২. সাউন্ড ইফেক্টস
 const bgMusic = new Audio('bg-music.mp3');
 const spinSound = new Audio('spin.mp3');
 const stopSound = new Audio('stop.mp3');
 const winSound = new Audio('win.mp3');
 const bigWinSound = new Audio('big-win.mp3');
 const scatterSound = new Audio('scatter-win.mp3');
+const clickSound = new Audio('stop.mp3'); // ক্লিক সাউন্ড হিসেবে স্টপ সাউন্ড ব্যবহার
 
 bgMusic.loop = true; 
-bgMusic.volume = 0.3; // হালকা ব্যাকগ্রাউন্ড মিউজিক
+bgMusic.volume = 0.3;
 
+// ৩. গেম ভেরিয়েবলস
 let balance = 1000;
 let currentBet = 0.50;
 let isSpinning = false;
@@ -35,7 +37,7 @@ let isAuto = false;
 let freeSpinsLeft = 0; 
 let isFreeSpinMode = false;
 
-// ৩. শুরুতে রীলে ছবি দেখানো (Updated for Full Image)
+// ৪. শুরুতে রীলে ছবি দেখানো
 function init() {
     reels.forEach(reel => {
         reel.innerHTML = '';
@@ -43,41 +45,42 @@ function init() {
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const div = document.createElement('div');
             div.className = 'slot-cell';
-            // ছবিতে width:100% এবং object-fit:cover দেওয়া হয়েছে যাতে ছবি বড় হয়
             div.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
             reel.appendChild(div);
         }
     });
 }
 
-
+// ৫. স্পিন শুরু
 async function startSpin() {
     if (isSpinning) return;
 
-    // ফ্রি স্পিন মোড চেক করা
+    bgMusic.play().catch(() => {});
+
+    // ফ্রি স্পিন লজিক
     if (isFreeSpinMode && freeSpinsLeft > 0) {
-        freeSpinsLeft--; // ফ্রি স্পিন হলে টাকা কাটবে না
+        freeSpinsLeft--;
     } else {
         if (balance < currentBet) {
             alert("ব্যালেন্স পর্যাপ্ত নয়!");
             isAuto = false;
+            isFreeSpinMode = false;
+            scatterSound.pause();
+            updateUI();
             return;
         }
         balance -= currentBet;
-        
-        // সাধারণ স্পিনে ফিরলে স্কাটার সাউন্ড বন্ধ হবে
-        isFreeSpinMode = false;
-        scatterSound.pause();
-        scatterSound.currentTime = 0;
+        if (freeSpinsLeft === 0) {
+            isFreeSpinMode = false;
+            scatterSound.pause();
+            scatterSound.currentTime = 0;
+        }
     }
 
     isSpinning = true;
+    document.getElementById('win').innerText = "0.00";
     updateUI();
-    // ... বাকি এনিমেশন কোড (যা আগে ছিল) ...
-}
 
-
-    // স্পিন সাউন্ড শুরু
     spinSound.currentTime = 0;
     spinSound.play();
 
@@ -91,15 +94,12 @@ async function startSpin() {
     setTimeout(stopReels, stopTime);
 }
 
-// ৫. রীল থামানো
+// ৬. রীল থামানো
 function stopReels() {
     let finalBoard = [];
-
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
-            
-            // রীল থামার শব্দ
             stopSound.currentTime = 0;
             stopSound.play();
             
@@ -107,55 +107,49 @@ function stopReels() {
             const cells = reel.querySelectorAll('.slot-cell');
             cells.forEach(cell => {
                 const randomImg = images[Math.floor(Math.random() * images.length)];
-                            cell.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
-            reelImages.push(randomImg);
-        });
-
-            
+                cell.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
+                reelImages.push(randomImg);
+            });
             finalBoard.push(reelImages);
 
             if (index === reels.length - 1) {
                 isSpinning = false;
-                spinSound.pause(); // স্পিন শব্দ বন্ধ
+                spinSound.pause();
                 check1024WaysWin(finalBoard);
-                if (isAuto) setTimeout(startSpin, 1000);
+                
+                if (isFreeSpinMode && freeSpinsLeft > 0) {
+                    setTimeout(startSpin, 1200);
+                } else if (isAuto) {
+                    setTimeout(startSpin, 1000);
+                }
             }
         }, index * 150);
     });
 }
 
-// ৬. ১০২৪ ওয়েজ উইন ও স্কাটার লজিক
+// ৭. উইন ও স্কাটার লজিক
 function check1024WaysWin(board) {
     let totalWin = 0;
     let scatterCount = 0;
 
-    // স্কাটার (9.png) চেক করা
+    // স্কাটার (9.png) চেক
     for (let i = 0; i < 5; i++) {
-        if (board[i].includes('9.png')) {
-            scatterCount++;
-        }
+        if (board[i].includes('9.png')) scatterCount++;
     }
 
-    // ৩টি বা তার বেশি স্কাটার পড়লে সাউন্ড ও অ্যালার্ট
- 
-if (scatterCount >= 3) {
-    freeSpinsLeft = 12; // ১২টি ফ্রি স্পিন দেওয়া হলো
-    isFreeSpinMode = true;
-    
-    scatterSound.currentTime = 0;
-    scatterSound.loop = true; // ১২ স্পিন চলা পর্যন্ত সাউন্ড লুপ হবে
-    scatterSound.play();
-    
-    setTimeout(() => { 
-        alert("অভিনন্দন! আপনি ১২টি FREE SPINS পেয়েছেন!"); 
-        startSpin(); // অটোমেটিক ফ্রি স্পিন শুরু হবে
-    }, 1000);
-}
+    if (scatterCount >= 3 && !isFreeSpinMode) {
+        freeSpinsLeft = 12;
+        isFreeSpinMode = true;
+        scatterSound.currentTime = 0;
+        scatterSound.loop = true;
+        scatterSound.play();
+        alert("অভিনন্দন! আপনি ১২টি FREE SPINS পেয়েছেন!");
+        setTimeout(startSpin, 1500);
+    }
 
-    // সাধারণ ১০২৪ ওয়েজ উইন চেক
+    // ১০২৪ ওয়েজ উইন চেক
     images.forEach(symbol => {
         if (symbol === '9.png') return;
-
         let counts = [];
         for (let i = 0; i < 5; i++) {
             counts.push(board[i].filter(s => s === symbol).length);
@@ -163,20 +157,17 @@ if (scatterCount >= 3) {
 
         if (counts[0] > 0 && counts[1] > 0 && counts[2] > 0) {
             let ways = counts[0] * counts[1] * counts[2];
-            let multiplier = 2; 
-            if (counts[3] > 0) { 
-                ways *= counts[3]; multiplier = 5; 
-                if (counts[4] > 0) { ways *= counts[4]; multiplier = 10; }
+            let mult = 2;
+            if (counts[3] > 0) { ways *= counts[3]; mult = 5; 
+                if (counts[4] > 0) { ways *= counts[4]; mult = 10; }
             }
-            totalWin += (currentBet / 20) * symbolValues[symbol] * ways * multiplier;
+            totalWin += (currentBet / 20) * symbolValues[symbol] * ways * mult;
         }
     });
 
     if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
-        
-        // বড় জয় বা সাধারণ জয়ের সাউন্ড
         if (totalWin >= currentBet * 10) bigWinSound.play();
         else winSound.play();
     }
@@ -189,7 +180,7 @@ function updateUI() {
     document.getElementById('spin-trigger').disabled = isSpinning;
 }
 
-// বাটন কন্ট্রোল
+// ৮. বাটন কন্ট্রোল
 document.getElementById('spin-trigger').onclick = startSpin;
 
 document.getElementById('bet-plus').onclick = () => {
@@ -198,6 +189,7 @@ document.getElementById('bet-plus').onclick = () => {
         else if(currentBet < 100) currentBet += 10;
         else if(currentBet < 1000) currentBet += 50;
         updateUI();
+        clickSound.play();
     }
 };
 
@@ -207,20 +199,18 @@ document.getElementById('bet-minus').onclick = () => {
         else if(currentBet <= 100) currentBet -= 10;
         else if(currentBet <= 1000) currentBet -= 50;
         updateUI();
-        clickSound.currentTime = 0; // এটি ব্র্যাকেটের ভেতরে থাকবে
         clickSound.play();
     }
 };
 
 document.getElementById('turbo-btn').onclick = function() {
-    isTurbo = !isTurbo;
-    this.classList.toggle('active');
-    clickSound.currentTime = 0;
+    isTurbo = !isTurbo; this.classList.toggle('active');
     clickSound.play();
 };
 
 document.getElementById('auto-btn').onclick = function() {
     isAuto = !isAuto; this.classList.toggle('active');
+    clickSound.play();
     if(isAuto && !isSpinning) startSpin();
 };
 

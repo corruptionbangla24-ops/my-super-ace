@@ -20,21 +20,27 @@
     max-width: 370px; 
     margin: auto; /* এটি যোগ করুন */
 }
+.slot-machine { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 5px; 
+    padding: 12px; 
+    background: #000; 
+    overflow: hidden; /* এটি খুবই জরুরি */
+    border-radius: 10px;
+}
 
-        .slot-machine { 
-            display: grid; grid-template-columns: repeat(5, 1fr); 
-            gap: 5px; padding: 12px; background: #000; 
-        }
-        .reel { 
+.reel { 
     display: flex; 
     flex-direction: column; 
-    gap: 4px; 
-    overflow: hidden; /* এটি নিশ্চিত করবে যেন কার্ড বাইরে না যায় */
-    height: 300px; /* ৫টি রীলের উচ্চতা */
-    background: #000; 
-    border-radius: 4px;
-    position: relative;
+    gap: 5px; 
+    height: 300px; /* উচ্চতা আপনার কার্ডের সাইজ অনুযায়ী */
+    overflow: hidden; /* এটি কার্ডকে উপরে যেতে দেবে না */
+    position: relative; /* এনিমেশন কন্ট্রোল করার জন্য */
+    background: #000;
 }
+
+        
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
 .slot-cell { 

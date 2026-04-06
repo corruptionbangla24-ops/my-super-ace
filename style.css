@@ -1,8 +1,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            margin: 0; display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; background: #000; font-family: 'Arial', sans-serif; overflow: hidden; 
-        }
+    margin: 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100dvh; /* এটি পরিবর্তন করুন */
+}
+
 
         /* ক্যাসিনো ব্যাকগ্রাউন্ড */
         body::before {
@@ -12,19 +16,18 @@
         }
 
         .game-container { 
-            width: 370px; background: rgba(15, 15, 15, 0.98); 
-            border: 4px solid #b8860b; border-radius: 20px; overflow: hidden; 
-            box-shadow: 0 0 40px rgba(0, 0, 0, 1);
-        }
+    width: 95%; 
+    max-width: 370px; 
+    margin: auto; /* এটি যোগ করুন */
+}
 
         .slot-machine { 
             display: grid; grid-template-columns: repeat(5, 1fr); 
             gap: 5px; padding: 12px; background: #000; 
         }
         .reel { 
-            display: flex; flex-direction: column; gap: 5px; 
-            overflow: hidden; height: 295px; 
-        }
+    height: 275px; /* এটি কিছুটা কমিয়ে দিন */
+}
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
 .slot-cell {

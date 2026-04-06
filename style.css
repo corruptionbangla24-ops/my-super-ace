@@ -1,59 +1,64 @@
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
+  /* ১. বডি এবং মেইন কন্টেইনার ফিক্স */
+body { 
     margin: 0; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    height: 100dvh; /* এটি পরিবর্তন করুন */
+    height: 100dvh; 
+    background: #000; 
+    font-family: 'Arial', sans-serif; 
+    overflow: hidden; 
 }
 
-
-        /* ক্যাসিনো ব্যাকগ্রাউন্ড */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://gstatic.com');
-            background-size: cover; background-position: center; filter: brightness(0.4) blur(4px); z-index: -1;
-        }
-
-       .game-container { 
+.game-container { 
     width: 95%; 
     max-width: 370px; 
-    height: auto; /* উচ্চতা অটো রাখুন */
-    margin: auto; 
+    background: rgba(15, 15, 15, 0.98); 
+    border: 3px solid #b8860b; 
+    border-radius: 15px; 
+    overflow: hidden; 
+    box-shadow: 0 0 30px rgba(0, 0, 0, 1);
+    margin: auto;
 }
- 
-/* রীল এবং কার্ডের মাপ ঠিক করার জন্য এটি আপডেট করুন */
+
+/* ২. স্লট মেশিন এবং রীল ফিক্স (খুবই জরুরি) */
 .slot-machine { 
     display: grid; 
     grid-template-columns: repeat(5, 1fr); 
-    gap: 3px; 
-    padding: 8px; 
+    gap: 4px; 
+    padding: 10px; 
     background: #000; 
+    overflow: hidden; /* কার্ড যেন বাইরে না যায় */
 }
 
 .reel { 
     display: flex; 
     flex-direction: column; 
-    gap: 3px; 
+    gap: 4px; 
     height: 310px; /* রীলের উচ্চতা ফিক্স করা হলো */
-    overflow: hidden; 
+    overflow: hidden; /* এটিই কার্ডকে বক্সের ভেতর আটকে রাখবে */
+    background: #000;
 }
 
+/* ৩. কার্ড বা সেল ফিক্স */
 .slot-cell { 
-    height: 75px; /* প্রতিটি কার্ডের উচ্চতা */
+    height: 75px; 
     width: 100%; 
     background: #111; 
     border: 1px solid #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .slot-cell img {
     width: 100%; 
     height: 100%; 
-    object-fit: cover; /* এটি ছবিকে লম্বা হতে দেবে না, সুন্দরভাবে ফিট করবে */
+    object-fit: cover; /* ছবিকে ঘরের মাপে সুন্দরভাবে ফিট করবে */
 }
 
-
-
+/* ৪. এনিমেশন ফিক্স */
 @keyframes moveReelDown { 
     0% { transform: translateY(-75px); } 
     100% { transform: translateY(0); }   
@@ -61,76 +66,4 @@
 
 .spinning { animation: moveReelDown 0.15s linear infinite; }
 .turbo-spin { animation: moveReelDown 0.08s linear infinite; }
-        .controls { padding: 15px; background: #111; border-top: 2px solid #b8860b; }
-        
-        .status-row { 
-            display: flex; justify-content: space-between; color: #ffd700; 
-            font-size: 0.9rem; margin-bottom: 12px; font-weight: bold; 
-        }
-
-        .action-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            gap: 5px; margin-bottom: 15px; 
-        }
-
-        .btn-small { 
-            background: #222; border: 1px solid #ffd700; color: #ffd700; 
-            padding: 6px 8px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; 
-            font-weight: bold; transition: 0.2s;
-        }
-        .btn-small.active { background: #ffd700; color: #000; box-shadow: 0 0 10px #ffd700; }
-        
-        /* বেট কন্ট্রোল এরিয়া */
-        .bet-area {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-        }
-        .bet-controls { 
-            display: flex; align-items: center; gap: 5px; 
-            background: #000; padding: 4px 8px; border-radius: 20px; border: 1px solid #444; 
-        }
-        .bet-btn { 
-            width: 25px; height: 25px; border-radius: 50%; border: none; 
-            background: #b8860b; color: white; cursor: pointer; font-weight: bold; font-size: 1rem;
-        }
-        #bet-val { color: #fff; min-width: 50px; text-align: center; font-size: 0.9rem; font-weight: bold; }
-
-        .spin-btn { 
-    width: 80px; 
-    height: 80px; 
-    background: radial-gradient(circle, #ff4500, #8b0000); 
-    border: 4px solid #fff; 
-    border-radius: 50%; 
-    color: #fff; 
-    font-weight: bold; 
-    cursor: pointer; 
-    text-transform: uppercase;
-    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* আরও উজ্জ্বল গ্লো */
-    transition: all 0.2s ease;
-}
-
-.spin-btn:hover { 
-    box-shadow: 0 0 35px rgba(255, 215, 0, 1); /* মাউস নিলে গোল্ডেন গ্লো */
-    transform: scale(1.05);
-}
-
-        .spin-btn:active { transform: scale(0.9); }
-        .spin-btn:disabled { background: #444; filter: grayscale(1); cursor: not-allowed; }
-
-        /* এনিমেশন: উপর থেকে নিচে */
-        .spinning { animation: moveReelDown 0.12s linear infinite; }
-        .turbo-spin { animation: moveReelDown 0.06s linear infinite; }
-
-        @keyframes moveReelDown { 
-            0% { transform: translateY(-75px); } 
-            100% { transform: translateY(0); }   
-        }
-/* জেতার সময় রীল জ্বলজ্বল করবে */
-@keyframes winGlow {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.8) drop-shadow(0 0 10px #ffd700); }
-    100% { filter: brightness(1); }
-}
-
-.win-highlight {
-    animation: winGlow 0.5s ease-in-out 3;
-}
+      

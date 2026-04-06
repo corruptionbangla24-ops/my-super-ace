@@ -26,23 +26,19 @@
             overflow: hidden; height: 295px; 
         }
 
-        .slot-cell { 
-    min-height: 70px; 
-    aspect-ratio: 1/1; 
-    background: #000; 
-    border: 1px solid #333; 
-    border-radius: 6px; 
-    display: flex; 
-    justify-content: center; 
+        /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
+.slot-cell {
+    padding: 0 !important; /* চারপাশের ফাঁকা জায়গা মুছে ফেলা */
+    display: flex;
+    justify-content: center;
     align-items: center;
-    overflow: hidden; 
-    padding: 0;
+    overflow: hidden; /* ছবি যেন বর্ডারের বাইরে না যায় */
 }
 
 .slot-cell img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover; /* ছবিকে স্ট্রেচ না করে পুরো সেলে ফিট করা */
     display: block;
 }
 

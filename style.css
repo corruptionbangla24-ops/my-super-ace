@@ -22,33 +22,36 @@
     margin: auto; 
 }
  
+/* রীল এবং কার্ডের মাপ ঠিক করার জন্য এটি আপডেট করুন */
 .slot-machine { 
-    border: 2px solid #b8860b; /* গোল্ডেন বর্ডার */
-    border-radius: 10px;
-    padding: 5px;
-    background: #000;
-}
-.reel { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 0;           /* ছবিগুলোর মাঝের গ্যাপ কমিয়ে ০ করা হয়েছে */
-    height: 300px;    /* উচ্চতা ৩০০ বা ৩১০ রাখুন */
-    overflow: hidden; /* ছবি যেন বক্সের বাইরে না যায় */
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 3px; 
+    padding: 8px; 
     background: #000; 
 }
 
-.slot-cell { 
-    height: 75px;     /* প্রতিটি ঘরের উচ্চতা নির্দিষ্ট করা হয়েছে */
-    width: 100%; 
+.reel { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 3px; 
+    height: 310px; /* রীলের উচ্চতা ফিক্স করা হলো */
     overflow: hidden; 
-    border: 1px solid #333; /* পাতলা বর্ডার */
+}
+
+.slot-cell { 
+    height: 75px; /* প্রতিটি কার্ডের উচ্চতা */
+    width: 100%; 
+    background: #111; 
+    border: 1px solid #222;
 }
 
 .slot-cell img {
     width: 100%; 
     height: 100%; 
-    object-fit: fill; /* ছবিকে ঘরের ভেতর ফিট করবে */
+    object-fit: cover; /* এটি ছবিকে লম্বা হতে দেবে না, সুন্দরভাবে ফিট করবে */
 }
+
 
 
 @keyframes moveReelDown { 

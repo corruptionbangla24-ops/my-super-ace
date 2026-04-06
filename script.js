@@ -55,34 +55,6 @@ function init() {
 async function startSpin() {
     if (isSpinning) return;
 
-    bgMusic.play().catch(() => {});
-
-    // ফ্রি স্পিন লজিক
-    if (isFreeSpinMode && freeSpinsLeft > 0) {
-        freeSpinsLeft--;
-    } else {
-        if (balance < currentBet) {
-            alert("ব্যালেন্স পর্যাপ্ত নয়!");
-            isAuto = false;
-            isFreeSpinMode = false;
-            scatterSound.pause();
-            updateUI();
-            return;
-        }
-        balance -= currentBet;
-        if (freeSpinsLeft === 0) {
-            isFreeSpinMode = false;
-            scatterSound.pause();
-            scatterSound.currentTime = 0;
-        }
-    }
-
-    isSpinning = true;
-    document.getElementById('win').innerText = "0.00";
-    updateUI();
-
-    spinSound.currentTime = 0;
-    spinSound.play();
 
     reels.forEach((reel, index) => {
         setTimeout(() => {

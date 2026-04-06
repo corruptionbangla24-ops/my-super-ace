@@ -43,7 +43,8 @@ function init() {
             const div = document.createElement('div');
             div.className = 'slot-cell';
             // নিচে 'images/' মুছে দেওয়া হয়েছে
-            div.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+            div.innerHTML = `<img src="${randomImg}">`;
+
             reel.appendChild(div);
         }
     });

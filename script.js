@@ -85,7 +85,7 @@ function stopReels() {
             const cells = reel.querySelectorAll('.slot-cell');
             cells.forEach(cell => {
                 const randomImg = images[Math.floor(Math.random() * images.length)];
-                cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+                cell.innerHTML = `<img src="${randomImg}">`;
                 reelImages.push(randomImg);
             });
             

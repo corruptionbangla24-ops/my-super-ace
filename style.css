@@ -21,26 +21,19 @@
     margin: auto; /* এটি যোগ করুন */
 }
 .slot-machine { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 5px; 
-    padding: 12px; 
-    background: #000; 
-    overflow: hidden; /* এটি খুবই জরুরি */
+    border: 2px solid #b8860b; /* গোল্ডেন বর্ডার */
     border-radius: 10px;
+    padding: 5px;
+    background: #000;
 }
-
 .reel { 
     display: flex; 
     flex-direction: column; 
-    gap: 5px; 
-    height: 300px; /* উচ্চতা আপনার কার্ডের সাইজ অনুযায়ী */
-    overflow: hidden; /* এটি কার্ডকে উপরে যেতে দেবে না */
-    position: relative; /* এনিমেশন কন্ট্রোল করার জন্য */
-    background: #000;
-}
-
-        
+    gap: 4px; 
+    overflow: hidden; 
+    height: 320px; /* ৩০০ থেকে বাড়িয়ে ৩২০ করা হয়েছে */
+    background: #000; 
+}      
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */
 .slot-cell img {

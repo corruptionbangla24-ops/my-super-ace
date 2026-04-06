@@ -33,7 +33,7 @@ let isSpinning = false;
 let isTurbo = false;
 let isAuto = false;
 
-// ৩. শুরুতে রীলে ছবি দেখানো
+// ৩. শুরুতে রীলে ছবি দেখানো (Updated for Full Image)
 function init() {
     reels.forEach(reel => {
         reel.innerHTML = '';
@@ -41,11 +41,13 @@ function init() {
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const div = document.createElement('div');
             div.className = 'slot-cell';
-            div.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+            // ছবিতে width:100% এবং object-fit:cover দেওয়া হয়েছে যাতে ছবি বড় হয়
+            div.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
             reel.appendChild(div);
         }
     });
 }
+
 
 // ৪. স্পিন শুরু
 async function startSpin() {
@@ -92,9 +94,10 @@ function stopReels() {
             const cells = reel.querySelectorAll('.slot-cell');
             cells.forEach(cell => {
                 const randomImg = images[Math.floor(Math.random() * images.length)];
-                cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
-                reelImages.push(randomImg);
-            });
+                            cell.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
+            reelImages.push(randomImg);
+        });
+
             
             finalBoard.push(reelImages);
 
@@ -181,11 +184,16 @@ document.getElementById('bet-minus').onclick = () => {
         else if(currentBet <= 100) currentBet -= 10;
         else if(currentBet <= 1000) currentBet -= 50;
         updateUI();
+        clickSound.currentTime = 0; // এটি ব্র্যাকেটের ভেতরে থাকবে
+        clickSound.play();
     }
 };
 
 document.getElementById('turbo-btn').onclick = function() {
-    isTurbo = !isTurbo; this.classList.toggle('active');
+    isTurbo = !isTurbo;
+    this.classList.toggle('active');
+    clickSound.currentTime = 0;
+    clickSound.play();
 };
 
 document.getElementById('auto-btn').onclick = function() {

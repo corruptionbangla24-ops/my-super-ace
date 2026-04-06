@@ -48,13 +48,17 @@
 }
 
 .slot-cell img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover; /* ছবিকে স্ট্রেচ না করে পুরো সেলে ফিট করা */
-    display: block;
+    width: 90%; 
+    height: 90%; 
+    object-fit: contain;
+}
+@keyframes moveReelDown { 
+    0% { transform: translateY(-75px); } 
+    100% { transform: translateY(0); }   
 }
 
-
+.spinning { animation: moveReelDown 0.15s linear infinite; }
+.turbo-spin { animation: moveReelDown 0.08s linear infinite; }
         .controls { padding: 15px; background: #111; border-top: 2px solid #b8860b; }
         
         .status-row { 

@@ -2,6 +2,15 @@
  * SuperAce Ultimate Slot - Fixed Full Code
  * Features: 1024 Ways, 12 Free Spins, 6 Sounds, Full Images
  */
+// সাউন্ড ইফেক্ট এবং মিউজিক কনফিগারেশন
+const spinSound = new Audio('https://soundjay.com');
+const stopSound = new Audio('https://soundjay.com');
+const winSound = new Audio('https://soundjay.com');
+const bgMusic = new Audio('https://soundjay.com');
+
+spinSound.loop = true;
+bgMusic.loop = true;
+bgMusic.volume = 0.2;
 
 // ১. কনফিগারেশন
 const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];

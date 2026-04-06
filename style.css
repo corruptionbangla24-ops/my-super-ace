@@ -1,15 +1,18 @@
-  /* ১. বডি এবং মেইন কন্টেইনার ফিক্স */
+/* ১. গ্লোবাল এবং বডি সেটিংস (গ্যাপ কমানোর জন্য) */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body { 
     margin: 0; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    height: 100dvh; 
+    height: 100dvh; /* মোবাইলের জন্য ডাইনামিক হাইট */
     background: #000; 
     font-family: 'Arial', sans-serif; 
     overflow: hidden; 
 }
 
+/* ২. গেম কন্টেইনার (বর্ডার এবং শ্যাডো) */
 .game-container { 
     width: 95%; 
     max-width: 370px; 
@@ -21,26 +24,27 @@ body {
     margin: auto;
 }
 
-/* ২. স্লট মেশিন এবং রীল ফিক্স (খুবই জরুরি) */
+/* ৩. স্লট মেশিন (কার্ডগুলোকে বর্ডারের ভেতর আটকে রাখবে) */
 .slot-machine { 
     display: grid; 
     grid-template-columns: repeat(5, 1fr); 
     gap: 4px; 
     padding: 10px; 
     background: #000; 
-    overflow: hidden; /* কার্ড যেন বাইরে না যায় */
+    overflow: hidden; /* এটিই কার্ডকে বর্ডারের বাইরে যেতে দেবে না */
+    border-bottom: 2px solid #b8860b;
 }
 
+/* ৪. রীল এবং কার্ড সেটিংস (ছবি ঘরজুড়ে বড় দেখাবে) */
 .reel { 
     display: flex; 
     flex-direction: column; 
     gap: 4px; 
-    height: 310px; /* রীলের উচ্চতা ফিক্স করা হলো */
-    overflow: hidden; /* এটিই কার্ডকে বক্সের ভেতর আটকে রাখবে */
+    height: 310px; /* রীলের উচ্চতা ফিক্সড */
+    overflow: hidden; /* কার্ড যেন বক্সের বাইরে না যায় */
     background: #000;
 }
 
-/* ৩. কার্ড বা সেল ফিক্স */
 .slot-cell { 
     height: 75px; 
     width: 100%; 
@@ -50,20 +54,110 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    padding: 0;
 }
 
 .slot-cell img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; /* ছবিকে ঘরের মাপে সুন্দরভাবে ফিট করবে */
+    width: 100% !important; 
+    height: 100% !important; 
+    object-fit: cover; /* ছবিকে ঘরজুড়ে ছড়িয়ে দেবে */
+    display: block;
 }
 
-/* ৪. এনিমেশন ফিক্স */
+/* ৫. কন্ট্রোল প্যানেল এবং বাটন */
+.controls { 
+    padding: 15px; 
+    background: #111; 
+}
+
+.status-row { 
+    display: flex; 
+    justify-content: space-between; 
+    color: #ffd700; 
+    font-size: 0.95rem; 
+    margin-bottom: 12px; 
+    font-weight: bold; 
+}
+
+.action-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 8px; 
+}
+
+.btn-small { 
+    background: #222; 
+    border: 1px solid #ffd700; 
+    color: #ffd700; 
+    padding: 6px 10px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 0.75rem; 
+    font-weight: bold; 
+}
+
+.btn-small.active { background: #ffd700; color: #000; }
+
+.bet-controls { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: #000; 
+    padding: 6px 12px; 
+    border-radius: 25px; 
+    border: 1px solid #444; 
+}
+
+.bet-btn { 
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%; 
+    border: none; 
+    background: #b8860b; 
+    color: white; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+
+#bet-val { color: #fff; min-width: 50px; text-align: center; font-weight: bold; }
+
+.spin-btn { 
+    width: 85px; 
+    height: 85px; 
+    background: radial-gradient(circle, #ff4500, #8b0000); 
+    border: 4px solid #fff; 
+    border-radius: 50%; 
+    color: #fff; 
+    font-weight: bold; 
+    cursor: pointer; 
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.5); 
+}
+
+/* ৬. এনিমেশন এবং কয়েন শাওয়ার */
+.spinning { animation: moveReelDown 0.15s linear infinite; }
+.turbo-spin { animation: moveReelDown 0.08s linear infinite; }
+
 @keyframes moveReelDown { 
     0% { transform: translateY(-75px); } 
     100% { transform: translateY(0); }   
 }
 
-.spinning { animation: moveReelDown 0.15s linear infinite; }
-.turbo-spin { animation: moveReelDown 0.08s linear infinite; }
-      
+#coin-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999;
+}
+
+.coin {
+    position: absolute;
+    width: 30px; height: 30px;
+    background-image: url('https://icons8.com');
+    background-size: contain;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}

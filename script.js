@@ -32,6 +32,8 @@ let currentBet = 0.50;
 let isSpinning = false;
 let isTurbo = false;
 let isAuto = false;
+let freeSpinsLeft = 0; 
+let isFreeSpinMode = false;
 
 // ৩. শুরুতে রীলে ছবি দেখানো (Updated for Full Image)
 function init() {
@@ -49,20 +51,31 @@ function init() {
 }
 
 
-// ৪. স্পিন শুরু
 async function startSpin() {
-    if (isSpinning || balance < currentBet) {
-        if(balance < currentBet) alert("ব্যালেন্স পর্যাপ্ত নয়!");
-        return;
+    if (isSpinning) return;
+
+    // ফ্রি স্পিন মোড চেক করা
+    if (isFreeSpinMode && freeSpinsLeft > 0) {
+        freeSpinsLeft--; // ফ্রি স্পিন হলে টাকা কাটবে না
+    } else {
+        if (balance < currentBet) {
+            alert("ব্যালেন্স পর্যাপ্ত নয়!");
+            isAuto = false;
+            return;
+        }
+        balance -= currentBet;
+        
+        // সাধারণ স্পিনে ফিরলে স্কাটার সাউন্ড বন্ধ হবে
+        isFreeSpinMode = false;
+        scatterSound.pause();
+        scatterSound.currentTime = 0;
     }
 
-    // প্রথম স্পিনে মিউজিক শুরু করার অনুমতি নেওয়া
-    bgMusic.play().catch(() => {});
-
     isSpinning = true;
-    balance -= currentBet;
-    document.getElementById('win').innerText = "0.00";
     updateUI();
+    // ... বাকি এনিমেশন কোড (যা আগে ছিল) ...
+}
+
 
     // স্পিন সাউন্ড শুরু
     spinSound.currentTime = 0;
@@ -124,10 +137,20 @@ function check1024WaysWin(board) {
     }
 
     // ৩টি বা তার বেশি স্কাটার পড়লে সাউন্ড ও অ্যালার্ট
-    if (scatterCount >= 3) {
-        scatterSound.play();
-        setTimeout(() => { alert("অভিনন্দন! আপনি " + scatterCount + "টি SCATTER পেয়েছেন।"); }, 500);
-    }
+ 
+if (scatterCount >= 3) {
+    freeSpinsLeft = 12; // ১২টি ফ্রি স্পিন দেওয়া হলো
+    isFreeSpinMode = true;
+    
+    scatterSound.currentTime = 0;
+    scatterSound.loop = true; // ১২ স্পিন চলা পর্যন্ত সাউন্ড লুপ হবে
+    scatterSound.play();
+    
+    setTimeout(() => { 
+        alert("অভিনন্দন! আপনি ১২টি FREE SPINS পেয়েছেন!"); 
+        startSpin(); // অটোমেটিক ফ্রি স্পিন শুরু হবে
+    }, 1000);
+}
 
     // সাধারণ ১০২৪ ওয়েজ উইন চেক
     images.forEach(symbol => {

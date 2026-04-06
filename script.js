@@ -100,35 +100,47 @@ async function startSpin() {
 }
 
 // ৬. রীল থামানো
+
 function stopReels() {
     let finalBoard = [];
+
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
+            
+            // প্রতিটি রীল থামার সময় ছোট শব্দ (Click sound)
             stopSound.currentTime = 0;
             stopSound.play();
-            
+
             let reelImages = [];
             const cells = reel.querySelectorAll('.slot-cell');
             cells.forEach(cell => {
                 const randomImg = images[Math.floor(Math.random() * images.length)];
-                cell.innerHTML = `<img src="${randomImg}" style="width:100%; height:100%; object-fit:cover; display:block;">`;
+                cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
                 reelImages.push(randomImg);
             });
+            
             finalBoard.push(reelImages);
 
+            // যখন শেষ রীলটি থামবে (৫ নম্বর রীল)
             if (index === reels.length - 1) {
                 isSpinning = false;
-                spinSound.pause();
-                check1024WaysWin(finalBoard);
                 
+                // ১. স্পিন সাউন্ড এখানে অবশ্যই থামিয়ে দিতে হবে
+                spinSound.pause();
+                spinSound.currentTime = 0; // সাউন্ড রিসেট করা
+
+                // ২. উইন লজিক চেক করা
+                check1024WaysWin(finalBoard);
+
+                // ৩. অটো মোড চেক করা
                 if (isFreeSpinMode && freeSpinsLeft > 0) {
-                    setTimeout(startSpin, 1200);
+                    setTimeout(startSpin, 1000);
                 } else if (isAuto) {
                     setTimeout(startSpin, 1000);
                 }
             }
-        }, index * 150);
+        }, index * 150); // প্রতিটি রীল থামার ব্যবধান
     });
 }
 

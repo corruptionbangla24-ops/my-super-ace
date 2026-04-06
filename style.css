@@ -26,7 +26,14 @@
             gap: 5px; padding: 12px; background: #000; 
         }
         .reel { 
-    height: 275px; /* এটি কিছুটা কমিয়ে দিন */
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+    overflow: hidden; /* এটি নিশ্চিত করবে যেন কার্ড বাইরে না যায় */
+    height: 300px; /* ৫টি রীলের উচ্চতা */
+    background: #000; 
+    border-radius: 4px;
+    position: relative;
 }
 
         /* ছবিগুলোকে সেলের পুরো জায়গা জুড়ে বড় করা */

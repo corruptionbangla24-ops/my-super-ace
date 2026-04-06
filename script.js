@@ -191,14 +191,17 @@ function check1024WaysWin(board) {
         }
     });
 
-    if (totalWin > 0) {
+      if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
-        if (totalWin >= currentBet * 10) bigWinSound.play();
-        else winSound.play();
+
+        // --- নতুন সাউন্ড লজিক ---
+        winSound.currentTime = 0;
+        winSound.play(); 
     }
+    
     updateUI();
-}
+  
 
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);

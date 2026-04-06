@@ -1,32 +1,31 @@
 /**
- * SuperAce Ultimate Slot - 1024 Ways to Win Logic
- * Author: Beginner Web Dev Partner
+ * SuperAce Ultimate Slot - Full Sound & 1024 Ways Logic
  */
 
-// ১. কনফিগারেশন: আপনার ১০টি ছবির নাম এবং তাদের জেতার মান (Payout)
+// ১. কনফিগারেশন: ১০টি ছবির নাম ও পে-আউট মান
 const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 
-// প্রতিটি ছবির জন্য আলাদা আলাদা গুনাঙ্ক (এটি প্রফেশনাল গেমের নিয়ম)
 const symbolValues = {
-    '1.png': 15,  // সবচেয়ে দামী ছবি (১৫ গুণ)
-    '2.png': 12, 
-    '3.png': 10,
-    '4.png': 8,
-    '5.png': 5,
-    '6.png': 3,
-    '7.png': 2,
-    '8.png': 1.5,
-    '9.png': 1,
-    '10.png': 0.5  // সবচেয়ে কম দামী ছবি
-};
+    '1.png': 15, '2.png': 12, '3.png': 10, '4.png': 8, '5.png': 5, 
+    '6.png': 3, '7.png': 2, '8.png': 1.5, '9.png': 0, '10.png': 0.5 
+}; // ৯ নম্বর কার্ড (9.png) হলো SCATTER
 
 const reels = [
-    document.getElementById('r1'), 
-    document.getElementById('r2'), 
-    document.getElementById('r3'), 
-    document.getElementById('r4'), 
+    document.getElementById('r1'), document.getElementById('r2'), 
+    document.getElementById('r3'), document.getElementById('r4'), 
     document.getElementById('r5')
 ];
+
+// ২. ৬টি সাউন্ড ইফেক্ট লোড করা
+const bgMusic = new Audio('bg-music.mp3');
+const spinSound = new Audio('spin.mp3');
+const stopSound = new Audio('stop.mp3');
+const winSound = new Audio('win.mp3');
+const bigWinSound = new Audio('big-win.mp3');
+const scatterSound = new Audio('scatter-win.mp3');
+
+bgMusic.loop = true; 
+bgMusic.volume = 0.3; // হালকা ব্যাকগ্রাউন্ড মিউজিক
 
 let balance = 1000;
 let currentBet = 0.50;
@@ -34,7 +33,7 @@ let isSpinning = false;
 let isTurbo = false;
 let isAuto = false;
 
-// ২. শুরুতে রীলে ছবি দেখানো
+// ৩. শুরুতে রীলে ছবি দেখানো
 function init() {
     reels.forEach(reel => {
         reel.innerHTML = '';
@@ -42,31 +41,31 @@ function init() {
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const div = document.createElement('div');
             div.className = 'slot-cell';
-            // নিচে 'images/' মুছে দেওয়া হয়েছে
-            div.innerHTML = `<img src="${randomImg}">`;
-
+            div.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
             reel.appendChild(div);
         }
     });
 }
 
-// ৩. স্পিন শুরু করা
+// ৪. স্পিন শুরু
 async function startSpin() {
     if (isSpinning || balance < currentBet) {
-        if(balance < currentBet) {
-            alert("পর্যাপ্ত ব্যালেন্স নেই!");
-            isAuto = false;
-            document.getElementById('auto-btn').classList.remove('active');
-        }
+        if(balance < currentBet) alert("ব্যালেন্স পর্যাপ্ত নয়!");
         return;
     }
 
+    // প্রথম স্পিনে মিউজিক শুরু করার অনুমতি নেওয়া
+    bgMusic.play().catch(() => {});
+
     isSpinning = true;
     balance -= currentBet;
-    document.getElementById('win').innerText = "0.00"; // নতুন স্পিনে উইন রিসেট
+    document.getElementById('win').innerText = "0.00";
     updateUI();
 
-    // এনিমেশন শুরু
+    // স্পিন সাউন্ড শুরু
+    spinSound.currentTime = 0;
+    spinSound.play();
+
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.add(isTurbo ? 'turbo-spin' : 'spinning');
@@ -77,83 +76,94 @@ async function startSpin() {
     setTimeout(stopReels, stopTime);
 }
 
-// ৪. রীল থামানো এবং ডাটা সংগ্রহ
+// ৫. রীল থামানো
 function stopReels() {
-    let finalBoard = []; // ৫টি রীলের সব ছবি এখানে জমা হবে
+    let finalBoard = [];
 
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
             
+            // রীল থামার শব্দ
+            stopSound.currentTime = 0;
+            stopSound.play();
+            
             let reelImages = [];
             const cells = reel.querySelectorAll('.slot-cell');
-            
             cells.forEach(cell => {
-    const randomImg = images[Math.floor(Math.random() * images.length)];
-    // নিচে 'images/' মুছে দেওয়া হয়েছে
-    cell.innerHTML = `<img src="${randomImg}">`;
-reelImages.push(randomImg);
-                
-});
-
+                const randomImg = images[Math.floor(Math.random() * images.length)];
+                cell.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+                reelImages.push(randomImg);
+            });
+            
             finalBoard.push(reelImages);
 
-            // শেষ রীল থামলে উইন চেক করো
             if (index === reels.length - 1) {
                 isSpinning = false;
+                spinSound.pause(); // স্পিন শব্দ বন্ধ
                 check1024WaysWin(finalBoard);
-                if (isAuto) setTimeout(startSpin, 800);
+                if (isAuto) setTimeout(startSpin, 1000);
             }
         }, index * 150);
     });
 }
 
-// ৫. ১০২৪ ওয়েজ উইনিং লজিক (The Core Engine)
-// ৫. ১০২৪ ওয়েজ উইনিং লজিক (সঠিক ভার্সন)
+// ৬. ১০২৪ ওয়েজ উইন ও স্কাটার লজিক
 function check1024WaysWin(board) {
     let totalWin = 0;
+    let scatterCount = 0;
 
+    // স্কাটার (9.png) চেক করা
+    for (let i = 0; i < 5; i++) {
+        if (board[i].includes('9.png')) {
+            scatterCount++;
+        }
+    }
+
+    // ৩টি বা তার বেশি স্কাটার পড়লে সাউন্ড ও অ্যালার্ট
+    if (scatterCount >= 3) {
+        scatterSound.play();
+        setTimeout(() => { alert("অভিনন্দন! আপনি " + scatterCount + "টি SCATTER পেয়েছেন।"); }, 500);
+    }
+
+    // সাধারণ ১০২৪ ওয়েজ উইন চেক
     images.forEach(symbol => {
-        let counts = []; 
+        if (symbol === '9.png') return;
+
+        let counts = [];
         for (let i = 0; i < 5; i++) {
-            let count = board[i].filter(s => s === symbol).length;
-            counts.push(count);
+            counts.push(board[i].filter(s => s === symbol).length);
         }
 
-        // বাম থেকে ডানে অন্তত প্রথম ৩টি রীলে ছবি থাকতে হবে
         if (counts[0] > 0 && counts[1] > 0 && counts[2] > 0) {
             let ways = counts[0] * counts[1] * counts[2];
-            let multiplier = 2; // ৩টি রীল মিললে ২ গুণ বোনাস
-
-            if (counts[3] > 0) {
-                ways *= counts[3];
-                multiplier = 5; // ৪টি রীল মিললে ৫ গুণ বোনাস
-                if (counts[4] > 0) {
-                    ways *= counts[4];
-                    multiplier = 10; // ৫টি রীল মিললে ১০ গুণ বোনাস
-                }
+            let multiplier = 2; 
+            if (counts[3] > 0) { 
+                ways *= counts[3]; multiplier = 5; 
+                if (counts[4] > 0) { ways *= counts[4]; multiplier = 10; }
             }
-
-            let win = (currentBet / 20) * symbolValues[symbol] * ways * multiplier;
-            totalWin += win;
+            totalWin += (currentBet / 20) * symbolValues[symbol] * ways * multiplier;
         }
     });
 
     if (totalWin > 0) {
         balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
+        
+        // বড় জয় বা সাধারণ জয়ের সাউন্ড
+        if (totalWin >= currentBet * 10) bigWinSound.play();
+        else winSound.play();
     }
     updateUI();
 }
 
-// ৬. ইউজার ইন্টারফেস আপডেট
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);
     document.getElementById('bet-val').innerText = currentBet.toFixed(2);
     document.getElementById('spin-trigger').disabled = isSpinning;
 }
 
-// ৭. বাটন ইভেন্ট হ্যান্ডলার
+// বাটন কন্ট্রোল
 document.getElementById('spin-trigger').onclick = startSpin;
 
 document.getElementById('bet-plus').onclick = () => {
@@ -175,15 +185,12 @@ document.getElementById('bet-minus').onclick = () => {
 };
 
 document.getElementById('turbo-btn').onclick = function() {
-    isTurbo = !isTurbo;
-    this.classList.toggle('active');
+    isTurbo = !isTurbo; this.classList.toggle('active');
 };
 
 document.getElementById('auto-btn').onclick = function() {
-    isAuto = !isAuto;
-    this.classList.toggle('active');
-    if(isAuto) startSpin();
+    isAuto = !isAuto; this.classList.toggle('active');
+    if(isAuto && !isSpinning) startSpin();
 };
 
-// গেম শুরু করা
 init();

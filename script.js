@@ -34,7 +34,7 @@ function init() {
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const div = document.createElement('div');
             div.className = 'slot-cell';
-            div.innerHTML = `<img src="${randomImg}" style="width:85%; height:85%; object-fit:contain;">`;
+            div.innerHTML = `<img src="${randomImg}">`;
             reel.appendChild(div);
         }
     });

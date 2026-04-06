@@ -55,6 +55,39 @@ function init() {
 async function startSpin() {
     if (isSpinning) return;
 
+    // ৫৯ থেকে ৮৪ লাইনের সংশোধিত কোড:
+    
+    // ব্যাকগ্রাউন্ড মিউজিক প্রথম ক্লিকের পর চালু হবে
+    bgMusic.play().catch(() => console.log("Audio waiting for click"));
+
+    if (isFreeSpinMode && freeSpinsLeft > 0) {
+        freeSpinsLeft--;
+    } else {
+        if (balance < currentBet) {
+            alert("ব্যালেন্স পর্যাপ্ত নয়!");
+            isAuto = false;
+            isFreeSpinMode = false;
+            if (typeof scatterSound !== 'undefined') scatterSound.pause();
+            updateUI();
+            return;
+        }
+        balance -= currentBet;
+        if (freeSpinsLeft === 0) {
+            isFreeSpinMode = false;
+            if (typeof scatterSound !== 'undefined') {
+                scatterSound.pause();
+                scatterSound.currentTime = 0;
+            }
+        }
+    }
+
+    isSpinning = true;
+    document.getElementById('win').innerText = "0.00";
+    updateUI();
+
+    // স্পিন সাউন্ড শুরু করা (এটি নিশ্চিত করবে স্পিন করার সময় শব্দ হবে)
+    spinSound.currentTime = 0;
+    spinSound.play();
 
     reels.forEach((reel, index) => {
         setTimeout(() => {

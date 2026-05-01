@@ -25,7 +25,7 @@ if (!$user || $user['balance'] < $bet_amount) {
 }
 
 // ৩. ৫x৪ রিল জেনারেট করা (১০২৪ ওয়েজ লজিক)
-$symbols = ['ACE', 'KING', 'QUEEN', 'JOKER', 'SPADE', 'SCATTER', 'WILD'];
+$symbols = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 $reels = [];
 for ($i = 0; $i < 5; $i++) {
     $column = [];

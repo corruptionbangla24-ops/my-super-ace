@@ -161,3 +161,16 @@ body {
     0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
     100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
+/* বিজয়ী সিম্বল হাইলাইট করার এনিমেশন */
+.win-highlight {
+    border: 2px solid #ffdf1b !important;
+    box-shadow: 0 0 15px #ffdf1b;
+    transform: scale(1.1);
+    animation: pulseWin 0.5s infinite alternate;
+    z-index: 10;
+}
+
+@keyframes pulseWin {
+    from { opacity: 1; filter: brightness(1.2); }
+    to { opacity: 0.7; filter: brightness(1.8); }
+}

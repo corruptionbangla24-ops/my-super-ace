@@ -2,7 +2,7 @@
 const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 const symbolValues = {'1.png': 15, '2.png': 12, '3.png': 10, '4.png': 8, '5.png': 5, '6.png': 3, '7.png': 2, '8.png': 1.5, '9.png': 1, '10.png': 0.5};
 
-// অডিও ফাইল লোড করা (গিটহাব ফাইল থেকে)
+// অডিও ফাইল লোড করা
 const spinSound = new Audio('spin.mp3');
 const stopSound = new Audio('stop.mp3');
 const winSound = new Audio('win.mp3');
@@ -11,7 +11,9 @@ const bigWinSound = new Audio('big-win.mp3');
 spinSound.loop = true;
 
 const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3'), document.getElementById('r4'), document.getElementById('r5')];
-let balance = 1000, currentBet = 10.00, isSpinning = false, isTurbo = false, isAuto = false;
+// ব্যালেন্স PHP থেকে আসা ভেরিয়েবল php_initial_balance থেকে লোড হবে
+let balance = typeof php_initial_balance !== 'undefined' ? php_initial_balance : 1000;
+let currentBet = 10.00, isSpinning = false, isTurbo = false, isAuto = false;
 
 // ২. শুরুতে রীলে ছবি দেখানো
 function init() {
@@ -28,10 +30,14 @@ function init() {
     updateUI();
 }
 
-// ৩. স্পিন শুরু
+// ৩. স্পিন শুরু (Database এর সাথে কানেক্টেড)
 async function startSpin() {
-    if (isSpinning || balance < currentBet) return;
-    isSpinning = true; balance -= currentBet;
+    if (isSpinning || balance < currentBet) {
+        if(balance < currentBet) alert("ব্যালেন্স পর্যাপ্ত নয়!");
+        return;
+    }
+    
+    isSpinning = true;
     document.getElementById('win').innerText = "0.00";
     updateUI();
     
@@ -39,54 +45,62 @@ async function startSpin() {
     spinSound.currentTime = 0;
     spinSound.play().catch(() => {});
 
-    reels.forEach((reel, index) => { setTimeout(() => { reel.classList.add(isTurbo ? 'turbo-spin' : 'spinning'); }, index * 80); });
-    setTimeout(stopReels, isTurbo ? 600 : 1500);
+    // এনিমেশন শুরু
+    reels.forEach((reel, index) => { 
+        setTimeout(() => { reel.classList.add(isTurbo ? 'turbo-spin' : 'spinning'); }, index * 80); 
+    });
+
+    // সার্ভার (spin.php) থেকে রেজাল্ট নিয়ে আসা
+    const formData = new FormData();
+    formData.append('user_id', php_user_id);
+    formData.append('bet', currentBet);
+
+    try {
+        const response = await fetch('spin.php', { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            setTimeout(() => stopReels(data), isTurbo ? 600 : 1500);
+        } else {
+            alert(data.message);
+            resetSpin();
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        resetSpin();
+    }
 }
 
-// ৪. রীল থামানো
-function stopReels() {
-    let finalBoard = [];
+// ৪. রীল থামানো এবং ফলাফল দেখানো
+function stopReels(serverData) {
     reels.forEach((reel, index) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
             stopSound.currentTime = 0;
             stopSound.play().catch(() => {});
 
-            let reelImages = [];
+            // সার্ভার থেকে আসা নির্দিষ্ট সিম্বলগুলো বসানো
             const cells = reel.querySelectorAll('.slot-cell');
-            cells.forEach(cell => {
-                const randomImg = images[Math.floor(Math.random() * images.length)];
-                cell.innerHTML = `<img src="${randomImg}">`;
-                reelImages.push(randomImg);
+            serverData.reels[index].forEach((symbol, i) => {
+                cells[i].innerHTML = `<img src="${symbol}">`;
             });
-            finalBoard.push(reelImages);
             
             if (index === reels.length - 1) {
                 isSpinning = false;
-                spinSound.pause(); // স্পিন সাউন্ড বন্ধ
-                checkWin(finalBoard);
+                spinSound.pause();
+                checkWinResult(serverData);
                 if (isAuto) setTimeout(startSpin, 1000);
             }
         }, index * 150);
     });
 }
 
-// ৫. উইন লজিক, সাউন্ড এবং কয়েন অ্যানিমেশন
-function checkWin(board) {
-    let totalWin = 0;
-    images.forEach(symbol => {
-        let counts = [];
-        for (let i = 0; i < 5; i++) { counts.push(board[i].filter(s => s === symbol).length); }
-        if (counts[0] > 0 && counts[1] > 0 && counts[2] > 0) {
-            let ways = counts[0] * counts[1] * counts[2];
-            let mult = 2;
-            if (counts[3] > 0) { ways *= counts[3]; mult = 5; if (counts[4] > 0) { ways *= counts[4]; mult = 10; } }
-            totalWin += (currentBet / 20) * symbolValues[symbol] * ways * mult;
-        }
-    });
-
+// ৫. উইন লজিক এবং সাউন্ড কন্ট্রোল
+function checkWinResult(data) {
+    const totalWin = parseFloat(data.win);
+    balance = parseFloat(data.new_balance);
+    
     if (totalWin > 0) {
-        balance += totalWin;
         document.getElementById('win').innerText = totalWin.toFixed(2);
         
         // বড় বা সাধারণ উইন সাউন্ড
@@ -124,10 +138,21 @@ function updateUI() {
     document.getElementById('spin-trigger').disabled = isSpinning;
 }
 
+function resetSpin() {
+    isSpinning = false;
+    spinSound.pause();
+    reels.forEach(reel => reel.classList.remove('spinning', 'turbo-spin'));
+    updateUI();
+}
+
+// বাটন ইভেন্ট হ্যান্ডলারসমূহ
 document.getElementById('spin-trigger').onclick = startSpin;
 document.getElementById('bet-plus').onclick = () => { clickSound.play(); if(!isSpinning && currentBet < 1000) { currentBet += 10; updateUI(); } };
 document.getElementById('bet-minus').onclick = () => { clickSound.play(); if(!isSpinning && currentBet > 10) { currentBet -= 10; updateUI(); } };
 document.getElementById('turbo-btn').onclick = function() { clickSound.play(); isTurbo = !isTurbo; this.classList.toggle('active'); };
 document.getElementById('auto-btn').onclick = function() { clickSound.play(); isAuto = !isAuto; this.classList.toggle('active'); if(isAuto && !isSpinning) startSpin(); };
 
+// গেম শুরু
 init();
+
+            

@@ -47,7 +47,7 @@ async function startSpin() {
 
     // এনিমেশন শুরু
     reels.forEach((reel, index) => { 
-        setTimeout(() => { reel.classList.add(isTurbo ? 'turbo-spin' : 'spinning'); }, index * 80); 
+        setTimeout(() => { reel.classList.add(isTurbo ? 'turbo-spin' : 'spinning'); }, index * 60); 
     });
 
     // সার্ভার (spin.php) থেকে রেজাল্ট নিয়ে আসা
@@ -60,7 +60,7 @@ async function startSpin() {
         const data = await response.json();
 
         if (data.status === 'success') {
-            setTimeout(() => stopReels(data), isTurbo ? 600 : 1500);
+            setTimeout(() => stopReels(data), isTurbo ? 300 : 800);
         } else {
             alert(data.message);
             resetSpin();

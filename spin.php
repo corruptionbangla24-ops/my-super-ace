@@ -54,11 +54,14 @@ $update_stmt->bind_param("di", $new_balance, $user_id);
 $update_stmt->execute();
 
 // ৬. রেজাল্ট পাঠানো (জাভাস্ক্রিপ্ট এনিমেশনের জন্য)
+// ৫৭ থেকে ৬৩ নম্বর লাইনে এটি বসান
 echo json_encode([
     "status" => "success",
     "reels" => $reels,
     "win" => number_format($win_amount, 2, '.', ''),
     "new_balance" => number_format($new_balance, 2, '.', ''),
-    "is_win" => $is_win
+    "is_win" => $is_win,
+    "win_symbol" => ($is_win) ? $symbols[array_rand($symbols)] : "" // কোন চিহ্ন জিতেছে
 ]);
+
 ?>

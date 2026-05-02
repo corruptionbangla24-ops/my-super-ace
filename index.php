@@ -36,6 +36,17 @@ function mysqli_real_escape_with_connection($conn, $str) {
     </style>
 </head>
 <body>
+<!-- ৩৯ নম্বর লাইনের নিচে এটি বসান (ফ্রি স্পিন কাউন্টার ও বিগ উইন মেসেজ) -->
+<div id="free-spin-info" style="display:none; position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.9); padding:8px 20px; border-radius:30px; color:#ffdf1b; font-weight:bold; z-index:100; border:1px solid #ffdf1b; box-shadow: 0 0 10px #ffdf1b;">
+    FREE SPINS: <span id="fs-count">0/10</span>
+</div>
+
+<div id="big-win-overlay" style="display:none; position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); text-align:center; z-index:200; pointer-events:none; width: 100%;">
+    <h1 id="big-win-text" style="font-size:70px; color:#ffdf1b; text-shadow:0 0 30px #000, 0 0 10px #ffdf1b; margin:0; font-family:serif; animation: bounce 0.5s infinite alternate;">0.00</h1>
+    <div id="total-fs-win" style="display:none; margin-top: 20px;">
+        <span style="background:#ffdf1b; color:#000; padding:12px 25px; border-radius:15px; font-weight:bold; font-size:22px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">TOTAL WIN: ৳<span id="fs-total-val">0</span></span>
+    </div>
+</div>
 
 <div class="game-container">
     <div class="slot-machine">

@@ -85,6 +85,17 @@ function stopReels(data) {
                     highlightWinners(data.win_symbol);
                     (parseFloat(data.win) >= currentBet * 5 ? bigWinSound : winSound).play().catch(()=>{});
                 }
+                // ৮৭ নম্বর লাইনের ঠিক নিচে এটি বসান
+if (data.is_win) {
+    const winPopup = document.getElementById('big-win-overlay');
+    winPopup.innerText = "WIN: " + data.win;
+    winPopup.classList.add('show-win');
+
+    setTimeout(() => {
+        winPopup.classList.remove('show-win');
+    }, 2500);
+}
+
                 // ৮৫ নম্বর লাইনের ঠিক নিচে এটি বসান
 if (data.free_spins > 0) {
     freeSpinsRemaining += data.free_spins;

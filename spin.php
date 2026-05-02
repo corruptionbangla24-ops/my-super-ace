@@ -74,11 +74,20 @@ foreach ($reels as $c) {
     } 
 }
 $free_spins_won = ($bet > 0 && $scatter_count >= 3) ? 10 : 0;
-
-// ৬. ব্যালেন্স আপডেট এবং রেজাল্ট পাঠানো
+// ৭৯ নম্বর লাইন থেকে এটি বসানো শুরু করুন
 $final_win = round($total_win, 2);
-$new_balance = $user['balance'] - $bet + $final_win;
+
+if ($bet > 0) {
+    // সাধারণ স্পিনে টাকা কাটবে এবং উইন যোগ হবে
+    $new_balance = $user['balance'] - $bet + $final_win;
+} else {
+    // ক্যাসকেড স্পিনে (বেট ০) টাকা কাটবে না, শুধু উইন যোগ হবে
+    $new_balance = $user['balance'] + $final_win;
+}
+
 $conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
+
+
 
 echo json_encode([
     "status" => "success", 

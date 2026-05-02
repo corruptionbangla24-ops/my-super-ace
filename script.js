@@ -89,6 +89,8 @@ function stopReels(serverData) {
                 isSpinning = false;
                 spinSound.pause();
                 checkWinResult(serverData);
+                highlightWinners(serverData);
+
                 if (isAuto) setTimeout(startSpin, 1000);
             }
         }, index * 150);

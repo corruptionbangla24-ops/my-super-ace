@@ -1,4 +1,4 @@
-const images = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
+constes = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 const spinSound = new Audio('spin.mp3'); 
 const stopSound = new Audio('stop.mp3');
 const winSound = new Audio('win.mp3'); 
@@ -62,72 +62,105 @@ formData.append('current_bet_val', currentBet);
         resetSpin();
     }
 }
-
-function stopReels(data) {
+// ৬৬ নম্বর লাইন থেকে এই নতুন stopReels এবং Cascade লজিক বসান
+async function stopReels(data) {
     reels.forEach((reel, i) => {
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
-            stopSound.play().catch(()=>{});
+            stopSound.play().catch(() => {});
             reel.innerHTML = '';
             data.reels[i].forEach(img => {
                 reel.innerHTML += `<div class="slot-cell"><img src="${img}"></div>`;
             });
 
             if (i === 4) {
-                isSpinning = false;
-                spinSound.pause();
-                balance = parseFloat(data.new_balance);
-                document.getElementById('bal').innerText = balance.toFixed(2);
-                document.getElementById('win').innerText = data.win;
-                document.getElementById('spin-trigger').disabled = false;
-                
-                if (data.is_win) {
-                    highlightWinners(data.win_symbol);
-                    (parseFloat(data.win) >= currentBet * 5 ? bigWinSound : winSound).play().catch(()=>{});
-                }
-                if (freeSpinsRemaining === 0 && isAuto) {
-    // ১০টি ফ্রি স্পিন শেষ হলে অটো স্পিন বন্ধ হবে
-    isAuto = false; 
-    document.getElementById('auto-btn').classList.remove('active');
-}
-                // ৮৭ নম্বর লাইনের ঠিক নিচে এটি বসান
-if (data.is_win) {
-    const winPopup = document.getElementById('big-win-overlay');
-    winPopup.innerText = "WIN: " + data.win;
-    winPopup.classList.add('show-win');
-
-    setTimeout(() => {
-        winPopup.classList.remove('show-win');
-    }, 2500);
+                handleWinSequence(data);
+            }
+        }, i * (isTurbo ? 30 : 60));
+    });
 }
 
-                // ৮৫ নম্বর লাইনের ঠিক নিচে এটি বসান
-if (data.free_spins > 0) {
-    freeSpinsRemaining += data.free_spins;
-    alert("অভিনন্দন! আপনি ১০টি ফ্রি স্পিন জিতেছেন!");
-    updateFreeSpinUI();
-    if (!isAuto) { 
-        isAuto = true; 
-        document.getElementById('auto-btn').classList.add('active');
-        setTimeout(startSpin, 1200); 
+async function handleWinSequence(data) {
+    isSpinning = false;
+    spinSound.pause();
+    
+    // ব্যালেন্স ও উইন আপডেট
+    balance = parseFloat(data.new_balance);
+    document.getElementById('bal').innerText = balance.toFixed(2);
+    document.getElementById('win').innerText = data.win;
+    document.getElementById('spin-trigger').disabled = false;
+
+    if (data.is_win) {
+        // ১. উইনিং কার্ড হাইলাইট ও পপ-আপ শো
+        highlightWinners(data.win_symbol);
+        showWinPopup(data.win);
+        (parseFloat(data.win) >= currentBet * 5 ? bigWinSound : winSound).play().catch(() => {});
+
+        // ২. কার্ড উধাও করে নতুন কার্ড ফেলার প্রক্রিয়া (SuperAce Style)
+        setTimeout(() => {
+            triggerCascade(data.win_symbol);
+        }, 1500);
+    } else {
+        checkAutoAndFreeSpins(data);
     }
 }
 
-// এই লাইনের পর যদি অটো-স্পিন লজিক থাকে সেটি থাকবে
-
-                if (isAuto) setTimeout(startSpin, 800);
-            }
-        }, i * 60);
+function triggerCascade(symbol) {
+    // উইনিং কার্ডগুলো ভ্যানিশ করা
+    document.querySelectorAll('.win-highlight').forEach(el => {
+        el.style.transition = "all 0.5s";
+        el.style.transform = "scale(0)";
+        el.style.opacity = "0";
     });
+
+    // নতুন স্পিন অটো শুরু করা (টাকা না কেটে)
+    setTimeout(() => {
+        startSpin(true); // true মানে এটি একটি ক্যাসকেড স্পিন
+    }, 600);
+}
+
+function showWinPopup(amount) {
+    const winPopup = document.getElementById('big-win-overlay');
+    winPopup.innerText = "WIN: " + amount;
+    winPopup.classList.add('show-win');
+    setTimeout(() => winPopup.classList.remove('show-win'), 2000);
+}
+
+function checkAutoAndFreeSpins(data) {
+    if (freeSpinsRemaining === 0 && isAuto) {
+        isAuto = false;
+        document.getElementById('auto-btn').classList.remove('active');
+    }
+
+    if (data.free_spins > 0) {
+        freeSpinsRemaining += data.free_spins;
+        alert("অভিনন্দন! আপনি ১০টি ফ্রি স্পিন জিতেছেন!");
+        updateFreeSpinUI();
+        if (!isAuto) {
+            isAuto = true;
+            document.getElementById('auto-btn').classList.add('active');
+            setTimeout(startSpin, 1000);
+        }
+    } else if (isAuto) {
+        setTimeout(startSpin, 1000);
+    }
 }
 
 function highlightWinners(symbol) {
     document.querySelectorAll('.slot-cell img').forEach(img => {
         if (img.src.includes(symbol)) img.parentElement.classList.add('win-highlight');
     });
-    setTimeout(() => {
-        document.querySelectorAll('.win-highlight').forEach(el => el.classList.remove('win-highlight'));
-    }, 2000);
+}
+
+function updateFreeSpinUI() {
+    const spinBtn = document.getElementById('spin-trigger');
+    if (freeSpinsRemaining > 0) {
+        spinBtn.innerText = "FREE (" + freeSpinsRemaining + ")";
+        spinBtn.style.background = "linear-gradient(#00ff88, #008855)";
+    } else {
+        spinBtn.innerText = "Spin";
+        spinBtn.style.background = "radial-gradient(#ff5e00, #ff0000)";
+    }
 }
 
 function resetSpin() {
@@ -135,49 +168,7 @@ function resetSpin() {
     document.getElementById('spin-trigger').disabled = false;
     reels.forEach(r => r.classList.remove('spinning', 'turbo-spin'));
 }
-function updateFreeSpinUI() {
-    const spinBtn = document.getElementById('spin-trigger');
-    if (freeSpinsRemaining > 0) {
-        spinBtn.innerText = "FREE (" + freeSpinsRemaining + ")";
-        spinBtn.style.background = "linear-gradient(#00ff88, #008855)"; // সবুজ রঙ
-    } else {
-        spinBtn.innerText = "Spin";
-        spinBtn.style.background = "radial-gradient(#ff5e00, #ff0000)"; // আগের লাল রঙ
-    }
-}
-// ১৩৩ নম্বর লাইন থেকে এটি বসান
-const betSteps = [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1000];
-let currentStepIndex = 4; // ডিফল্ট ১০ টাকা
 
-document.getElementById('spin-trigger').onclick = startSpin;
-
-document.getElementById('bet-plus').onclick = () => {
-    if (!isSpinning && currentStepIndex < betSteps.length - 1) {
-        currentStepIndex++;
-        currentBet = betSteps[currentStepIndex];
-        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
-    }
-};
-
-document.getElementById('bet-minus').onclick = () => {
-    if (!isSpinning && currentStepIndex > 0) {
-        currentStepIndex--;
-        currentBet = betSteps[currentStepIndex];
-        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
-    }
-};
-
-document.getElementById('turbo-btn').onclick = function() { 
-    isTurbo = !isTurbo; 
-    this.classList.toggle('active'); 
-};
-
-document.getElementById('auto-btn').onclick = function() { 
-    isAuto = !isAuto; 
-    this.classList.toggle('active'); 
-    if(isAuto && !isSpinning) startSpin(); 
-};
-
+// বাটন ইভেন্টগুলো আপনার আগের মতোই থাকবে
 init();
-
 

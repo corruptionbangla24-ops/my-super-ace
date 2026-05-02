@@ -36,7 +36,7 @@ $conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
 $scatter_count = 0;
 foreach ($reels as $col) {
     foreach ($col as $sym) {
-        if ($sym === 'SCATTER.png') $scatter_count++; 
+        if ($sym === '9.png') $scatter_count++; 
     }
 }
 $free_spins_won = ($scatter_count >= 3) ? 10 : 0;

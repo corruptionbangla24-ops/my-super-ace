@@ -129,11 +129,39 @@ function updateFreeSpinUI() {
         spinBtn.style.background = "radial-gradient(#ff5e00, #ff0000)"; // আগের লাল রঙ
     }
 }
+// ১৩৩ নম্বর লাইন থেকে এটি বসান
+const betSteps = [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1000];
+let currentStepIndex = 4; // ডিফল্ট ১০ টাকা
 
 document.getElementById('spin-trigger').onclick = startSpin;
-document.getElementById('bet-plus').onclick = () => { if(!isSpinning && currentBet < 1000) { currentBet += 10; document.getElementById('bet-val').innerText = currentBet.toFixed(2); } };
-document.getElementById('bet-minus').onclick = () => { if(!isSpinning && currentBet > 10) { currentBet -= 10; document.getElementById('bet-val').innerText = currentBet.toFixed(2); } };
-document.getElementById('turbo-btn').onclick = function() { isTurbo = !isTurbo; this.classList.toggle('active'); };
-document.getElementById('auto-btn').onclick = function() { isAuto = !isAuto; this.classList.toggle('active'); if(isAuto && !isSpinning) startSpin(); };
+
+document.getElementById('bet-plus').onclick = () => {
+    if (!isSpinning && currentStepIndex < betSteps.length - 1) {
+        currentStepIndex++;
+        currentBet = betSteps[currentStepIndex];
+        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    }
+};
+
+document.getElementById('bet-minus').onclick = () => {
+    if (!isSpinning && currentStepIndex > 0) {
+        currentStepIndex--;
+        currentBet = betSteps[currentStepIndex];
+        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    }
+};
+
+document.getElementById('turbo-btn').onclick = function() { 
+    isTurbo = !isTurbo; 
+    this.classList.toggle('active'); 
+};
+
+document.getElementById('auto-btn').onclick = function() { 
+    isAuto = !isAuto; 
+    this.classList.toggle('active'); 
+    if(isAuto && !isSpinning) startSpin(); 
+};
 
 init();
+
+

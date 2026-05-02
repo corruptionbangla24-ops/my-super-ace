@@ -14,47 +14,57 @@ if (!$user || ($bet > 0 && $user['balance'] < $bet)) {
     exit;
 }
 
-$symbols = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
-$reels = [];
-for ($i = 0; $i < 5; $i++) {
-    $col = [];
-    for ($j = 0; $j < 4; $j++) { $col[] = $symbols[array_rand($symbols)]; }
-    $reels[] = $col;
-}
+    $symbols = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
+    $reels = [];
+    for ($i = 0; $i < 5; $i++) {
+        $col = [];
+        for ($j = 0; $j < 4; $j++) { 
+            $col[] = $symbols[array_rand($symbols)]; 
+        }
+        $reels[] = $col;
+    }
 
-$win_chance = rand(1, 100);
-$win_amount = 0; $is_win = false; $win_symbol = "";
+    // ১. জেতার সম্ভাবনা সেট করা (২০% চান্স)
+    $win_chance = rand(1, 100);
+    $win_amount = 0; 
+    $is_win = false; 
+    $win_symbol = "";
 
-if ($win_chance <= 30) {
-    $is_win = true;
-    $win_symbol = $symbols[array_rand($symbols)];
-    $multipliers = [1, 2, 5, 10, 20];
-    $win_amount = $bet * $multipliers[array_rand($multipliers)];
-}
+    if ($win_chance <= 20) {
+        $is_win = true;
+        $win_symbol = $symbols[array_rand($symbols)];
+        $multipliers = [1, 2, 5, 10, 20]; 
+        $win_amount = $bet * $multipliers[array_rand($multipliers)];
+    }
 
-$new_balance = $user['balance'] - $bet + $win_amount;
-$conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
-// ৩৭ থেকে ৫৩ নম্বর লাইনের জায়গায় এটি বসান
-$scatter_count = 0;
-// যদি বেট ০ এর বেশি হয় (অর্থাৎ মেইন স্পিন), তবেই কেবল নতুন ফ্রি স্পিন পাওয়ার সুযোগ থাকবে
-if ($bet > 0) {
-    foreach ($reels as $col) {
-        foreach ($col as $sym) {
-            if ($sym === '9.png') $scatter_count++; 
+    // ২. স্ক্যাটার (৯.পিএনজি) পড়ার সম্ভাবনা নিয়ন্ত্রণ (১৫% চান্স)
+    $scatter_count = 0;
+    $scatter_luck = rand(1, 100);
+    
+    // শুধুমাত্র নরমাল স্পিনে এবং ভাগ্যে থাকলে স্ক্যাটার গুনবে
+    if ($bet > 0 && $scatter_luck <= 15) {
+        foreach ($reels as $col) {
+            foreach ($col as $sym) {
+                if ($sym === '9.png') $scatter_count++;
+            }
         }
     }
-}
 
-$free_spins_won = ($scatter_count >= 3) ? 10 : 0;
+    $free_spins_won = ($scatter_count >= 3) ? 10 : 0;
 
-echo json_encode([
-    "status" => "success",
-    "reels" => $reels,
-    "win" => number_format($win_amount, 2, '.', ''),
-    "new_balance" => number_format($new_balance, 2, '.', ''),
-    "is_win" => $is_win,
-    "win_symbol" => $win_symbol,
-    "free_spins" => $free_spins_won,
-    "scatter_count" => $scatter_count
-]);
+    // ৩. ডাটাবেসে নতুন ব্যালেন্স আপডেট
+    $new_balance = $user['balance'] - $bet + $win_amount;
+    $conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
 
+    // ৪. রেজাল্ট পাঠানো
+    echo json_encode([
+        "status" => "success",
+        "reels" => $reels,
+        "win" => number_format($win_amount, 2, '.', ''),
+        "new_balance" => number_format($new_balance, 2, '.', ''),
+        "is_win" => $is_win,
+        "win_symbol" => $win_symbol,
+        "free_spins" => $free_spins_won,
+        "scatter_count" => $scatter_count
+    ]);
+?>

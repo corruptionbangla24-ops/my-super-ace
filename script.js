@@ -85,6 +85,11 @@ function stopReels(data) {
                     highlightWinners(data.win_symbol);
                     (parseFloat(data.win) >= currentBet * 5 ? bigWinSound : winSound).play().catch(()=>{});
                 }
+                if (freeSpinsRemaining === 0 && isAuto) {
+    // ১০টি ফ্রি স্পিন শেষ হলে অটো স্পিন বন্ধ হবে
+    isAuto = false; 
+    document.getElementById('auto-btn').classList.remove('active');
+}
                 // ৮৭ নম্বর লাইনের ঠিক নিচে এটি বসান
 if (data.is_win) {
     const winPopup = document.getElementById('big-win-overlay');

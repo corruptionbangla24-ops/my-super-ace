@@ -136,7 +136,11 @@ body {
 
 /* ৬. এনিমেশন এবং কয়েন শাওয়ার */
 .spinning { animation: moveReelDown 0.1s linear infinite; }
-.turbo-spin { animation: moveReelDown 0.05s linear infinite; }
+/* এটি style.css ফাইলে বসান */
+.turbo-spin {
+    animation: moveReelDown 0.05s linear infinite !important; 
+}
+
 
 @keyframes moveReelDown { 
     0% { transform: translateY(-75px); } 

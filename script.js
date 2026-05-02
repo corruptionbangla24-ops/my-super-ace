@@ -48,7 +48,7 @@ async function startSpin() {
     const formData = new FormData();
     formData.append('user_id', php_user_id);
     formData.append('bet', betToSend); // এখানে currentBet এর বদলে betToSend হবে
-
+formData.append('current_bet_val', currentBet); 
     try {
         const res = await fetch('spin.php', { method: 'POST', body: formData });
         const data = await res.json();

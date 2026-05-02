@@ -77,9 +77,10 @@ if ($bet > 0 && $scatter_roll <= 20) {
     }
 }
 
+$free_spins_won = ($scatter_count >= 3) ? 10 : 0;
 
 
-$free_spins_won = ($bet > 0 && $scatter_count >= 3) ? 10 : 0;
+
 // ৭৯ নম্বর লাইন থেকে এটি বসানো শুরু করুন
 $final_win = round($total_win, 2);
 

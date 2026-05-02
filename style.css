@@ -161,16 +161,19 @@ body {
     0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
     100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
-/* বিজয়ী সিম্বল হাইলাইট করার এনিমেশন */
+/* বিজয়ী কার্ড হাইলাইট - ব্লাক থিম */
 .win-highlight {
-    border: 2px solid #ffdf1b !important;
-    box-shadow: 0 0 15px #ffdf1b;
-    transform: scale(1.1);
-    animation: pulseWin 0.5s infinite alternate;
-    z-index: 10;
+    border: 4px solid #000000 !important; /* মোটা কালো বর্ডার */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.2); /* হালকা কালো শেড */
+    transform: scale(1.05); /* হালকা বড় হবে */
+    z-index: 100;
+    position: relative;
+    transition: all 0.3s ease;
+    animation: blinkBlack 0.4s infinite alternate; /* স্পষ্ট করে বোঝানোর জন্য ব্লিংক */
 }
 
-@keyframes pulseWin {
-    from { opacity: 1; filter: brightness(1.2); }
-    to { opacity: 0.7; filter: brightness(1.8); }
+@keyframes blinkBlack {
+    from { border-color: #000000; filter: brightness(1.2); }
+    to { border-color: #333333; filter: brightness(0.8); }
 }

@@ -90,6 +90,9 @@ function stopReels(serverData) {
                 spinSound.pause();
                 checkWinResult(serverData);
                 highlightWinners(serverData);
+// ৯৩ নম্বর লাইনের নিচে এই ২ লাইন বসান
+handleFreeSpins(serverData);
+if (remainingFreeSpins > 0) runFreeSpins();
 
                 if (isAuto) setTimeout(startSpin, 1000);
             }

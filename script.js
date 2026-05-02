@@ -168,7 +168,42 @@ function resetSpin() {
     document.getElementById('spin-trigger').disabled = false;
     reels.forEach(r => r.classList.remove('spinning', 'turbo-spin'));
 }
+// ১৭২ নম্বর লাইন থেকে এটি বসান
 
-// বাটন ইভেন্টগুলো আপনার আগের মতোই থাকবে
+// ১. স্পিন বাটন
+document.getElementById('spin-trigger').onclick = () => startSpin(false);
+
+// ২. বেট বাড়ানোর বাটন (+)
+document.getElementById('bet-plus').onclick = () => {
+    if (!isSpinning && currentStepIndex < betSteps.length - 1) {
+        currentStepIndex++;
+        currentBet = betSteps[currentStepIndex];
+        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    }
+};
+
+// ৩. বেট কমানোর বাটন (-)
+document.getElementById('bet-minus').onclick = () => {
+    if (!isSpinning && currentStepIndex > 0) {
+        currentStepIndex--;
+        currentBet = betSteps[currentStepIndex];
+        document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    }
+};
+
+// ৪. টার্বো মোড বাটন
+document.getElementById('turbo-btn').onclick = function() { 
+    isTurbo = !isTurbo; 
+    this.classList.toggle('active'); 
+};
+
+// ৫. অটো স্পিন বাটন
+document.getElementById('auto-btn').onclick = function() { 
+    isAuto = !isAuto; 
+    this.classList.toggle('active'); 
+    if(isAuto && !isSpinning) startSpin(false); 
+};
+
+
 init();
 

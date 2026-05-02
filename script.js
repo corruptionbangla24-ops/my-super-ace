@@ -8,8 +8,12 @@ spinSound.loop = true;
 
 const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3'), document.getElementById('r4'), document.getElementById('r5')];
 let balance = typeof php_initial_balance !== 'undefined' ? php_initial_balance : 0;
-let currentBet = 10.00;
+// ১১ ও ১২ নম্বর লাইনের জায়গায় এটি বসান
+const betSteps = [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1000];
+let currentStepIndex = 4; // ডিফল্ট ১০ টাকা সেট থাকবে
+let currentBet = betSteps[currentStepIndex];
 let isSpinning = false, isTurbo = false, isAuto = false, freeSpinsRemaining = 0;
+
 
 
 function init() {

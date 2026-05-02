@@ -110,3 +110,25 @@ body {
 }
 .btn-small { background: #333; color: #fff; border: none; padding: 8px 12px; border-radius: 5px; }
 .btn-small.active { background: #f39c12; }
+/* ১১২ নম্বর লাইনের নিচে এটি বসান */
+.win-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(0, 0, 0, 0.9);
+    color: #f1c40f;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 30px;
+    font-weight: bold;
+    border: 3px solid #f1c40f;
+    z-index: 1000;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.win-popup.show-win {
+    transform: translate(-50%, -50%) scale(1.2);
+}

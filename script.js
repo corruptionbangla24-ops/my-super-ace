@@ -149,6 +149,28 @@ function highlightWinners(serverData) {
         }, 3000);
     }
 }
+// ১৫২ নম্বর লাইনের আগে এটি বসান (ফ্রি স্পিন ইঞ্জিন)
+let remainingFreeSpins = 0;
+
+function handleFreeSpins(serverData) {
+    if (serverData.free_spins > 0) {
+        remainingFreeSpins = serverData.free_spins;
+        alert("🎉 অভিনন্দন! আপনি " + remainingFreeSpins + "টি ফ্রি স্পিন পেয়েছেন!");
+        runFreeSpins();
+    }
+}
+
+function runFreeSpins() {
+    if (remainingFreeSpins > 0) {
+        remainingFreeSpins--;
+        console.log("বাকি ফ্রি স্পিন: " + remainingFreeSpins);
+        
+        // ১.৫ সেকেন্ড পর পর অটোমেটিক স্পিন হবে
+        setTimeout(() => {
+            if (!isSpinning) startSpin(); 
+        }, 1500);
+    }
+}
 
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);

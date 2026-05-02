@@ -97,12 +97,21 @@ async function stopReels(data) {
 async function handleWinSequence(data) {
     isSpinning = false;
     spinSound.pause();
-    
+      // ১০১ থেকে ১০৬ নম্বর লাইনের জায়গায় এটি বসান
+    if (data.is_win) {
+        updateMultiplierUI(); // বার হাইলাইট করা
+        if (currentMultiplier < 10) currentMultiplier++; // জেতার পর এক ধাপ বাড়ানো
+    } else {
+        currentMultiplier = 1; // না জিতলে আবার x1 এ ফেরা
+        updateMultiplierUI();
+    }
+
     // ব্যালেন্স ও উইন আপডেট
     balance = parseFloat(data.new_balance);
     document.getElementById('bal').innerText = balance.toFixed(2);
     document.getElementById('win').innerText = data.win;
     document.getElementById('spin-trigger').disabled = false;
+  
 
     if (data.is_win) {
         // ১. উইনিং কার্ড হাইলাইট ও পপ-আপ শো

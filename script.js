@@ -13,6 +13,8 @@ const betSteps = [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1000];
 let currentStepIndex = 4; // ডিফল্ট ১০ টাকা সেট থাকবে
 let currentBet = betSteps[currentStepIndex];
 let isSpinning = false, isTurbo = false, isAuto = false, freeSpinsRemaining = 0;
+// ১৫ নম্বর লাইনের নিচে এটি বসান
+let currentMultiplier = 1;
 
 
 

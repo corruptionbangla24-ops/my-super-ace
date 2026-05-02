@@ -1,188 +1,193 @@
-/* ১. গ্লোবাল এবং বডি সেটিংস (গ্যাপ কমানোর জন্য) */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body { 
-    margin: 0; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 100dvh; /* মোবাইলের জন্য ডাইনামিক হাইট */
-    background: #000; 
-    font-family: 'Arial', sans-serif; 
-    overflow: hidden; 
-}
-
-/* ২. গেম কন্টেইনার (বর্ডার এবং শ্যাডো) */
-.game-container { 
-    width: 95%; 
-    max-width: 370px; 
-    background: rgba(15, 15, 15, 0.98); 
-    border: 3px solid #b8860b; 
-    border-radius: 15px; 
-    overflow: hidden; 
-    box-shadow: 0 0 30px rgba(0, 0, 0, 1);
-    margin: auto;
-}
-
-/* ৩. স্লট মেশিন (কার্ডগুলোকে বর্ডারের ভেতর আটকে রাখবে) */
-.slot-machine { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 4px; 
-    padding: 10px; 
-    background: #000; 
-    overflow: hidden; /* এটিই কার্ডকে বর্ডারের বাইরে যেতে দেবে না */
-    border-bottom: 2px solid #b8860b;
-}
-
-/* ৪. রীল এবং কার্ড সেটিংস (ছবি ঘরজুড়ে বড় দেখাবে) */
-.reel { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 4px; 
-    height: 310px; /* রীলের উচ্চতা ফিক্সড */
-    overflow: hidden; /* কার্ড যেন বক্সের বাইরে না যায় */
-    background: #000;
-}
-
-.slot-cell { 
-    height: 75px; 
-    width: 100%; 
-    background: #111; 
-    border: 1px solid #222;
+/* ১. বেসিক সেটআপ */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+
+/* ২. গেম কন্টেইনার */
+.game-container {
+    width: 100%;
+    max-width: 500px;
+    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255, 223, 27, 0.1);
+    position: relative;
+}
+
+/* ৩. স্লট মেশিন গ্রিড (৫x৪) */
+.slot-machine {
+    display: flex;
+    justify-content: space-between;
+    background: #111;
+    border: 4px solid #333;
+    border-radius: 15px;
+    padding: 10px;
     overflow: hidden;
-    padding: 0;
+    height: 350px;
+}
+
+.reel {
+    flex: 1;
+    margin: 0 3px;
+    display: flex;
+    flex-direction: column;
+}
+
+.slot-cell {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #222;
+    background: #1a1a1a;
+    transition: transform 0.2s;
 }
 
 .slot-cell img {
-    width: 100% !important; 
-    height: 100% !important; 
-    object-fit: cover; /* ছবিকে ঘরজুড়ে ছড়িয়ে দেবে */
-    display: block;
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
 }
 
-/* ৫. কন্ট্রোল প্যানেল এবং বাটন */
-.controls { 
-    padding: 15px; 
-    background: #111; 
+/* ৪. এনিমেশন স্পিড (রকেট গতি) */
+.spinning {
+    animation: moveReelDown 0.1s linear infinite;
 }
 
-.status-row { 
-    display: flex; 
-    justify-content: space-between; 
-    color: #ffd700; 
-    font-size: 0.95rem; 
-    margin-bottom: 12px; 
-    font-weight: bold; 
-}
-
-.action-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    gap: 8px; 
-}
-
-.btn-small { 
-    background: #222; 
-    border: 1px solid #ffd700; 
-    color: #ffd700; 
-    padding: 6px 10px; 
-    border-radius: 5px; 
-    cursor: pointer; 
-    font-size: 0.75rem; 
-    font-weight: bold; 
-}
-
-.btn-small.active { background: #ffd700; color: #000; }
-
-.bet-controls { 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    background: #000; 
-    padding: 6px 12px; 
-    border-radius: 25px; 
-    border: 1px solid #444; 
-}
-
-.bet-btn { 
-    width: 28px; 
-    height: 28px; 
-    border-radius: 50%; 
-    border: none; 
-    background: #b8860b; 
-    color: white; 
-    font-weight: bold; 
-    cursor: pointer; 
-}
-
-#bet-val { color: #fff; min-width: 50px; text-align: center; font-weight: bold; }
-
-.spin-btn { 
-    width: 85px; 
-    height: 85px; 
-    background: radial-gradient(circle, #ff4500, #8b0000); 
-    border: 4px solid #fff; 
-    border-radius: 50%; 
-    color: #fff; 
-    font-weight: bold; 
-    cursor: pointer; 
-    box-shadow: 0 0 20px rgba(255, 69, 0, 0.5); 
-}
-
-/* ৬. এনিমেশন এবং কয়েন শাওয়ার */
-.spinning { animation: moveReelDown 0.1s linear infinite; }
-/* এটি style.css ফাইলে বসান */
 .turbo-spin {
-    animation: moveReelDown 0.05s linear infinite !important; 
+    animation: moveReelDown 0.05s linear infinite !important;
 }
 
-
-@keyframes moveReelDown { 
-    0% { transform: translateY(-75px); } 
-    100% { transform: translateY(0); }   
+@keyframes moveReelDown {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
 }
 
+/* ৫. উইন হাইলাইট (ব্লাক থিম - স্পষ্ট) */
+.win-highlight {
+    border: 4px solid #000 !important;
+    box-shadow: 0 0 20px #000, inset 0 0 10px rgba(0,0,0,0.8);
+    background-color: rgba(255, 223, 27, 0.2) !important;
+    z-index: 10;
+    animation: pulseWin 0.4s infinite alternate;
+}
+
+@keyframes pulseWin {
+    from { transform: scale(1); filter: brightness(1.2); }
+    to { transform: scale(1.1); filter: brightness(1.5); }
+}
+
+/* ৬. কন্ট্রোল প্যানেল */
+.controls {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffdf1b;
+}
+
+#bal { color: #00ff88; }
+
+.action-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-small {
+    background: #222;
+    border: 2px solid #ffdf1b;
+    color: #ffdf1b;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-small.active {
+    background: #ffdf1b;
+    color: #000;
+}
+
+.bet-area {
+    background: #222;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid #444;
+}
+
+.bet-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bet-btn {
+    background: #ffdf1b;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ৭. স্পিন বাটন */
+.spin-btn {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #ff4500, #b22222);
+    border: 5px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+    transition: 0.1s;
+}
+
+.spin-btn:active { transform: scale(0.9); }
+.spin-btn:disabled { background: #555; border-color: #777; cursor: not-allowed; }
+
+/* ৮. কয়েন এনিমেশন */
 #coin-container {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
 }
 
 .coin {
     position: absolute;
-    width: 30px; height: 30px;
-    background-image: url('https://icons8.com');
-    background-size: contain;
-    animation: fall linear forwards;
+    width: 30px;
+    height: 30px;
+    background-image: url('coin.png'); /* আপনার কাছে কয়েন ইমেজ থাকলে */
+    background-size: cover;
+    background-color: #ffd700; /* ইমেজ না থাকলে গোল্ড কালার হবে */
+    border-radius: 50%;
+    animation: fall 2.5s linear forwards;
 }
 
 @keyframes fall {
     0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-}
-/* বিজয়ী কার্ড হাইলাইট - ব্লাক থিম */
-.win-highlight {
-    border: 4px solid #000000 !important; /* মোটা কালো বর্ডার */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.2); /* হালকা কালো শেড */
-    transform: scale(1.05); /* হালকা বড় হবে */
-    z-index: 100;
-    position: relative;
-    transition: all 0.3s ease;
-    animation: blinkBlack 0.4s infinite alternate; /* স্পষ্ট করে বোঝানোর জন্য ব্লিংক */
-}
-
-@keyframes blinkBlack {
-    from { border-color: #000000; filter: brightness(1.2); }
-    to { border-color: #333333; filter: brightness(0.8); }
-}
-/* বিগ উইন টেক্সট লাফানোর এনিমেশন (১৭৯ নম্বর লাইনের নিচে) */
-@keyframes bounce {
-    from { transform: scale(1); }
-    to { transform: scale(1.3); }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }

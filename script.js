@@ -21,34 +21,41 @@ function init() {
         }
     });
 }
-async function startSpin() {
-    if (isSpinning) return;
+// ২৫ নম্বর লাইন থেকে ৪৪ নম্বর লাইনের জায়গায় এটি বসান
+async function startSpin(isCascade = false) {
+    if (isSpinning && !isCascade) return; // ক্যাসকেড না হলে এবং স্পিন চললে থামো
 
-    let betToSend = currentBet; // ডিফল্ট বেট
+    let betToPay = isCascade ? 0 : currentBet; // ক্যাসকেড হলে টাকা কাটবে না
 
-    // ফ্রি স্পিন থাকলে টাকা কাটবে না
-    if (freeSpinsRemaining > 0) {
-        freeSpinsRemaining--;
-        betToSend = 0; // সার্ভারে ০ বেট পাঠাবে যাতে টাকা না কাটে
-        updateFreeSpinUI();
-    } else {
-        if (balance < currentBet) {
-            alert("Insufficient Balance!");
-            return;
+    // ১. ব্যালেন্স চেক (শুধুমাত্র মেইন স্পিনের জন্য)
+    if (!isCascade) {
+        if (freeSpinsRemaining > 0) {
+            freeSpinsRemaining--;
+            betToPay = 0; // ফ্রি স্পিনেও টাকা কাটবে না
+            updateFreeSpinUI();
+        } else {
+            if (balance < currentBet) {
+                alert("Insufficient Balance!");
+                return;
+            }
         }
+        // মেইন স্পিন শুরু হলে উইন বক্স ক্লিয়ার করো
+        document.getElementById('win').innerText = "0.00";
     }
 
     isSpinning = true;
     document.getElementById('spin-trigger').disabled = true;
-    document.getElementById('win').innerText = "0.00";
     
+    // ২. এনিমেশন শুরু
     spinSound.play().catch(()=>{});
     reels.forEach((r, i) => setTimeout(() => r.classList.add(isTurbo ? 'turbo-spin' : 'spinning'), i * 80));
 
+    // ৩. সার্ভারে ডাটা পাঠানো
     const formData = new FormData();
     formData.append('user_id', php_user_id);
-    formData.append('bet', betToSend); // এখানে currentBet এর বদলে betToSend হবে
-formData.append('current_bet_val', currentBet); 
+    formData.append('bet', betToPay); // এখানে অবশ্যই betToPay পাঠাতে হবে
+    formData.append('current_bet_val', currentBet);
+
     try {
         const res = await fetch('spin.php', { method: 'POST', body: formData });
         const data = await res.json();
@@ -62,6 +69,7 @@ formData.append('current_bet_val', currentBet);
         resetSpin();
     }
 }
+
 // ৬৬ নম্বর লাইন থেকে এই নতুন stopReels এবং Cascade লজিক বসান
 async function stopReels(data) {
     reels.forEach((reel, i) => {

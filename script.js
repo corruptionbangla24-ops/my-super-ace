@@ -122,5 +122,44 @@ document.getElementById('bet-plus').onclick = () => { if(!isSpinning) { currentB
 document.getElementById('bet-minus').onclick = () => { if(!isSpinning && currentBet > 0.5) { currentBet -= 0.5; updateUI(); } };
 document.getElementById('turbo-btn').onclick = function() { isTurbo = !isTurbo; this.classList.toggle('active'); };
 document.getElementById('auto-btn').onclick = function() { isAuto = !isAuto; this.classList.toggle('active'); if(isAuto && !isSpinning) startSpin(); };
+// বাটন ইভেন্ট হ্যান্ডলারসমূহ
+// ১. স্পিন বাটন
+document.getElementById('spin-trigger').onclick = startSpin;
 
+// ২. বেট বাড়ানোর বাটন (+ ১০ করে বাড়বে)
+document.getElementById('bet-plus').onclick = () => { 
+    clickSound.play(); 
+    if(!isSpinning && currentBet < 1000) { 
+        currentBet += 10; 
+        updateUI(); 
+    } 
+};
+
+// ৩. বেট কমানোর বাটন (- ১০ করে কমবে)
+document.getElementById('bet-minus').onclick = () => { 
+    clickSound.play(); 
+    if(!isSpinning && currentBet > 10) { 
+        currentBet -= 10; 
+        updateUI(); 
+    } 
+};
+
+// ৪. টার্বো মোড বাটন
+document.getElementById('turbo-btn').onclick = function() { 
+    clickSound.play(); 
+    isTurbo = !isTurbo; 
+    this.classList.toggle('active'); 
+};
+
+// ৫. অটো স্পিন বাটন
+document.getElementById('auto-btn').onclick = function() { 
+    clickSound.play(); 
+    isAuto = !isAuto; 
+    this.classList.toggle('active'); 
+    if(isAuto && !isSpinning) startSpin(); 
+};
+
+// গেমটি শুরু করা (এটি একদম শেষ লাইনে থাকবে)
 init();
+
+

@@ -74,12 +74,13 @@ async function startSpin() {
 // ৪. রীল থামানো এবং ফলাফল দেখানো
 function stopReels(serverData) {
     reels.forEach((reel, index) => {
+              // ৭৭ নম্বর লাইন থেকে এটি বসান
+        let stopDelay = isTurbo ? (index * 20) : (index * 150);
         setTimeout(() => {
             reel.classList.remove('spinning', 'turbo-spin');
             stopSound.currentTime = 0;
             stopSound.play().catch(() => {});
 
-            // সার্ভার থেকে আসা নির্দিষ্ট সিম্বলগুলো বসানো
             const cells = reel.querySelectorAll('.slot-cell');
             serverData.reels[index].forEach((symbol, i) => {
                 cells[i].innerHTML = `<img src="${symbol}">`;
@@ -90,14 +91,14 @@ function stopReels(serverData) {
                 spinSound.pause();
                 checkWinResult(serverData);
                 highlightWinners(serverData);
-// ৯৩ নম্বর লাইনের নিচে এই ২ লাইন বসান
-handleFreeSpins(serverData);
-if (remainingFreeSpins > 0) runFreeSpins();
-
-                if (isAuto) setTimeout(startSpin, 1000);
+                handleFreeSpins(serverData);
+                if (remainingFreeSpins > 0) runFreeSpins();
+                if (isAuto && remainingFreeSpins === 0) setTimeout(startSpin, 1000);
             }
-        }, index * 150);
+        }, stopDelay);
     });
+}
+  
 }
 
 // ৫. উইন লজিক এবং সাউন্ড কন্ট্রোল

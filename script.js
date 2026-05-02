@@ -256,6 +256,14 @@ document.getElementById('auto-btn').onclick = function() {
     this.classList.toggle('active'); 
     if(isAuto && !isSpinning) startSpin(false); 
 };
+function updateMultiplierUI() {
+    // সব আইটেম থেকে active ক্লাস মুছে ফেলা
+    document.querySelectorAll('.m-item').forEach(el => el.classList.remove('active'));
+    
+    // বর্তমান মাল্টিপ্লায়ারটিকে হাইলাইট করা
+    const activeItem = document.getElementById('m' + currentMultiplier);
+    if (activeItem) activeItem.classList.add('active');
+}
 
 
 init();

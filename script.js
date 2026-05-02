@@ -21,13 +21,15 @@ function init() {
         }
     });
 }
-
 async function startSpin() {
     if (isSpinning) return;
 
-    // ফ্রি স্পিন চেক
+    let betToSend = currentBet; // ডিফল্ট বেট
+
+    // ফ্রি স্পিন থাকলে টাকা কাটবে না
     if (freeSpinsRemaining > 0) {
         freeSpinsRemaining--;
+        betToSend = 0; // সার্ভারে ০ বেট পাঠাবে যাতে টাকা না কাটে
         updateFreeSpinUI();
     } else {
         if (balance < currentBet) {
@@ -35,7 +37,7 @@ async function startSpin() {
             return;
         }
     }
-    
+
     isSpinning = true;
     document.getElementById('spin-trigger').disabled = true;
     document.getElementById('win').innerText = "0.00";
@@ -45,7 +47,7 @@ async function startSpin() {
 
     const formData = new FormData();
     formData.append('user_id', php_user_id);
-    formData.append('bet', currentBet);
+    formData.append('bet', betToSend); // এখানে currentBet এর বদলে betToSend হবে
 
     try {
         const res = await fetch('spin.php', { method: 'POST', body: formData });

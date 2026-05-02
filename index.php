@@ -18,7 +18,7 @@ if($user_id > 0){
 </head>
 <body>
 <div class="game-container">
-    <div class="slot-machine">
+  <div id="coin-container"></div>  
         <!-- ২১ নম্বর লাইনের ঠিক নিচে এটি বসান -->
 <div class="multiplier-bar">
     <span class="m-item active" id="m1">x1</span>
@@ -32,7 +32,7 @@ if($user_id > 0){
     <span class="m-item" id="m9">x9</span>
     <span class="m-item" id="m10">x10</span>
 </div>
-
+<div class="slot-machine">
         <div id="r1" class="reel"></div><div id="r2" class="reel"></div><div id="r3" class="reel"></div><div id="r4" class="reel"></div><div id="r5" class="reel"></div>
     </div>
     <div id="big-win-overlay" class="win-popup">0.00</div>
@@ -57,7 +57,7 @@ if($user_id > 0){
         </div>
     </div>
 </div>
-<div id="coin-container"></div>
+
 <script> 
     var php_user_id = "<?php echo $user_id; ?>"; 
     var php_initial_balance = <?php echo $display_balance; ?>; 

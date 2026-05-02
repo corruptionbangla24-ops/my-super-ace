@@ -152,8 +152,37 @@ function highlightWinners(serverData) {
         }, 3000);
     }
 }
-// ১৫২ নম্বর লাইনের আগে এটি বসান (ফ্রি স্পিন ইঞ্জিন)
-let remainingFreeSpins = 0;
+// ১৫৬ নম্বর লাইনের আগে এটি বসান (ফ্রি স্পিন ও বিগ উইন লজিক)
+let totalFreeSpinWin = 0;
+let initialFreeSpins = 10;
+
+function showBigWin(amount) {
+    let winText = document.getElementById('big-win-text');
+    let overlay = document.getElementById('big-win-overlay');
+    if (amount > 0 && winText && overlay) {
+        winText.innerText = amount;
+        overlay.style.display = 'block';
+        setTimeout(() => { overlay.style.display = 'none'; }, 2500);
+    }
+}
+
+function showTotalFreeSpinSummary() {
+    document.getElementById('free-spin-info').style.display = 'none';
+    let overlay = document.getElementById('big-win-overlay');
+    let totalText = document.getElementById('total-fs-win');
+    if(overlay && totalText) {
+        document.getElementById('big-win-text').innerText = "CONGRATULATIONS!";
+        document.getElementById('fs-total-val').innerText = totalFreeSpinWin.toFixed(2);
+        overlay.style.display = 'block';
+        totalText.style.display = 'block';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            totalText.style.display = 'none';
+            totalFreeSpinWin = 0;
+        }, 5000);
+    }
+}
+
 
 function handleFreeSpins(serverData) {
     if (serverData.free_spins > 0) {
@@ -165,15 +194,17 @@ function handleFreeSpins(serverData) {
 
 function runFreeSpins() {
     if (remainingFreeSpins > 0) {
+        // কাউন্টার আপডেট
+        document.getElementById('free-spin-info').style.display = 'block';
+        document.getElementById('fs-count').innerText = (initialFreeSpins - remainingFreeSpins + 1) + "/" + initialFreeSpins;
+
         remainingFreeSpins--;
-        console.log("বাকি ফ্রি স্পিন: " + remainingFreeSpins);
-        
-        // ১.৫ সেকেন্ড পর পর অটোমেটিক স্পিন হবে
-        setTimeout(() => {
-            if (!isSpinning) startSpin(); 
-        }, 1500);
+        setTimeout(() => { if (!isSpinning) startSpin(); }, 1500);
+    } else {
+        showTotalFreeSpinSummary(); // শেষ হলে সামারি দেখাবে
     }
 }
+
 
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);

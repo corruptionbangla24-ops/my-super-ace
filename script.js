@@ -131,6 +131,23 @@ function startCoinShower() {
         }, i * 50);
     }
 }
+// বিজয়ী কার্ড হাইলাইট করার লজিক (১৩৪ নম্বর লাইনের আগে বসান)
+function highlightWinners(serverData) {
+    if (serverData.is_win) {
+        const winSymbol = serverData.win_symbol;
+        const allCells = document.querySelectorAll('.slot-cell img');
+        
+        allCells.forEach(img => {
+            if (img.src.includes(winSymbol)) {
+                img.parentElement.classList.add('win-highlight');
+            }
+        });
+
+        setTimeout(() => {
+            document.querySelectorAll('.win-highlight').forEach(el => el.classList.remove('win-highlight'));
+        }, 3000);
+    }
+}
 
 function updateUI() {
     document.getElementById('bal').innerText = balance.toFixed(2);

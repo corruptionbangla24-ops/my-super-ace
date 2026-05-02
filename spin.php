@@ -34,13 +34,19 @@ if ($win_chance <= 30) {
 
 $new_balance = $user['balance'] - $bet + $win_amount;
 $conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
+// ৩৭ থেকে ৫৩ নম্বর লাইনের জায়গায় এটি বসান
 $scatter_count = 0;
-foreach ($reels as $col) {
-    foreach ($col as $sym) {
-        if ($sym === '9.png') $scatter_count++; 
+// যদি বেট ০ এর বেশি হয় (অর্থাৎ মেইন স্পিন), তবেই কেবল নতুন ফ্রি স্পিন পাওয়ার সুযোগ থাকবে
+if ($bet > 0) {
+    foreach ($reels as $col) {
+        foreach ($col as $sym) {
+            if ($sym === '9.png') $scatter_count++; 
+        }
     }
 }
+
 $free_spins_won = ($scatter_count >= 3) ? 10 : 0;
+
 echo json_encode([
     "status" => "success",
     "reels" => $reels,

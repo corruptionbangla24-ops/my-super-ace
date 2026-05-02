@@ -117,19 +117,49 @@ async function handleWinSequence(data) {
     }
 }
 
-function triggerCascade(symbol) {
-    // উইনিং কার্ডগুলো ভ্যানিশ করা
+async function triggerCascade(symbol) {
+    // ১. উইনিং কার্ডগুলো ভ্যানিশ করা (অ্যানিমেশন আগেই দেওয়া আছে)
     document.querySelectorAll('.win-highlight').forEach(el => {
-        el.style.transition = "all 0.5s";
         el.style.transform = "scale(0)";
         el.style.opacity = "0";
     });
 
-    // নতুন স্পিন অটো শুরু করা (টাকা না কেটে)
+    // ২. সার্ভার থেকে নতুন ডাটা আনা (টাকা কাটবে না)
+    const formData = new FormData();
+    formData.append('user_id', php_user_id);
+    formData.append('bet', 0); 
+    formData.append('is_cascade', true);
+    formData.append('current_bet_val', currentBet);
+
+    const res = await fetch('spin.php', { method: 'POST', body: formData });
+    const newData = await res.json();
+
+    // ৩. পুরো রীল না ঘুরিয়ে শুধু উইনিং ঘরগুলোতে নতুন ছবি বসানো
     setTimeout(() => {
-        startSpin(true); // true মানে এটি একটি ক্যাসকেড স্পিন
+        const reelsData = newData.reels;
+        reels.forEach((reel, i) => {
+            const cells = reel.querySelectorAll('.slot-cell');
+            cells.forEach((cell, j) => {
+                if (cell.classList.contains('win-highlight')) {
+                    // শুধুমাত্র জেতা ঘরে নতুন ছবি ওপর থেকে পড়ার ইফেক্ট
+                    cell.classList.remove('win-highlight');
+                    cell.style.opacity = "0";
+                    cell.innerHTML = `<img src="${reelsData[i][j]}" style="transform: translateY(-20px)">`;
+                    
+                    setTimeout(() => {
+                        cell.style.transition = "all 0.3s ease-out";
+                        cell.style.opacity = "1";
+                        cell.querySelector('img').style.transform = "translateY(0)";
+                    }, 50);
+                }
+            });
+        });
+        
+        // ৪. আবার উইন চেক করা (একই স্পিনে বারবার জেতার জন্য)
+        setTimeout(() => handleWinSequence(newData), 500);
     }, 600);
 }
+
 
 function showWinPopup(amount) {
     const winPopup = document.getElementById('big-win-overlay');

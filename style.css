@@ -149,27 +149,26 @@ body {
         filter: brightness(2);
     }
 }
-/* মাল্টিপ্লায়ার বারের প্রফেশনাল ডিজাইন */
+/* মাল্টিপ্লায়ার বারটি পুরো স্ক্রিন জুড়ে সমান করার কোড */
 .multiplier-bar {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around; /* এটি আইটেমগুলোকে সমান দূরত্বে রাখবে */
     align-items: center;
-    background: linear-gradient(180deg, #222, #000);
-    padding: 6px 4px;
-    border-radius: 8px;
-    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 5px;
+    border-radius: 10px;
+    margin-bottom: 10px;
     border: 1px solid #f39c12;
-    box-shadow: 0 0 10px rgba(243, 156, 18, 0.2);
+    width: 100%; /* পুরো চওড়া হবে */
+    box-sizing: border-box;
 }
 
 .m-item {
     flex: 1;
     text-align: center;
-    font-weight: 900;
-    color: #555; /* ইন-অ্যাক্টিভ অবস্থায় কালচে দেখাবে */
-    font-size: 10px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-transform: uppercase;
+    font-weight: bold;
+    color: #555;
+    font-size: 11px;
 }
 
 /* যখন কোনো মাল্টিপ্লায়ার চালু হবে */

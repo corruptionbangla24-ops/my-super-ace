@@ -64,15 +64,21 @@ $win_symbol = "";
         }
     }
 
-    
-
-// ৫. স্ক্যাটার এবং ফ্রি স্পিন লজিক
+    // ৬৯ নম্বর লাইন থেকে এটি বসানো শুরু করুন
+$scatter_roll = rand(1, 1000);
 $scatter_count = 0;
-foreach ($reels as $c) { 
-    foreach ($c as $sm) { 
-        if ($sm === '9.png') $scatter_count++; 
-    } 
+
+// ২% সম্ভাবনা (১০০০ এর মধ্যে ২০) সেট করা হলো
+if ($bet > 0 && $scatter_roll <= 20) {
+    foreach ($reels as $col) {
+        foreach ($col as $sym) {
+            if ($sym === '9.png') $scatter_count++;
+        }
+    }
 }
+
+
+
 $free_spins_won = ($bet > 0 && $scatter_count >= 3) ? 10 : 0;
 // ৭৯ নম্বর লাইন থেকে এটি বসানো শুরু করুন
 $final_win = round($total_win, 2);

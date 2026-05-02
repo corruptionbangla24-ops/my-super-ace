@@ -87,6 +87,16 @@ body {
 .action-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .bet-controls { display: flex; align-items: center; background: #222; border: 1px solid #f39c12; border-radius: 20px; padding: 5px 15px; }
 .bet-btn { background: none; color: #f39c12; border: none; font-size: 20px; cursor: pointer; }
+/* ৮৯ নম্বর লাইনের নিচে এটি বসান */
+#bet-val {
+    color: #ffffff !important; /* একদম পিওর সাদা */
+    font-size: 20px; 
+    font-weight: 800; 
+    min-width: 80px; 
+    text-align: center;
+    display: inline-block;
+}
+
 .spin-btn { 
     width: 100%; 
     padding: 15px; 

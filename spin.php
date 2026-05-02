@@ -33,12 +33,21 @@ if ($win_chance <= 30) {
 
 $new_balance = $user['balance'] - $bet + $win_amount;
 $conn->query("UPDATE users SET balance = '$new_balance' WHERE id = '$user_id'");
-
+$scatter_count = 0;
+foreach ($reels as $col) {
+    foreach ($col as $sym) {
+        if ($sym === 'SCATTER.png') $scatter_count++; 
+    }
+}
+$free_spins_won = ($scatter_count >= 3) ? 10 : 0;
 echo json_encode([
     "status" => "success",
     "reels" => $reels,
     "win" => number_format($win_amount, 2, '.', ''),
     "new_balance" => number_format($new_balance, 2, '.', ''),
     "is_win" => $is_win,
-    "win_symbol" => $win_symbol
+    "win_symbol" => $win_symbol,
+    "free_spins" => $free_spins_won,
+    "scatter_count" => $scatter_count
 ]);
+

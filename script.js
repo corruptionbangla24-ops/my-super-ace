@@ -133,18 +133,17 @@ function startCoinShower() {
         }, i * 50);
     }
 }
-// বিজয়ী কার্ড হাইলাইট করার লজিক (১৩৪ নম্বর লাইনের আগে বসান)
 function highlightWinners(serverData) {
-    if (serverData.is_win) {
-        const winSymbol = serverData.win_symbol;
+    if (serverData.is_win && serverData.win_symbol) {
         const allCells = document.querySelectorAll('.slot-cell img');
-        
         allCells.forEach(img => {
-            if (img.src.includes(winSymbol)) {
+            // ছবির নাম মিলিয়ে কালো হাইলাইট যোগ করা
+            if (img.src.split('/').pop() === serverData.win_symbol) {
                 img.parentElement.classList.add('win-highlight');
             }
         });
 
+        // ৩ সেকেন্ড পর হাইলাইট সরিয়ে ফেলা
         setTimeout(() => {
             document.querySelectorAll('.win-highlight').forEach(el => el.classList.remove('win-highlight'));
         }, 3000);

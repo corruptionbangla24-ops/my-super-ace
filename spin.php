@@ -31,34 +31,39 @@ $total_win = 0;
 $is_win = false;
 $win_symbol = "";
 
-foreach ($symbols as $s) {
-    if ($s === '9.png') continue; // ৯ নম্বর স্ক্যাটার আলাদা হিসাব হবে
+    // ৩৪ নম্বর লাইন থেকে এটি বসানো শুরু করুন
+    foreach ($symbols as $s) {
+        if ($s === '9.png') continue;
 
-    $match_count = 0;
-    $ways = 1;
+        $match_count = 0;
+        $ways = 1;
 
-    for ($r = 0; $r < 5; $r++) {
-        $count_in_reel = 0;
-        foreach ($reels[$r] as $sym_in_box) {
-            if ($sym_in_box === $s) $count_in_reel++;
+        for ($r = 0; $r < 5; $r++) {
+            $count_in_reel = 0;
+            foreach ($reels[$r] as $sym_in_box) {
+                if ($sym_in_box === $s) $count_in_reel++;
+            }
+            
+            if ($count_in_reel > 0) {
+                $match_count++;
+                $ways *= $count_in_reel;
+            } else {
+                break; 
+            }
         }
-        
-        if ($count_in_reel > 0) {
-            $match_count++;
-            $ways *= $count_in_reel;
-        } else {
-            break; // ধারাবাহিকতা না থাকলে থামবে
+
+        // ৩টি রীল বা তার বেশি মিললে উইন হবে
+        if ($match_count >= 3) {
+            // ফ্রি স্পিন চলাকালীন (বেট যখন ০) জেতার অংক বাড়িয়ে দেওয়া হলো
+            $multi_bet = ($bet > 0) ? $bet : 10; // ফ্রি স্পিনে বেট ১০ ধরে হিসাব হবে
+            $multipliers = [3 => 0.5, 4 => 2.0, 5 => 10.0]; 
+            
+            $total_win += ($multi_bet * $multipliers[$match_count]) * $ways;
+            $is_win = true;
+            $win_symbol = $s;
         }
     }
 
-    // অন্তত ৩টি রীলে ধারাবাহিকভাবে থাকলে উইন
-    if ($match_count >= 3) {
-        $multipliers = [3 => 0.4, 4 => 1.5, 5 => 8.0]; // ৫টি মিললে বড় উইন
-        $total_win += ($bet * $multipliers[$match_count]) * $ways;
-        $is_win = true;
-        $win_symbol = $s;
-    }
-}
 
 // ৫. স্ক্যাটার এবং ফ্রি স্পিন লজিক
 $scatter_count = 0;

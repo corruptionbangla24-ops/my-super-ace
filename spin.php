@@ -8,7 +8,8 @@ $bet = floatval($_POST['bet'] ?? 0);
 $res = $conn->query("SELECT balance FROM users WHERE id = '$user_id'");
 $user = $res->fetch_assoc();
 
-if (!$user || $user['balance'] < $bet) {
+if (!$user || ($bet > 0 && $user['balance'] < $bet)) {
+
     echo json_encode(["status" => "error", "message" => "Insufficient Balance"]);
     exit;
 }

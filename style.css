@@ -177,3 +177,8 @@ body {
     from { border-color: #000000; filter: brightness(1.2); }
     to { border-color: #333333; filter: brightness(0.8); }
 }
+/* বিগ উইন টেক্সট লাফানোর এনিমেশন (১৭৯ নম্বর লাইনের নিচে) */
+@keyframes bounce {
+    from { transform: scale(1); }
+    to { transform: scale(1.3); }
+}

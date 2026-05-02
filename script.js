@@ -9,7 +9,8 @@ spinSound.loop = true;
 const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3'), document.getElementById('r4'), document.getElementById('r5')];
 let balance = typeof php_initial_balance !== 'undefined' ? php_initial_balance : 0;
 let currentBet = 10.00;
-let isSpinning = false, isTurbo = false, isAuto = false;
+let isSpinning = false, isTurbo = false, isAuto = false, freeSpinsRemaining = 0;
+
 
 function init() {
     reels.forEach(reel => {
@@ -22,10 +23,19 @@ function init() {
 }
 
 async function startSpin() {
-    if (isSpinning || balance < currentBet) {
-        if(balance < currentBet) alert("Insufficient Balance!");
-        return;
+    if (isSpinning) return;
+
+    // ফ্রি স্পিন চেক
+    if (freeSpinsRemaining > 0) {
+        freeSpinsRemaining--;
+        updateFreeSpinUI();
+    } else {
+        if (balance < currentBet) {
+            alert("Insufficient Balance!");
+            return;
+        }
     }
+    
     isSpinning = true;
     document.getElementById('spin-trigger').disabled = true;
     document.getElementById('win').innerText = "0.00";
@@ -73,6 +83,20 @@ function stopReels(data) {
                     highlightWinners(data.win_symbol);
                     (parseFloat(data.win) >= currentBet * 5 ? bigWinSound : winSound).play().catch(()=>{});
                 }
+                // ৮৫ নম্বর লাইনের ঠিক নিচে এটি বসান
+if (data.free_spins > 0) {
+    freeSpinsRemaining += data.free_spins;
+    alert("অভিনন্দন! আপনি ১০টি ফ্রি স্পিন জিতেছেন!");
+    updateFreeSpinUI();
+    if (!isAuto) { 
+        isAuto = true; 
+        document.getElementById('auto-btn').classList.add('active');
+        setTimeout(startSpin, 1200); 
+    }
+}
+
+// এই লাইনের পর যদি অটো-স্পিন লজিক থাকে সেটি থাকবে
+
                 if (isAuto) setTimeout(startSpin, 800);
             }
         }, i * 60);
@@ -92,6 +116,16 @@ function resetSpin() {
     isSpinning = false;
     document.getElementById('spin-trigger').disabled = false;
     reels.forEach(r => r.classList.remove('spinning', 'turbo-spin'));
+}
+function updateFreeSpinUI() {
+    const spinBtn = document.getElementById('spin-trigger');
+    if (freeSpinsRemaining > 0) {
+        spinBtn.innerText = "FREE (" + freeSpinsRemaining + ")";
+        spinBtn.style.background = "linear-gradient(#00ff88, #008855)"; // সবুজ রঙ
+    } else {
+        spinBtn.innerText = "Spin";
+        spinBtn.style.background = "radial-gradient(#ff5e00, #ff0000)"; // আগের লাল রঙ
+    }
 }
 
 document.getElementById('spin-trigger').onclick = startSpin;

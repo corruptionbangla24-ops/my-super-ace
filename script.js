@@ -53,7 +53,7 @@ async function startSpin() {
         const res = await fetch('spin.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.status === 'success') {
-            setTimeout(() => stopReels(data), isTurbo ? 300 : 800);
+            setTimeout(() => stopReels(data), isTurbo ? 150 : 600);
         } else {
             alert(data.message);
             resetSpin();

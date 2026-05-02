@@ -55,14 +55,24 @@ body {
     height: 80%;
     object-fit: contain;
 }
-
-/* ৩. এনিমেশন */
-.spinning { animation: moveDown 0.1s linear infinite; }
-.turbo-spin { animation: moveDown 0.05s linear infinite; }
-@keyframes moveDown {
-    0% { transform: translateY(-10px); }
-    100% { transform: translateY(10px); }
+/* এটি style.css এর এনিমেশন সেকশনে আপডেট করুন */
+.spinning { 
+    animation: rollDown 0.15s linear infinite; 
 }
+
+.turbo-spin { 
+    animation: rollDown 0.05s linear infinite; 
+}
+
+@keyframes rollDown {
+    0% { 
+        transform: translateY(-100%); 
+    }
+    100% { 
+        transform: translateY(0%); 
+    }
+}
+
 
 .win-highlight { 
     border: 2px solid #ffdf1b !important; 

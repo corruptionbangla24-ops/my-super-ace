@@ -19,6 +19,20 @@ if($user_id > 0){
 <body>
 <div class="game-container">
     <div class="slot-machine">
+        <!-- ২১ নম্বর লাইনের ঠিক নিচে এটি বসান -->
+<div class="multiplier-bar">
+    <span class="m-item active" id="m1">x1</span>
+    <span class="m-item" id="m2">x2</span>
+    <span class="m-item" id="m3">x3</span>
+    <span class="m-item" id="m4">x4</span>
+    <span class="m-item" id="m5">x5</span>
+    <span class="m-item" id="m6">x6</span>
+    <span class="m-item" id="m7">x7</span>
+    <span class="m-item" id="m8">x8</span>
+    <span class="m-item" id="m9">x9</span>
+    <span class="m-item" id="m10">x10</span>
+</div>
+
         <div id="r1" class="reel"></div><div id="r2" class="reel"></div><div id="r3" class="reel"></div><div id="r4" class="reel"></div><div id="r5" class="reel"></div>
     </div>
     <div id="big-win-overlay" class="win-popup">0.00</div>

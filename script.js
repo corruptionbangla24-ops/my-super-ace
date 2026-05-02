@@ -188,7 +188,7 @@ function showTotalFreeSpinSummary() {
 function handleFreeSpins(serverData) {
     if (serverData.free_spins > 0) {
         remainingFreeSpins = serverData.free_spins;
-        alert("🎉 অভিনন্দন! আপনি " + remainingFreeSpins + "টি ফ্রি স্পিন পেয়েছেন!");
+        alert("🎉 অভিনন্দন! আপনি  + remainingFreeSpins + টি ফ্রি স্পিন পেয়েছেন!");
         runFreeSpins();
     }
 }

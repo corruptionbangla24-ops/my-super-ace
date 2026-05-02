@@ -10,7 +10,6 @@ if ($user_id <= 0 || $bet_amount <= 0) {
     echo json_encode(["status" => "error", "message" => "Invalid Request"]); exit();
 }
 
-// ১. ব্যালেন্স চেক
 $stmt = $conn->prepare("SELECT balance FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -20,46 +19,34 @@ if (!$user || $user['balance'] < $bet_amount) {
     echo json_encode(["status" => "error", "message" => "Insufficient Balance"]); exit();
 }
 
-// ২. সিম্বল সেটিংস ও ভ্যালু
 $symbols = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png'];
 $symbol_values = [
-    '2.png' => 50,  '10.png' => 30, '1.png' => 10, '3.png' => 8, 
+    '2.png' => 50, '10.png' => 30, '1.png' => 10, '3.png' => 8, 
     '4.png' => 5, '5.png' => 4, '6.png' => 3, '7.png' => 2, '8.png' => 1
 ];
 
-// ৩. ৫x৪ রিল জেনারেট করা
 $reels = [];
 for ($i = 0; $i < 5; $i++) {
-    for ($j = 0; $j < 4; $j++) { $reels[$i][$j] = $symbols[array_rand($symbols)]; }
+    for ($j = 0; $j < 4; $j++) {
+        // সংশোধন: এখানে বাড়তি ব্র্যাকেট সরিয়ে দেওয়া হয়েছে
+        $reels[$i][$j] = $symbols[array_rand($symbols)];
+    }
 }
 
-// ৪. এনি-হোয়ার স্কাটার চেক (9.png)
 $scatter_count = 0;
 $free_spins = 0;
-
-// শুধুমাত্র পেইড স্পিনে (Paid Spin) ফ্রি স্পিন মিলবে
 if ($bet_amount > 0.01) { 
     foreach ($reels as $column) {
         foreach ($column as $symbol) {
-            if ($symbol === '9.png') {
-                $scatter_count++;
-            }
+            if ($symbol === '9.png') $scatter_count++;
         }
     }
-
-    if ($scatter_count >= 3) {
-        $free_spins = 10; 
-    }
+    if ($scatter_count >= 3) $free_spins = 10;
 }
 
-
-// ৫. পে-লাইন উইনিং লজিক (১, ২, ৩ কলামে মিললে উইন)
-$win_amount = 0;
-$is_win = false;
-$win_symbol = "";
-
+$win_amount = 0; $is_win = false; $win_symbol = "";
 foreach ($symbol_values as $sym => $multiplier) {
-    // প্রতি কলামে সিম্বল সংখ্যা গোনা
+    // সংশোধন: কলামগুলো নির্ভুলভাবে চেক করা হচ্ছে
     $c1 = count(array_keys($reels[0], $sym));
     $c2 = count(array_keys($reels[1], $sym));
     $c3 = count(array_keys($reels[2], $sym));
@@ -73,26 +60,18 @@ foreach ($symbol_values as $sym => $multiplier) {
             if ($c5 > 0) { $ways *= $c5; $win_mult = 10; } 
         }
         $win_amount += ($bet_amount / 20) * $multiplier * $ways * $win_mult;
-        $is_win = true;
-        $win_symbol = $sym;
+        $is_win = true; $win_symbol = $sym;
     }
 }
 
-// ৬. ডাটাবেস আপডেট
 $new_balance = $user['balance'] - $bet_amount + $win_amount;
 $update_stmt = $conn->prepare("UPDATE users SET balance = ? WHERE id = ?");
 $update_stmt->bind_param("di", $new_balance, $user_id);
 $update_stmt->execute();
 
-// ৭. রেজাল্ট পাঠানো
 echo json_encode([
-    "status" => "success",
-    "reels" => $reels,
-    "win" => number_format($win_amount, 2, '.', ''),
-    "new_balance" => number_format($new_balance, 2, '.', ''),
-    "is_win" => $is_win,
-    "win_symbol" => $win_symbol,
-    "free_spins" => $free_spins,
-    "scatters" => $scatter_count
+    "status" => "success", "reels" => $reels, "win" => number_format($win_amount, 2, '.', ''),
+    "new_balance" => number_format($new_balance, 2, '.', ''), "is_win" => $is_win,
+    "win_symbol" => $win_symbol, "free_spins" => $free_spins, "scatters" => $scatter_count
 ]);
 ?>

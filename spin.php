@@ -30,8 +30,9 @@ for ($i = 0; $i < 5; $i++) {
 $total_win = 0;
 $is_win = false;
 $win_symbol = "";
-
     // ৩৪ নম্বর লাইন থেকে এটি বসানো শুরু করুন
+    $current_bet_val = floatval($_POST['current_bet_val'] ?? 10);
+
     foreach ($symbols as $s) {
         if ($s === '9.png') continue;
 
@@ -52,18 +53,18 @@ $win_symbol = "";
             }
         }
 
-        // ৩টি রীল বা তার বেশি মিললে উইন হবে
         if ($match_count >= 3) {
-            // ফ্রি স্পিন চলাকালীন (বেট যখন ০) জেতার অংক বাড়িয়ে দেওয়া হলো
-            $multi_bet = ($bet > 0) ? $bet : 10; // ফ্রি স্পিনে বেট ১০ ধরে হিসাব হবে
+            // ফ্রি স্পিন হলে (বেট ০) অরিজিনাল বেট ভ্যালু দিয়ে উইন গুণ হবে
+            $actual_bet = ($bet > 0) ? $bet : $current_bet_val;
             $multipliers = [3 => 0.5, 4 => 2.0, 5 => 10.0]; 
             
-            $total_win += ($multi_bet * $multipliers[$match_count]) * $ways;
+            $total_win += ($actual_bet * $multipliers[$match_count]) * $ways;
             $is_win = true;
             $win_symbol = $s;
         }
     }
 
+    
 
 // ৫. স্ক্যাটার এবং ফ্রি স্পিন লজিক
 $scatter_count = 0;

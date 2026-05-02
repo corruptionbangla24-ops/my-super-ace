@@ -35,16 +35,23 @@ for ($i = 0; $i < 5; $i++) {
 
 // ৪. এনি-হোয়ার স্কাটার চেক (9.png)
 $scatter_count = 0;
-foreach ($reels as $column) {
-    foreach ($column as $symbol) {
-        if ($symbol === '9.png') $scatter_count++;
+$free_spins = 0;
+
+// শুধুমাত্র পেইড স্পিনে (Paid Spin) ফ্রি স্পিন মিলবে
+if ($bet_amount > 0.01) { 
+    foreach ($reels as $column) {
+        foreach ($column as $symbol) {
+            if ($symbol === '9.png') {
+                $scatter_count++;
+            }
+        }
+    }
+
+    if ($scatter_count >= 3) {
+        $free_spins = 10; 
     }
 }
 
-$free_spins = 0;
-if ($scatter_count >= 3) {
-    $free_spins = 10; // ৩ বা তার বেশি স্কাটারে ১০ ফ্রি স্পিন
-}
 
 // ৫. পে-লাইন উইনিং লজিক (১, ২, ৩ কলামে মিললে উইন)
 $win_amount = 0;

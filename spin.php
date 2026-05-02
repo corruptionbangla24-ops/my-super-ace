@@ -5,6 +5,9 @@ header('Content-Type: application/json');
 // ১. ইনপুট ডাটা নেওয়া
 $user_id = $_POST['user_id'] ?? 0;
 $bet = floatval($_POST['bet'] ?? 0);
+// ৮ নম্বর লাইনে এটি বসান
+$multiplier = intval($_POST['multiplier'] ?? 1);
+$current_bet_val = floatval($_POST['current_bet_val'] ?? 10);
 
 // ২. ইউজার ব্যালেন্স চেক করা
 $res = $conn->query("SELECT balance FROM users WHERE id = '$user_id'");
@@ -82,7 +85,9 @@ $free_spins_won = ($scatter_count >= 3) ? 10 : 0;
 
 
 // ৭৯ নম্বর লাইন থেকে এটি বসানো শুরু করুন
-$final_win = round($total_win, 2);
+
+// ৮৮ নম্বর লাইনের জায়গায় এটি বসান
+$final_win = round($total_win * $multiplier, 2);
 
 if ($bet > 0) {
     // সাধারণ স্পিনে টাকা কাটবে এবং উইন যোগ হবে

@@ -128,12 +128,36 @@ async function handleWinSequence(data) {
     }
 }
 
-async function triggerCascade(symbol) {
-    // ১. উইনিং কার্ডগুলো ভ্যানিশ করা (অ্যানিমেশন আগেই দেওয়া আছে)
-    document.querySelectorAll('.win-highlight').forEach(el => {
-        el.style.transform = "scale(0)";
-        el.style.opacity = "0";
+async function triggerCascade(data) {
+    const reels = document.querySelectorAll('.reel');
+    
+    reels.forEach((reel) => {
+        // ১. ওই রীলের উইনিং কার্ডগুলো খুঁজে বের করা
+        const winningCards = reel.querySelectorAll('.win-highlight');
+        let removedCount = winningCards.length;
+
+        // ২. উইনিং কার্ডগুলো মুছে ফেলা
+        winningCards.forEach(card => {
+            card.style.transform = "scale(0)";
+            card.style.opacity = "0";
+            setTimeout(() => card.remove(), 300);
+        });
+
+        // ৩. ঠিক যতগুলো কার্ড মুছেছে, ততগুলো নতুন কার্ড উপরে যোগ করা
+        if (removedCount > 0) {
+            setTimeout(() => {
+                for (let i = 0; i < removedCount; i++) {
+                    const newImg = images[Math.floor(Math.random() * images.length)];
+                    const newCard = document.createElement('div');
+                    newCard.className = 'slot-cell';
+                    newCard.innerHTML = `<img src="${newImg}">`;
+                    reel.prepend(newCard); // নতুন কার্ড রীলের একদম উপরে বসবে
+                }
+            }, 400);
+        }
     });
+}
+
 
     // ২. সার্ভার থেকে নতুন ডাটা আনা (টাকা কাটবে না)
     const formData = new FormData();

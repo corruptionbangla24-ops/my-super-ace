@@ -62,7 +62,8 @@ for ($s = 0; $s < $batch_size; $s++) {
             $win_amount += count($matches) * 5; 
             foreach($matches as $m) {
                 // ইউনিক আইডি দিয়ে পজিশন সেভ করা যাতে ডুপ্লিকেট না হয়
-                $temp_win_positions[$m[0].'-'.$m[1]] = $m;
+                $temp_win_positions[$m[0].'-'.$m[1]] = ['c' => $m[0], 'r' => $m[1]];
+
             }
         }
     }

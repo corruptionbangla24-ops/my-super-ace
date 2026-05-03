@@ -1,5 +1,4 @@
-let queue = [];
-let isSpinning = false, isTurbo = false;
+let queue = [], isSpinning = false, isTurbo = false;
 
 async function loadBatch() {
     let r = await fetch(`spin_generator.php?uid=${userId}`);
@@ -7,62 +6,41 @@ async function loadBatch() {
     queue = d.results;
 }
 
-document.getElementById('spin').onclick = async () => {
-    if (isSpinning) return;
-    if (queue.length === 0) await loadBatch();
-    
+async function handleSpin() {
+    if (isSpinning || queue.length === 0) return;
     isSpinning = true;
     let data = queue.shift();
-    let reels = document.querySelectorAll('.reel');
     
-    reels.forEach(r => r.classList.add('blur'));
-    
-       setTimeout(() => {
-        // ১. রীল রেন্ডার করা এবং প্রতিটি সেলে আইডি দেওয়া
-        data.reels.forEach((col, i) => {
-            let el = document.getElementById(`reel-${i}`);
-            el.innerHTML = col.map((c, idx) => `
-                <div class="cell ${c.g ? 'golden' : ''}" id="c-${i}-${idx}">
-                    <img src="${c.s}">
-                </div>
-            `).join('');
-        });
-               // সঠিক কার্ড হাইলাইট এবং ভ্যানিশ করার প্রো-লজিক
-        if (data.win_pos && data.win_pos.length > 0) {
-            data.win_pos.forEach(pos => {
-                // PHP থেকে আসা c (column) এবং r (row) ব্যবহার করা
-                let cell = document.getElementById(`c-${pos.c}-${pos.r}`);
-                
-                if (cell) {
-                    cell.classList.add('win-highlight');
-                    
-                    // ০.৫ সেকেন্ড পর কার্ড ভ্যানিশ হওয়া
-                    setTimeout(() => {
-                        cell.style.transition = "all 0.3s ease";
-                        cell.style.transform = "scale(0)";
-                        cell.style.opacity = "0";
-                    }, 500);
-                }
-            });
-        }
- 
+    // রীল রেন্ডার
+    data.reels.forEach((col, i) => {
+        let el = document.getElementById(`reel-${i}`);
+        el.innerHTML = col.map((c, j) => `<div class="cell ${c.g?'golden':''}" id="c-${i}-${j}"><img src="${c.s}"></div>`).join('');
+    });
 
-                
-
-        reels.forEach(r => r.classList.remove('blur'));
-        document.getElementById('bal').innerText = data.bal;
-        document.getElementById('win').innerText = data.win;
-        isSpinning = false;
+    if (data.win_pos.length > 0) {
+        // ১. হাইলাইট
+        data.win_pos.forEach(p => document.getElementById(`c-${p.c}-${p.r}`)?.classList.add('win-highlight'));
         
-        if (queue.length < 5) loadBatch();
-    }, isTurbo ? 50 : 600);
- 
-};
+        await new Promise(r => setTimeout(r, 600));
 
-document.getElementById('turbo').onclick = function() {
-    isTurbo = !isTurbo;
-    this.innerText = isTurbo ? "TURBO ON" : "TURBO OFF";
-    this.style.background = isTurbo ? "green" : "#333";
-};
+        // ২. ভ্যানিশ ও গ্র্যাভিটি (Gravity Logic)
+        data.win_pos.forEach(p => {
+            let cell = document.getElementById(`c-${p.c}-${p.r}`);
+            if (cell) cell.style.transform = "scale(0)";
+        });
 
+        await new Promise(r => setTimeout(r, 400));
+        
+        // ৩. রিফিল (উপরের কার্ড নিচে নামা)
+        data.win_pos.forEach(p => document.getElementById(`c-${p.c}-${p.r}`)?.remove());
+        // এখানে নতুন কার্ড যোগ করার লজিক...
+    }
+
+    document.getElementById('bal-val').innerText = data.bal;
+    document.getElementById('win-amount').innerText = data.win;
+    isSpinning = false;
+    if (queue.length < 5) loadBatch();
+}
+
+document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();

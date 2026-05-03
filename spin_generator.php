@@ -66,9 +66,11 @@ for ($s = 0; $s < $batch_size; $s++) {
     
     $results[] = [
         'reels' => $reels,
-        'bal' => number_format($current_balance, 2, '.', ''),
-        'win' => number_format($win_amount, 2, '.', '')
+                'bal' => number_format($current_balance, 2, '.', ''),
+        'win' => number_format($win_amount, 2, '.', ''),
+        'win_pos' => $win_positions // এই লাইনটি যোগ করুন
     ];
+
 }
 
 // ৩. ডাটাবেসে নতুন ব্যালেন্স একবারে আপডেট করা (সিকিউরিটির জন্য)

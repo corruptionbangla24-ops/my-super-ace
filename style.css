@@ -26,3 +26,29 @@ body { background: #0a0a0a; color: white; font-family: sans-serif; display: flex
 
 #spin-btn { width: 100%; padding: 15px; background: radial-gradient(#ff0000, #800); color: white; border: none; font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 15px rgba(255,0,0,0.4); }
 #spin-btn:disabled { background: #555; cursor: not-allowed; }
+/* ১. কার্ড ওপর থেকে পড়ার এনিমেশন */
+.cell-fall {
+    animation: superDrop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes superDrop {
+    0% { 
+        transform: translateY(-350px); /* ৪টি কার্ডের সমান ওপরে থাকবে */
+        opacity: 0; 
+    }
+    100% { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+
+/* ২. স্পিন করার সময় রীল কাঁপানোর ইফেক্ট */
+.reel-spinning {
+    filter: blur(3px);
+    animation: shake 0.1s infinite alternate;
+}
+
+@keyframes shake {
+    from { transform: translateY(-5px); }
+    to { transform: translateY(5px); }
+}

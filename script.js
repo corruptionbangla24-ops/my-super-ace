@@ -30,7 +30,10 @@ document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highligh
 // ২৮ নম্বর লাইনের দিকে (id-টা ভালো করে মিলিয়ে নিন)
 data.win_pos.forEach(p => {
     let cell = document.getElementById(`c-${p.c}-${p.r}`);
-    if (cell) cell.classList.add('win-highlight');
+                    if (cell) {
+                    cell.classList.remove('golden'); 
+                    cell.classList.add('win-highlight');
+                }
 });
 
         

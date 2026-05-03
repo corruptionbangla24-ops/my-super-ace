@@ -12,7 +12,9 @@ async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
     let data = queue.shift();
-    
+    // ১৫ নম্বর লাইনের নিচে এই কোডটি বসান (আগের হাইলাইট মুছতে)
+document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highlight'));
+
     // রীল রেন্ডার করা (id="c-কলাম-রো" ফরম্যাটে)
     data.reels.forEach((col, i) => {
         let el = document.getElementById(`reel-${i}`);

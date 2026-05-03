@@ -18,11 +18,12 @@ document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highligh
     // রীল রেন্ডার করা (id="c-কলাম-রো" ফরম্যাটে)
     data.reels.forEach((col, i) => {
         let el = document.getElementById(`reel-${i}`);
-        el.innerHTML = col.map((c, j) => `
-            <div class="cell ${c.g ? 'golden' : ''}" id="c-${i}-${j}">
+                el.innerHTML = col.map((c, j) => `
+            <div class="cell ${c.g ? 'golden' : ''} cell-fall" id="c-${i}-${j}" style="animation-delay: ${j * 0.05}s">
                 <img src="${c.s}">
             </div>
         `).join('');
+
     });
 
     // ৩. হাইলাইট এবং ক্যাসকেড লজিক

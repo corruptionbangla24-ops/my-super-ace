@@ -80,20 +80,21 @@ function processCascade(winPos) {
             let newImg = Math.floor(Math.random() * 10) + 1 + ".png";
             let newCard = document.createElement('div');
             newCard.className = 'cell';
-            
-            // কার্ডটিকে শুরুতে রীলের অনেক উপরে লুকিয়ে রাখা
-            newCard.style.transform = "translateY(-400px)"; 
-            newCard.style.opacity = "0";
-            newCard.innerHTML = `<img src="${newImg}">`;
-            
-            reel.prepend(newCard); // রীলের একদম উপরে যোগ হবে
+                    // ৮৪ নম্বর লাইনের পর থেকে এভাবে লিখুন
+        newCard.style.transform = "translateY(-400px)"; // কার্ডটিকে শুরুতে ওপরে পাঠাবে
+        newCard.style.opacity = "0"; // শুরুতে অদৃশ্য থাকবে
+        newCard.innerHTML = `<img src="${newImg}">`;
+        
+        reel.prepend(newCard); 
 
-            // চোখের পলকে নিচে পড়ার এনিমেশন শুরু
-            setTimeout(() => {
-                newCard.style.transition = "all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-                newCard.style.transform = "translateY(0)";
-                newCard.style.opacity = "1";
-            }, n * 100); // প্রতিটি কার্ড একে একে পড়ার জন্য ছোট ডিলে
+        // চোখের পলকে নিচে পড়ার এনিমেশন (৯১ নম্বর লাইনের পর)
+        setTimeout(() => {
+            newCard.style.transition = "all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+            newCard.style.transform = "translateY(0)"; // নিচে নেমে আসবে
+            newCard.style.opacity = "1"; // দৃশ্যমান হবে
+        }, n * 100); 
+
+            
         }
     }
 }

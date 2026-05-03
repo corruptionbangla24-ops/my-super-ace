@@ -265,6 +265,31 @@ function updateMultiplierUI() {
     if (activeItem) activeItem.classList.add('active');
 }
 
+async function refillReels() {
+    const reels = document.querySelectorAll('.reel');
+    reels.forEach((reel) => {
+        const cards = Array.from(reel.querySelectorAll('.slot-cell'));
+        
+        // ১. উইনিং কার্ডগুলো খুঁজে বের করে মুছে ফেলা
+        let removedCount = 0;
+        cards.forEach(card => {
+            if (card.classList.contains('win-highlight')) { // আপনার উইন ক্লাসের নাম অনুযায়ী
+                card.style.transform = "scale(0)"; // ছোট হয়ে ভ্যানিশ হবে
+                setTimeout(() => card.remove(), 300);
+                removedCount++;
+            }
+        });
+
+        // ২. নতুন কার্ড উপর থেকে যোগ করা
+        for (let i = 0; i < removedCount; i++) {
+            const newImg = images[Math.floor(Math.random() * images.length)];
+            const newCard = document.createElement('div');
+            newCard.className = 'slot-cell';
+            newCard.innerHTML = `<img src="${newImg}">`;
+            reel.prepend(newCard); // রীলের একদম উপরে নতুন কার্ড ঢুকবে
+        }
+    });
+}
 
 init();
 

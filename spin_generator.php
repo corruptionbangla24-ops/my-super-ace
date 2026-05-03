@@ -36,11 +36,34 @@ for ($s = 0; $s < $batch_size; $s++) {
         }
         $reels[] = $column;
     }
+    // --- উইন ক্যালকুলেশন শুরু ---
+    $win_amount = 0;
+    $win_positions = []; // কোন কোন কার্ড মিলল তার লিস্ট
 
-    // উইন ক্যালকুলেশন (আপাতত র‍্যান্ডম উইন দিচ্ছি, পরে আমরা অরিজিনাল লজিক বসাবো)
-    $win_amount = (rand(1, 100) > 80) ? rand(20, 100) : 0; 
+    for ($r = 0; $r < 4; $r++) {
+        $first_symbol = $reels[0][$r]['s']; // ১ম কলামের কার্ড
+        $matches = [[0, $r]];
+
+        for ($c = 1; $c < 5; $c++) {
+            $found_in_col = false;
+            for ($row_idx = 0; $row_idx < 4; $row_idx++) {
+                if ($reels[$c][$row_idx]['s'] === $first_symbol || $reels[$c][$row_idx]['s'] === 'wild.png') {
+                    $matches[] = [$c, $row_idx];
+                    $found_in_col = true;
+                }
+            }
+            if (!$found_in_col) break;
+        }
+
+        if (count($matches) >= 3) {
+            $win_amount += count($matches) * 2; // প্রতিটি মিলের জন্য ২ টাকা উইন
+            $win_positions = array_merge($win_positions, $matches);
+        }
+    }
     $current_balance += $win_amount;
+    // --- উইন ক্যালকুলেশন শেষ ---
 
+    
     $results[] = [
         'reels' => $reels,
         'bal' => number_format($current_balance, 2, '.', ''),

@@ -273,12 +273,13 @@ async function refillReels() {
         // ১. উইনিং কার্ডগুলো খুঁজে বের করে মুছে ফেলা
         let removedCount = 0;
         cards.forEach(card => {
-            if (card.classList.contains('win-highlight')) { // আপনার উইন ক্লাসের নাম অনুযায়ী
-                card.style.transform = "scale(0)"; // ছোট হয়ে ভ্যানিশ হবে
-                setTimeout(() => card.remove(), 300);
+                 cards.forEach(card => {
+            if (card.classList.contains('win-highlight')) { 
+                card.remove(); // এটি সাথে সাথে মুছে ফেলবে
                 removedCount++;
             }
         });
+   
 
         // ২. নতুন কার্ড উপর থেকে যোগ করা
         for (let i = 0; i < removedCount; i++) {

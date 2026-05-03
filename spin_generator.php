@@ -36,42 +36,41 @@ for ($s = 0; $s < $batch_size; $s++) {
         }
         $reels[] = $column;
     }
-           // --- ১০০% নিখুঁত উইন ক্যালকুলেশন ---
+              // --- ৩৯ থেকে ৭৩ নম্বর লাইনের জায়গায় এই কোডটুকু বসান ---
     $win_amount = 0;
     $temp_win_positions = [];
 
-    for ($r = 0; $row_val = 0, $r < 4; $r++) {
+    // প্রতি রো এর জন্য উইন চেক করা (সুপার এস স্টাইল)
+    for ($r = 0; $r < 4; $r++) {
         $symbol = $reels[0][$r]['s']; // ১ম কলামের সিম্বল
         $matches = [[0, $r]];
 
         for ($c = 1; $c < 5; $c++) {
             $found_in_col = false;
             for ($row_idx = 0; $row_idx < 4; $row_idx++) {
-                // কার্ড মিললে বা wild হলে
+                // একই সিম্বল অথবা wild চেক
                 if ($reels[$c][$row_idx]['s'] === $symbol || $reels[$c][$row_idx]['s'] === 'wild.png') {
                     $matches[] = [$c, $row_idx];
                     $found_in_col = true;
                 }
             }
-            // যদি এই কলামে কোনো মিল না থাকে, তবে আর পরের কলাম চেক করার দরকার নেই
             if (!$found_in_col) break;
         }
 
-        // শুধুমাত্র ৩টি বা তার বেশি মিললেই উইন হিসেবে ধরা হবে
+        // ৩টি বা তার বেশি মিললে তবেই উইন ধরবে
         if (count($matches) >= 3) {
             $win_amount += count($matches) * 5; 
             foreach($matches as $m) {
-                // ডুপ্লিকেট পজিশন এড়ানোর জন্য ইউনিক কি (Key) ব্যবহার
-                $temp_win_positions[$m[0] . '-' . $m[1]] = $m;
+                // ইউনিক আইডি দিয়ে পজিশন সেভ করা যাতে ডুপ্লিকেট না হয়
+                $temp_win_positions[$m[0].'-'.$m[1]] = $m;
             }
         }
     }
 
     $win_positions = array_values($temp_win_positions);
     $current_balance += $win_amount; 
-    // --- ক্যালকুলেশন শেষ ---
+    // --- উইন ক্যালকুলেশন শেষ ---
  
-
 
     
     $results[] = [

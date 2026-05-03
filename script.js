@@ -73,3 +73,8 @@ async function handleSpin() {
     isSpinning = false;
     if (queue.length < 5) loadBatch();
 }
+// ৭৫ নম্বর লাইনের নিচে এটি বসান
+document.getElementById('spin-btn').onclick = handleSpin;
+
+// প্রথমবার গেম লোড হলে ডাটা আনা শুরু করবে
+loadBatch();

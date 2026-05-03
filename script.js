@@ -61,32 +61,44 @@ data.win_pos.forEach(p => {
     isSpinning = false;
     if (queue.length < 5) loadBatch();
 }
-
-// ৫. কার্ড নিচে নামানোর আসল ম্যাজিক
 function processCascade(winPos) {
-    // প্রতি রীলের জন্য চেক
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);
-        let cells = Array.from(reel.querySelectorAll('.cell'));
+        let currentCells = Array.from(reel.querySelectorAll('.cell'));
         
-        // উইনিং কার্ডগুলো রিমুভ করা
-        cells.forEach(cell => {
+        // ১. উধাও হওয়া কার্ডগুলো রিমুভ করা
+        currentCells.forEach(cell => {
             if (cell.style.opacity === "0") cell.remove();
         });
 
-        // নতুন কার্ড ওপর থেকে ঢোকানো
+        // ২. কতটি কার্ড উধাও হয়েছে তা হিসেব করা
         let remaining = reel.querySelectorAll('.cell').length;
         let needed = 4 - remaining;
 
+        // ৩. নতুন কার্ডগুলো রীলের মাথায় যোগ করা এবং নিচে পড়ার এনিমেশন দেওয়া
         for (let n = 0; n < needed; n++) {
             let newImg = Math.floor(Math.random() * 10) + 1 + ".png";
             let newCard = document.createElement('div');
             newCard.className = 'cell';
+            
+            // কার্ডটিকে শুরুতে রীলের অনেক উপরে লুকিয়ে রাখা
+            newCard.style.transform = "translateY(-400px)"; 
+            newCard.style.opacity = "0";
             newCard.innerHTML = `<img src="${newImg}">`;
-            reel.prepend(newCard); // মাথায় যোগ হবে
+            
+            reel.prepend(newCard); // রীলের একদম উপরে যোগ হবে
+
+            // চোখের পলকে নিচে পড়ার এনিমেশন শুরু
+            setTimeout(() => {
+                newCard.style.transition = "all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+                newCard.style.transform = "translateY(0)";
+                newCard.style.opacity = "1";
+            }, n * 100); // প্রতিটি কার্ড একে একে পড়ার জন্য ছোট ডিলে
         }
     }
 }
+
+
 
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();

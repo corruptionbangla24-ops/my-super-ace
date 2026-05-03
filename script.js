@@ -28,13 +28,26 @@ document.getElementById('spin').onclick = async () => {
             `).join('');
         });
 
-        // ২. উইনিং পজিশন হাইলাইট করা
+                // ২. সঠিক উইনিং পজিশন হাইলাইট এবং ভ্যানিশ করা
         if (data.win_pos && data.win_pos.length > 0) {
             data.win_pos.forEach(pos => {
-                let cell = document.getElementById(`c-${pos[0]}-${pos[1]}`);
-                if (cell) cell.classList.add('win-highlight');
+                let col = pos[0]; // কলাম
+                let row = pos[1]; // রো
+                let cell = document.getElementById(`c-${col}-${row}`);
+                
+                if (cell) {
+                    cell.classList.add('win-highlight');
+                    
+                    // ০.৫ সেকেন্ড পর কার্ডটি উধাও হবে
+                    setTimeout(() => {
+                        cell.style.transition = "all 0.3s ease";
+                        cell.style.transform = "scale(0)";
+                        cell.style.opacity = "0";
+                    }, 500);
+                }
             });
         }
+
 
         reels.forEach(r => r.classList.remove('blur'));
         document.getElementById('bal').innerText = data.bal;

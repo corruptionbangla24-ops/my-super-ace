@@ -61,7 +61,8 @@ $balance = $user ? $user['balance'] : 0.00;
     <script>
         const userId = <?= $user_id ?>;
         let currentBalance = <?= $balance ?>;
-    </script>
+        <script src="sound_manager.js"></script>
     <script src="script.js"></script>
+
 </body>
 </html>

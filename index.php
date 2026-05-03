@@ -1,67 +1,51 @@
-<?php
-session_start();
-include 'db.php';
-$user_id = $_GET['user'] ?? 0;
-$display_balance = "0.00";
-if($user_id > 0){
-    $res = $conn->query("SELECT balance FROM users WHERE id = '$user_id'");
-    if($row = $res->fetch_assoc()) $display_balance = number_format($row['balance'], 2, '.', '');
-}
-?>
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperAce Ultimate Slot</title>
+    <title>Super Ace Pro - Turbo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="game-container">
-  <div id="coin-container"></div>  
-        <!-- ২১ নম্বর লাইনের ঠিক নিচে এটি বসান -->
-<div class="multiplier-bar">
-    <span class="m-item active" id="m1">x1</span>
-    <span class="m-item" id="m2">x2</span>
-    <span class="m-item" id="m3">x3</span>
-    <span class="m-item" id="m4">x4</span>
-    <span class="m-item" id="m5">x5</span>
-    <span class="m-item" id="m6">x6</span>
-    <span class="m-item" id="m7">x7</span>
-    <span class="m-item" id="m8">x8</span>
-    <span class="m-item" id="m9">x9</span>
-    <span class="m-item" id="m10">x10</span>
-</div>
-<div class="slot-machine">
-        <div id="r1" class="reel"></div><div id="r2" class="reel"></div><div id="r3" class="reel"></div><div id="r4" class="reel"></div><div id="r5" class="reel"></div>
-    </div>
-    <div id="big-win-overlay" class="win-popup">0.00</div>
-    <div class="controls">
-        <div class="status-row">
-            <span>WIN: <b id="win">0.00</b></span>
-            <span>BAL: <b id="bal"><?php echo $display_balance; ?></b></span>
+    <div class="game-container">
+        <!-- মাল্টিপ্লায়ার ডিসপ্লে -->
+        <div class="multiplier-bar">
+            <span id="m1" class="active">x1</span>
+            <span id="m2">x2</span>
+            <span id="m3">x3</span>
+            <span id="m5">x5</span>
         </div>
-        <div class="action-row">
-            <button class="btn-small" id="auto-btn">AUTO</button>
-            <div class="bet-area">
-                <div class="bet-controls">
-                    <button class="bet-btn" id="bet-minus">-</button>
-                    <span id="bet-val">10.00</span>
-                    <button class="bet-btn" id="bet-plus">+</button>
-                </div>
-            </div>
-            <button class="btn-small" id="turbo-btn">TURBO</button>
-        </div>
-        <div class="main-btn-container">
-            <button class="spin-btn" id="spin-trigger">Spin</button>
-        </div>
-    </div>
-</div>
 
-<script> 
-    var php_user_id = "<?php echo $user_id; ?>"; 
-    var php_initial_balance = <?php echo $display_balance; ?>; 
-</script>
-<script src="script.js"></script>
+        <!-- ৫ রীল, ৪ রো এর গ্রিড -->
+        <div class="slot-machine" id="slot-grid">
+            <?php for($i=0; $i<5; $i++): ?>
+                <div class="reel" id="reel-<?php echo $i; ?>">
+                    <?php for($j=0; $j<4; $j++): ?>
+                        <div class="slot-cell"><img src="1.png"></div>
+                    <?php endfor; ?>
+                </div>
+            <?php endfor; ?>
+        </div>
+
+        <!-- কন্ট্রোল প্যানেল -->
+        <div class="controls">
+            <div class="win-display">
+                WIN: <span id="win-amount">0.00</span>
+            </div>
+            
+            <div class="main-buttons">
+                <div class="balance-info">
+                    <small>BALANCE</small>
+                    <div id="balance-val">1000.00</div>
+                </div>
+
+                <!-- টার্বো এবং স্পিন বাটন -->
+                <button id="turbo-btn">TURBO OFF</button>
+                <button id="spin-btn">SPIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -36,38 +36,41 @@ for ($s = 0; $s < $batch_size; $s++) {
         }
         $reels[] = $column;
     }
-        // --- ফ্রেশ উইন ক্যালকুলেশন (ডুপ্লিকেট মুক্ত) ---
+           // --- ১০০% নিখুঁত উইন ক্যালকুলেশন ---
     $win_amount = 0;
     $temp_win_positions = [];
 
-    for ($r = 0; $r < 4; $r++) {
-        $symbol = $reels[0][$r]['s']; // ১ম কলামের কার্ড
+    for ($r = 0; $row_val = 0, $r < 4; $r++) {
+        $symbol = $reels[0][$r]['s']; // ১ম কলামের সিম্বল
         $matches = [[0, $r]];
 
         for ($c = 1; $c < 5; $c++) {
             $found_in_col = false;
             for ($row_idx = 0; $row_idx < 4; $row_idx++) {
+                // কার্ড মিললে বা wild হলে
                 if ($reels[$c][$row_idx]['s'] === $symbol || $reels[$c][$row_idx]['s'] === 'wild.png') {
                     $matches[] = [$c, $row_idx];
                     $found_in_col = true;
                 }
             }
+            // যদি এই কলামে কোনো মিল না থাকে, তবে আর পরের কলাম চেক করার দরকার নেই
             if (!$found_in_col) break;
         }
 
+        // শুধুমাত্র ৩টি বা তার বেশি মিললেই উইন হিসেবে ধরা হবে
         if (count($matches) >= 3) {
             $win_amount += count($matches) * 5; 
             foreach($matches as $m) {
-                // পজিশনকে ইউনিক আইডি হিসেবে সেভ করা (যাতে ডুপ্লিকেট না হয়)
+                // ডুপ্লিকেট পজিশন এড়ানোর জন্য ইউনিক কি (Key) ব্যবহার
                 $temp_win_positions[$m[0] . '-' . $m[1]] = $m;
             }
         }
     }
 
-    // ফাইনাল পজিশন লিস্ট তৈরি
     $win_positions = array_values($temp_win_positions);
     $current_balance += $win_amount; 
-    // --- উইন ক্যালকুলেশন শেষ ---
+    // --- ক্যালকুলেশন শেষ ---
+ 
 
 
     

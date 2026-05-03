@@ -24,27 +24,36 @@ for ($s = 0; $s < 50; $s++) {
         $reels[] = $col;
     }
 
-    // উইন চেক
+        // --- ২৭ থেকে ৪৭ নম্বর লাইনের জায়গায় এই কোডটুকু বসান ---
     $win_amount = 0;
     $win_pos = [];
+    
     for ($r = 0; $r < 4; $r++) {
-        $sym = $reels[0][$r]['s'];
+        $sym = $reels[0][$r]['s']; // ১ম রীলের সিম্বল
         $match = [[0, $r]];
+        
         for ($c = 1; $c < 5; $c++) {
-            $found = false;
+            $found_in_col = false;
             for ($row = 0; $row < 4; $row++) {
-                if ($reels[$c][$row]['s'] == $sym || $reels[$c][$row]['s'] == 'wild.png') {
+                // একই সিম্বল অথবা wild চেক
+                if ($reels[$c][$row]['s'] === $sym || $reels[$c][$row]['s'] === 'wild.png') {
                     $match[] = [$c, $row];
-                    $found = true;
+                    $found_in_col = true;
                 }
             }
-            if (!$found) break;
+            if (!$found_in_col) break; // মাঝখানে গ্যাপ থাকলে উইন হবে না
         }
+
         if (count($match) >= 3) {
-            $win_amount += count($match) * 5;
-            foreach($match as $m) $win_pos[$m[0].'-'.$m[1]] = ['c' => $m[0], 'r' => $m[1]];
+            $win_amount += count($match) * 5; // আপনার পছন্দমতো উইন অ্যামাউন্ট
+            foreach($match as $m) {
+                // ডুপ্লিকেট পজিশন এড়ানোর জন্য ইউনিক আইডি
+                $win_pos[$m[0].'-'.$m[1]] = ['c' => $m[0], 'r' => $m[1]];
+            }
         }
     }
+    // --- উইন চেক শেষ ---
+
 
     $balance += $win_amount;
     $results[] = [

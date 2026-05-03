@@ -36,19 +36,18 @@ for ($s = 0; $s < $batch_size; $s++) {
         }
         $reels[] = $column;
     }
-    // --- সঠিক উইন ক্যালকুলেশন শুরু (৪০ থেকে ৬৩ লাইন রিপ্লেস করুন) ---
+        // --- ফ্রেশ উইন ক্যালকুলেশন (ডুপ্লিকেট মুক্ত) ---
     $win_amount = 0;
-    $win_positions = [];
+    $temp_win_positions = [];
 
     for ($r = 0; $r < 4; $r++) {
-        $first_symbol = $reels[0][$r]['s']; // ১ম কলামের কার্ড
+        $symbol = $reels[0][$r]['s']; // ১ম কলামের কার্ড
         $matches = [[0, $r]];
 
         for ($c = 1; $c < 5; $c++) {
             $found_in_col = false;
             for ($row_idx = 0; $row_idx < 4; $row_idx++) {
-                // একই কার্ড অথবা wild চেক
-                if ($reels[$c][$row_idx]['s'] === $first_symbol || $reels[$c][$row_idx]['s'] === 'wild.png') {
+                if ($reels[$c][$row_idx]['s'] === $symbol || $reels[$c][$row_idx]['s'] === 'wild.png') {
                     $matches[] = [$c, $row_idx];
                     $found_in_col = true;
                 }
@@ -56,16 +55,17 @@ for ($s = 0; $s < $batch_size; $s++) {
             if (!$found_in_col) break;
         }
 
-        // ৩টি বা তার বেশি মিললে উইন হবে
         if (count($matches) >= 3) {
-            $win_amount += count($matches) * 5; // প্রতি কার্ডের জন্য ৫ টাকা
+            $win_amount += count($matches) * 5; 
             foreach($matches as $m) {
-                $win_positions[] = $m; // পজিশনগুলো লিস্টে রাখা
+                // পজিশনকে ইউনিক আইডি হিসেবে সেভ করা (যাতে ডুপ্লিকেট না হয়)
+                $temp_win_positions[$m[0] . '-' . $m[1]] = $m;
             }
         }
     }
 
-    // গুরুত্বপূর্ণ: এখানে ব্যালেন্স যোগ হচ্ছে
+    // ফাইনাল পজিশন লিস্ট তৈরি
+    $win_positions = array_values($temp_win_positions);
     $current_balance += $win_amount; 
     // --- উইন ক্যালকুলেশন শেষ ---
 

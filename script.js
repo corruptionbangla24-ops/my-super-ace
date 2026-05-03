@@ -27,18 +27,20 @@ document.getElementById('spin').onclick = async () => {
                 </div>
             `).join('');
         });
-
-                // ২. সঠিক উইনিং পজিশন হাইলাইট এবং ভ্যানিশ করা
+        // সঠিক কার্ড হাইলাইট করার জন্য এই কোডটি ব্যবহার করুন
         if (data.win_pos && data.win_pos.length > 0) {
             data.win_pos.forEach(pos => {
-                let col = pos[0]; // কলাম
-                let row = pos[1]; // রো
-                let cell = document.getElementById(`c-${col}-${row}`);
+                // পজিশন ডাটা থেকে কলাম এবং রো আলাদা করা
+                const colIndex = pos[0]; 
+                const rowIndex = pos[1];
+                
+                // আইডি অনুযায়ী সঠিক সেল খুঁজে বের করা
+                let cell = document.getElementById(`c-${colIndex}-${rowIndex}`);
                 
                 if (cell) {
                     cell.classList.add('win-highlight');
                     
-                    // ০.৫ সেকেন্ড পর কার্ডটি উধাও হবে
+                    // ০.৫ সেকেন্ড পর কার্ড ভ্যানিশ (সুপার এস স্টাইল)
                     setTimeout(() => {
                         cell.style.transition = "all 0.3s ease";
                         cell.style.transform = "scale(0)";
@@ -48,6 +50,7 @@ document.getElementById('spin').onclick = async () => {
             });
         }
 
+                
 
         reels.forEach(r => r.classList.remove('blur'));
         document.getElementById('bal').innerText = data.bal;

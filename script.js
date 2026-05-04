@@ -1,27 +1,35 @@
 let queue = [], isSpinning = false, isTurbo = false;
 let freeSpinCount = 0, isFreeMode = false;
 let currentMultiplier = 1;
-const normalMulti = [1, 2, 3, 5], freeMulti = [2, 4, 6, 10];
+const normalMulti = [1, 2, 3, 5];
+const freeMulti = [2, 4, 6, 10];
 
 // ১. ডাটা লোড করা
 async function loadBatch() {
     try {
-        // এই লাইনটিই ফ্রি স্পিনে টাকা কাটা বন্ধ করবে
+        // নিশ্চিত করুন userId ভেরিয়েবলটি আপনার index.php থেকে আসছে
         let url = `spin_generator.php?uid=${userId}${isFreeMode ? '&mode=free' : ''}`;
         let r = await fetch(url);
         let d = await r.json();
-        queue = d.results;
-    } catch (e) { console.log("Load error:", e); }
+        if (d.results) {
+            queue = d.results;
+        }
+    } catch (e) { 
+        console.log("Load error:", e); 
+    }
 }
 
 // ২. মাল্টিপ্লায়ার ডিসপ্লে আপডেট করা
 function updateMultiplierDisplay(level) {
-    document.querySelectorAll('.multiplier-bar span').forEach(s => s.classList.remove('active'));
-    let mElement = document.getElementById(`m${level}`);
+    document.querySelectorAll('.multiplier-bar span').forEach(s => {
+        s.classList.remove('active');
+    });
+    let mElement = document.getElementById('m' + level);
     if (mElement) {
         mElement.classList.add('active');
     }
 }
+
 
 
 // ২. মেইন স্পিন ফাংশন

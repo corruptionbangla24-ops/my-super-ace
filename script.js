@@ -1,4 +1,4 @@
-leteue = [], isSpinning = false, isTurbo = false;
+let queue= [], isSpinning = false, isTurbo = false;
 let freeSpinCount = 0, isFreeMode = false;
 let currentMultiplier = 1; 
 const normalMulti = [1, 2, 3, 5];

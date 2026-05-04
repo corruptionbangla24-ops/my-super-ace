@@ -25,10 +25,10 @@ document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highligh
                 <img src="${c.s}">
             </div>
         `).join('');
-        
+      playS('stop');  
 
     });
-    playS('stop');
+    
 
     // ৩. হাইলাইট এবং ক্যাসকেড লজিক
     if (data.win_pos && data.win_pos.length > 0) {

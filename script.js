@@ -37,9 +37,11 @@ async function handleSpin() {
         
         playS('stop');
 
-        // উইন এবং ক্যাসকেড লজিক
+               // উইন এবং ক্যাসকেড লজিক
         if (data.win_pos && data.win_pos.length > 0) {
             await new Promise(r => setTimeout(r, 500));
+            
+            // ১. হাইলাইট করা
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
                 if (cell) cell.classList.add('win-highlight');
@@ -47,19 +49,23 @@ async function handleSpin() {
             playS('win');
             
             await new Promise(r => setTimeout(r, 1000));
-            // কার্ড উধাও হওয়া এবং ড্রপ সাউন্ড
-            playS('drop');
-            processCascade(data.win_pos);
-        }
+            
+            // ২. কার্ড উধাও করা (ভ্যানিশ)
+            data.win_pos.forEach(p => {
+                let cell = document.getElementById(`c-${p.c}-${p.r}`);
+                if (cell) {
+                    cell.style.transition = "all 0.4s ease";
+                    cell.style.transform = "scale(0)";
+                    cell.style.opacity = "0";
+                }
+            });
 
-        document.getElementById('bal-val').innerText = data.bal;
-        document.getElementById('win-amount').innerText = data.win;
-        
-        isSpinning = false;
-        if (queue.length < 5) loadBatch();
-        
-    }, delay);
-}
+            // ৩. কার্ড ফিলআপ করা (এই লাইনটিই আসল)
+            setTimeout(() => {
+                processCascade();
+            }, 400);
+        }
+ 
 function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);

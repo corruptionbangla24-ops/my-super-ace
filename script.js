@@ -44,7 +44,10 @@ if (isSpinning) return;
     }
    
     isSpinning = true;
-           // ৪৪ থেকে ৫০ নম্বর লাইনের জায়গায় এটি বসান
+    currentMultiplier = isFreeMode ? 2 : 1;
+    updateMultiplierDisplay(currentMultiplier);
+
+           
     if (isFreeMode) {
         freeSpinCount--; // এক এক করে কমাবে
         

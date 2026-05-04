@@ -232,17 +232,32 @@ function startFreeGames() {
         handleSpin();
     }, 1500);
 }
-
 function resetToNormalMode() {
     isFreeMode = false;
+    freeSpinCount = 0;
+    currentMultiplier = 1;
+
+    // ১. মাল্টিপ্লায়ার টেক্সট রিসেট (x1, x2, x3, x5)
     document.getElementById('m1').innerText = "x1";
     document.getElementById('m2').innerText = "x2";
     document.getElementById('m3').innerText = "x3";
     document.getElementById('m5').innerText = "x5";
-    if(document.getElementById('free-spin-info')) {
-        document.getElementById('free-spin-info').style.display = 'none';
+
+    // ২. গ্লো এবং বর্ডার সরিয়ে ফেলা
+    let container = document.querySelector('.game-container');
+    if (container) {
+        container.style.borderColor = "#333";
+        container.style.boxShadow = "none";
     }
+    
+    // ৩. ফ্রি স্পিন কাউন্টার লুকিয়ে ফেলা
+    let fsInfo = document.getElementById('free-spin-info');
+    if (fsInfo) fsInfo.style.display = 'none';
+    
+    updateMultiplierDisplay(1); // x1 কে হাইলাইট করা
+    console.log("গেম এখন সাধারণ মোডে ফিরেছে।");
 }
+
 
 // বাটন কানেক্ট করা (এই লাইনটি খুব জরুরি)
 document.getElementById('spin-btn').onclick = handleSpin;

@@ -41,11 +41,8 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
     background: radial-gradient(circle, #ff0000, #330000) !important;
     border: 2px solid #ffd700 !important;
     box-shadow: 0 0 30px #ff0000 !important;
-    z-index: 100;
 }
-
 @keyframes explode {
     0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); }
     100% { transform: scale(1); opacity: 1; }
 }

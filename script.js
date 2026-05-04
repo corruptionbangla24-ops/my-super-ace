@@ -91,6 +91,19 @@ function processCascade() {
         }
     }
 }
+// ১. নিশ্চিত করুন বাটন আইডি আপনার index.php এর সাথে মিলছে
+const spinBtn = document.getElementById('spin-btn');
 
-document.getElementById('spin-btn').onclick = handleSpin;
-loadBatch();
+if (spinBtn) {
+    spinBtn.onclick = () => {
+        console.log("Spin Clicked!"); // চেক করার জন্য
+        handleSpin();
+    };
+}
+
+// ২. শুরুতে ডাটা লোড করা
+window.onload = () => {
+    loadBatch();
+};
+
+

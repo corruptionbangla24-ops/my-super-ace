@@ -8,11 +8,30 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="multiplier-bar">
-    <span id="m1" class="active">x1</span>
-    <span id="m2">x2</span>
-    <span id="m3">x3</span>
-    <span id="m5">x5</span>
+    <!-- মাল্টিপ্লায়ার বার -->
+    <div class="multiplier-bar">
+        <span id="m1" class="active">x1</span>
+        <span id="m2">x2</span>
+        <span id="m3">x3</span>
+        <span id="m5">x5</span>
+    </div>
+
+    <!-- ৫টি রীলকে এই 'reel-container' এর ভেতরে অবশ্যই রাখতে হবে -->
+    <div class="reel-container">
+        <div class="reel" id="reel-0"></div>
+        <div class="reel" id="reel-1"></div>
+        <div class="reel" id="reel-2"></div>
+        <div class="reel" id="reel-3"></div>
+        <div class="reel" id="reel-4"></div>
+    </div>
+
+    <!-- ব্যালেন্স এবং উইন ইনফো -->
+    <div class="info-row">
+        <div class="box">BALANCE: <span id="balance">0.00</span></div>
+        <div class="box">WIN: <span id="win-amount">0.00</span></div>
+    </div>
+
+    <button id="spin-btn">SPIN</button>
 </div>
 
         <div class="slot-machine">

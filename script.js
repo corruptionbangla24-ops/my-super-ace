@@ -64,11 +64,11 @@ function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);
         let cells = Array.from(reel.querySelectorAll('.cell'));
-        
+
         // ১. উধাও হওয়া কার্ডগুলো রিমুভ করা
-        cells.forEach(c => { 
+        cells.forEach(c => {
             if (c.style.opacity === "0" || c.style.transform === "scale(0)") {
-                c.remove(); 
+                c.remove();
             }
         });
 
@@ -79,7 +79,6 @@ function processCascade() {
         for (let n = 0; n < missing; n++) {
             let newImg = Math.floor(Math.random() * 10 + 1) + ".png";
             let newCard = document.createElement('div');
-            // 'cell-fall' ক্লাসটি নিশ্চিত করবে যে কার্ড ওপর থেকে পড়ছে
             newCard.className = 'cell cell-fall'; 
             newCard.innerHTML = `<img src="${newImg}">`;
             
@@ -88,10 +87,8 @@ function processCascade() {
         }
     }
     // কার্ড পড়ার সাউন্ড
-    playS('drop'); 
+    playS('drop');
 }
-
-
 
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;

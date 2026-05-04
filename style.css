@@ -81,38 +81,49 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
     border: 1px solid white;
 }
 
-/* মোবাইল রেসপন্সিভ স্টাইল */
-@media (max-width: 768px) {
-    .game-container {
-        width: 95% !important; /* স্ক্রিনের দুই পাশে সামান্য জায়গা রেখে পুরোটা দখল করবে */
-        padding: 5px !important;
-    }
+/* মোবাইল রেসপন্সিভ মাস্টার ফিক্স */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* পুরো স্ক্রিন জুড়ে গেমটি থাকবে */
+}
 
-    .reel {
-        margin: 1px !important; /* রীলগুলোর মাঝের গ্যাপ কমিয়ে আনা */
-    }
+.game-container {
+    width: 95vw !important; /* মোবাইলের চওড়া অনুযায়ী অটো সেট হবে */
+    max-width: 450px; /* ডেস্কটপে বড় হয়ে যাবে না */
+    margin: auto;
+    padding: 10px;
+    background: #111;
+    border-radius: 15px;
+}
 
-    .cell {
-        width: 60px !important; /* মোবাইলের জন্য কার্ডের সাইজ ছোট করা */
-        height: 60px !important;
-    }
+/* রীল এবং সেলগুলো মোবাইলে বড় দেখানোর জন্য */
+.reel-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 2px; /* মোবাইলে গ্যাপ কমিয়ে আনা */
+}
 
-    .cell img {
-        width: 50px !important; /* ছবিও ছোট করে দেওয়া */
-        height: 50px !important;
-    }
+.cell {
+    width: 18vw !important; /* স্ক্রিনের অনুপাতে কার্ড বড় হবে */
+    height: 18vw !important;
+    max-width: 80px;
+    max-height: 80px;
+}
 
-    .multiplier-bar span {
-        padding: 5px 8px !important; /* মাল্টিপ্লায়ার বাটন ছোট করা */
-        font-size: 12px !important;
-    }
+.cell img {
+    width: 90%;
+    height: 90%;
+}
 
-    #spin-btn {
-        padding: 10px !important;
-        font-size: 18px !important;
-    }
-
-    .info-row .box div {
-        font-size: 14px !important; /* ব্যালেন্স এবং উইন টেক্সট ছোট করা */
-    }
+/* স্পিন বাটন মোবাইলে বড় এবং স্পষ্ট করার জন্য */
+#spin-btn {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    margin-top: 20px;
 }

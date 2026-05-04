@@ -207,37 +207,32 @@ function processCascade() {
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();
-// ফ্রি স্পিন মোড চালু করার ফাংশন
 function startFreeGames() {
     isFreeMode = true;
     freeSpinCount = 10;
-    isSpinning = false; // এটি গুরুত্বপূর্ণ যাতে অটো স্পিন শুরু হতে পারে
+    
+    // স্পিন লক খুলে দেওয়া যাতে অটোমেটিক নতুন স্পিন শুরু হতে পারে
+    isSpinning = false; 
 
-    // ১. মাল্টিপ্লায়ার বার পরিবর্তন (x2, x4, x6, x10)
-    document.getElementById('m1').innerText = "x2";
-    document.getElementById('m2').innerText = "x4";
-    document.getElementById('m3').innerText = "x6";
-    document.getElementById('m5').innerText = "x10";
+    // ১. মাল্টিপ্লায়ার টেক্সট বদলে দেওয়া (x2, x4, x6, x10)
+    if(document.getElementById('m1')) {
+        document.getElementById('m1').innerText = "x2";
+        document.getElementById('m2').innerText = "x4";
+        document.getElementById('m3').innerText = "x6";
+        document.getElementById('m5').innerText = "x10";
+    }
 
-    // ২. গ্লো ইফেক্ট যোগ করা (গেমের বর্ডার সোনালী হবে)
-    document.querySelector('.game-container').style.borderColor = "gold";
-    document.querySelector('.game-container').style.boxShadow = "0 0 20px gold";
+    // ২. কাউন্টার দেখানো
+    if(document.getElementById('free-spin-info')) {
+        document.getElementById('free-spin-info').style.display = 'block';
+        document.getElementById('fs-count').innerText = freeSpinCount;
+    }
 
     alert("🎰 অভিনন্দন! ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
-
-    // ৩. ১.৫ সেকেন্ড পর প্রথম অটো স্পিন শুরু
+    
+    // ৩. 'OK' দেওয়ার ১.৫ সেকেন্ড পর প্রথম অটো স্পিনটি চালু করা
     setTimeout(function() {
-        handleSpin();
+        handleSpin(); 
     }, 1500);
 }
 
-// ফ্রি স্পিন শেষ হলে সাধারণ মোডে ফেরার ফাংশন
-function resetToNormalMode() {
-    isFreeMode = false;
-    document.getElementById('m1').innerText = "x1";
-    document.getElementById('m2').innerText = "x2";
-    document.getElementById('m3').innerText = "x3";
-    document.getElementById('m5').innerText = "x5";
-    document.querySelector('.game-container').style.borderColor = "#333";
-    document.querySelector('.game-container').style.boxShadow = "none";
-}

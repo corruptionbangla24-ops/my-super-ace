@@ -40,6 +40,24 @@ async function handleSpin() {
         });
         
         playS('stop');
+        // ৪৩ নম্বর লাইনে এটি বসান
+        let scatterCount = 0;
+        data.reels.forEach(col => {
+            if (col.some(c => c.s === '9.png')) scatterCount++;
+        });
+
+        if (scatterCount >= 3) {
+            playS('scatter'); 
+            // ৯ নম্বর কার্ডগুলোতে সবুজ গ্লো দেওয়া
+            document.querySelectorAll('img[src="9.png"]').forEach(img => {
+                img.parentElement.classList.add('scatter-glow');
+            });
+            
+            setTimeout(() => {
+                alert("🎰 অভিনন্দন! ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
+                // এখানে পরে আমরা ফ্রি গেমের মেইন লজিক যোগ করবো
+            }, 1000);
+        }
 
           // --- ১০০০০০০০০০% একুরেট উইন লজিক শুরু ---
         if (data.win_pos && data.win_pos.length > 0) {

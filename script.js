@@ -14,7 +14,8 @@ async function handleSpin() {
         data.reels.forEach((col, i) => {
             let el = document.getElementById(`reel-${i}`);
             el.classList.remove('reel-spinning');
-            el.innerHTML = col.map((c, j) => `<div class="cell ${c.g?'golden':''}" id="c-${i}-${j}"><img src="${c.s}"></div>`).join('');
+           el.innerHTML = col.map((c, j) => `<div class="cell ${c.g?'golden':'' } cell-fall" id="c-${i}-${j}" style="animation-delay: ${j * 0.05}s"><img src="${c.s}"></div>`).join('');
+ 
         });
         playS('stop');
         if (data.win_pos.length > 0) {

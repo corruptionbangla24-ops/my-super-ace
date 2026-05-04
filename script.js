@@ -141,15 +141,17 @@ async function handleSpin() {
         isSpinning = false;
 
         // ফ্রি স্পিন অটোমেটিক চালানোর লজিক
+                // ১৪৪ থেকে ১৫৩ নম্বর লাইনের জায়গায় এটি বসান
         if (isFreeMode && freeSpinCount > 0) {
-            // ২ সেকেন্ড বিরতি দিয়ে পরের স্পিন নিজে নিজেই শুরু হবে
-            setTimeout(() => {
+            console.log("বাকি ফ্রি স্পিন:", freeSpinCount);
+            // বর্তমান স্পিন পুরোপুরি শেষ হওয়ার জন্য ২ সেকেন্ড বিরতি
+            setTimeout(function() {
                 handleSpin();
             }, 2000);
         } else if (isFreeMode && freeSpinCount === 0) {
             isFreeMode = false;
             alert("ফ্রি স্পিন শেষ!");
-            resetToNormalMode(); // সাধারণ মোডে ফিরে যাওয়া
+            resetToNormalMode();
         }
 
         if (queue.length < 5) loadBatch();

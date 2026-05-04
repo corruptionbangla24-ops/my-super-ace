@@ -3,67 +3,65 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* স্ক্রিন কাঁপাকাঁপি বন্ধ */
     background-color: #000;
+    overflow: hidden; /* স্ক্রিন কাঁপাকাঁপি বন্ধ */
 }
 
 body {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* ওপরে সামান্য গ্যাপ রেখে শুরু হবে */
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .game-container {
-    width: 100vw; /* মোবাইলের পুরো চওড়া */
-    height: auto;
-    max-width: 480px;
-    padding-top: 10px; /* একদম ওপরের বর্ডার থেকে একটু নিচে */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    width: 100vw;
+    max-width: 450px;
+    padding: 10px 5px;
+    box-sizing: border-box;
 }
 
-/* রীলগুলো যেন স্ক্রিন অনুযায়ী বড় হয় */
+/* রীলগুলো পাশাপাশি বসার প্রধান লজিক */
 .reel-container {
-    display: flex;
-    justify-content: center;
+    display: flex; /* এটিই ৫টি রীলকে এক লাইনে আনবে */
+    justify-content: space-between;
     gap: 4px;
-    padding: 0 5px;
+    width: 100%;
 }
 
 .reel {
-    flex: 1;
+    flex: 1; /* প্রতিটি রীল সমান জায়গা নেবে */
+    display: flex;
+    flex-direction: column;
 }
 
 .cell {
     width: 100%;
-    aspect-ratio: 1 / 1; /* কার্ডগুলো সবসময় বর্গাকার থাকবে */
-    background: linear-gradient(145deg, #222, #111);
-    border-radius: 6px;
+    aspect-ratio: 1 / 1.1; /* কার্ডগুলো সামান্য লম্বাটে সুন্দর দেখাবে */
+    background: #1a1a1a;
+    border-radius: 4px;
+    margin-bottom: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 4px;
     border: 1px solid #333;
+    overflow: hidden;
 }
 
 .cell img {
-    width: 85%;
-    height: 85%;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
 }
 
-/* বাটন এবং ইনফো বক্সের সাইজ মোবাইলের জন্য বড় করা */
+/* বাটন ও ইনফো সেকশন */
 #spin-btn {
     width: 90%;
     margin: 10px auto;
-    height: 60px;
-    font-size: 22px;
+    height: 50px;
+    display: block;
+    background: linear-gradient(#f00, #800);
     border-radius: 50px;
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
+    color: white;
+    font-size: 20px;
+    border: none;
 }

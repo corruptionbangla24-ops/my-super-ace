@@ -42,19 +42,21 @@ async function handleSpin() {
         cell.style.transition = "all 0.4s ease";
         cell.style.transform = "scale(0)";
         cell.style.opacity = "0";
-
-        if (isGolden) {
-            setTimeout(() => {
-                let wildCard = document.createElement('div');
-                wildCard.className = 'cell wild-card cell-fall';
-                wildCard.id = `c-${p.c}-${p.r}`; 
-                wildCard.innerHTML = `<img src="wild.png">`;
-                
-                // রীলের ভেতর সঠিক জায়গায় Wild ঢুকিয়ে দেওয়া
-                cell.parentElement.appendChild(wildCard);
-                playS('wild'); 
-            }, 300);
-        }
+            if (isGolden) {
+                setTimeout(() => {
+                    let wildCard = document.createElement('div');
+                    // এটি আপনার সেই ধামাকা লাল বিস্ফোরণ ইফেক্ট দিবে
+                    wildCard.className = 'cell wild-explosion cell-fall'; 
+                    wildCard.id = `c-${p.c}-${p.r}`; 
+                    wildCard.innerHTML = `<img src="wild.png">`;
+                    
+                    // যে কার্ডটি ভ্যানিশ হয়েছে ঠিক তার জায়গায় Wild বসানো
+                    cell.parentElement.appendChild(wildCard);
+                    
+                    // সাউন্ড প্লে করা
+                    playS('wild'); 
+                }, 350); 
+            }
     }
 });
 

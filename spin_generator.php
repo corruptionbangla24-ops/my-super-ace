@@ -12,21 +12,22 @@ for ($s = 0; $s < 50; $s++) {
     if ($balance < $bet) break;
     $balance -= $bet;
     $reels = [];
+    
+    $reels = [];
     for ($i = 0; $i < 5; $i++) {
         $col = [];
-        for ($j = 0; $j < 4; $j++) { $col[] = ['s' => rand(1, 10).".png", 'g' => (rand(1, 100) <= 15)]; }
+        for ($j = 0; $j < 4; $j++) {
+            $col[] = ['s' => rand(1, 10).".png", 'g' => (rand(1, 100) <= 15)];
+        }
         $reels[] = $col;
     }
-    // ১৯ নম্বর লাইনের নিচে এই ধামাকা লজিকটি বসান
-$isWildExplosion = (rand(1, 100) <= 15); // ১৫% সম্ভাবনা যে ওয়াইল্ড ধামাকা হবে
 
-if ($isWildExplosion) {
-    for ($k = 0; $k < 4; $k++) {
-        $randCol = rand(2, 4); // কলাম ৩, ৪ বা ৫ (ইন্ডেক্স ২, ৩, ৪)
-        $randRow = rand(0, 3); // রো ১ থেকে ৪
-        $reels[$randCol][$randRow] = ['s' => 'wild.png', 'g' => false];
+    // ৩, ৪, ৫ কলামে ওয়াইল্ড বিস্ফোরণ লজিক
+    if (rand(1, 100) <= 20) { // ২০% সম্ভাবনা
+        for ($k = 0; $k < 3; $k++) {
+            $reels[rand(2, 4)][rand(0, 3)] = ['s' => 'wild.png', 'g' => false];
+        }
     }
-}
 
     $win_amount = 0; $win_pos = [];
     for ($r = 0; $r < 4; $r++) {

@@ -1,6 +1,9 @@
 let queue = [], isSpinning = false, isTurbo = false;
 let freeSpinCount = 0, isFreeMode = false;
-let currentMultiplier = 1;
+let currentMultiplier = 1; 
+const normalMulti = [1, 2, 3, 5];
+const freeMulti = [2, 4, 6, 10];
+
 
 
 // ১. ডাটা লোড করা

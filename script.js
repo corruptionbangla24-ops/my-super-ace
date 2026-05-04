@@ -76,23 +76,31 @@ if (isSpinning) return;
         });
         
         playS('stop');
-        // ৪৩ নম্বর লাইনে এটি বসান
-        let scatterCount = 0;
+                // ৩টি বা তার বেশি ৯ নম্বর কার্ড চেক করার চূড়ান্ত লজিক
+        let scatters = 0;
         data.reels.forEach(col => {
-            if (col.some(c => c.s === '9.png')) scatterCount++;
+            col.forEach(c => {
+                if (c.s === '9.png') scatters++;
+            });
         });
 
-        if (scatterCount >= 3) {
+        if (scatters >= 3) {
+            console.log("Scatter Found: " + scatters);
             playS('scatter'); 
-            // ৯ নম্বর কার্ডগুলোতে সবুজ গ্লো দেওয়া
+            
+            // সব ৯ নম্বর কার্ডগুলোতে সবুজ আভা দেওয়া
             document.querySelectorAll('img[src="9.png"]').forEach(img => {
                 img.parentElement.classList.add('scatter-glow');
             });
             
+            // ২ সেকেন্ড পর ফ্রি স্পিন শুরু করা
             setTimeout(() => {
-                alert("🎰 অভিনন্দন! ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
-                // এখানে পরে আমরা ফ্রি গেমের মেইন লজিক যোগ করবো
-            }, 1000);
+                if (typeof startFreeGames === "function") {
+                    startFreeGames();
+                } else {
+                    console.error("startFreeGames function is missing!");
+                }
+            }, 2000);
         }
 
           // --- ১০০০০০০০০০% একুরেট উইন লজিক শুরু ---

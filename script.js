@@ -199,26 +199,24 @@ function processCascade() {
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();
-// ফাইলের একদম শেষে এটি বসান
 function startFreeGames() {
     isFreeMode = true;
     freeSpinCount = 10;
-    
-    // ১. মাল্টিপ্লায়ার বার পরিবর্তন (Free Game x2, x4, x6, x10)
+    isSpinning = false; // এটিই নতুন স্পিন শুরু করতে সাহায্য করবে
+
     document.getElementById('m1').innerText = "x2";
     document.getElementById('m2').innerText = "x4";
     document.getElementById('m3').innerText = "x6";
     document.getElementById('m5').innerText = "x10";
 
-    // ২. গেমের বর্ডারে একটা সোনালী আভা দেওয়া (যাতে প্লেয়ার বোঝে ফ্রি গেম চলছে)
-    document.querySelector('.game-container').style.borderColor = "#ffd700";
-    document.querySelector('.game-container').style.boxShadow = "0 0 20px #ffd700";
-
-    // ৩. ৩টি ৯ (Scatter) পড়ার পর ১.৫ সেকেন্ড বিরতি দিয়ে অটো স্পিন শুরু
+    alert("🎰 ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
+    
+    // ১.৫ সেকেন্ড পর প্রথম স্পিন চালু
     setTimeout(function() {
         handleSpin();
     }, 1500);
 }
+
 
 // সাধারণ মোডে ফিরে যাওয়ার ফাংশন (এটিও নিচে বসান)
 function resetToNormalMode() {

@@ -7,16 +7,18 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
 .reel { flex: 1; display: flex; flex-direction: column; gap: 5px; }
 .cell { height: 78px; background: #222; border-radius: 5px; display: flex; justify-content: center; align-items: center; position: relative; }
 .cell img { width: 85%; }
+/* গোল্ডেন কার্ডকে সাধারণ কার্ডের মতো বানানো */
 .golden { 
-    background: radial-gradient(circle, #ffd700 0%, #b8860b 50%, #1a1a1a 100%) !important; 
-    border: 1px solid #fff700 !important;
-    box-shadow: inset 0 0 15px #ffae00, 0 0 10px rgba(255, 215, 0, 0.5) !important;
-    position: relative;
+    background: #222 !important; /* সাধারণ ডার্ক ব্যাকগ্রাউন্ড */
+    border: 1px solid #333 !important; 
+    box-shadow: none !important;
 }
 
+/* গোল্ডেন কার্ডের ভেতরের ছবিকেও সাধারণ রাখা */
 .golden img {
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    filter: none !important;
 }
+
 
 .win-highlight { border: 3px solid #00ff00 !important; box-shadow: 0 0 15px #00ff00 !important; z-index: 10; }
 .reel-spinning { animation: shake 0.1s infinite alternate; filter: blur(2px); }

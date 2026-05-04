@@ -1,25 +1,32 @@
 let queue = [], isSpinning = false, isTurbo = false;
 
+// ১. সার্ভার থেকে ৫০টি স্পিন লোড করা
 async function loadBatch() {
-    let r = await fetch(`spin_generator.php?uid=${userId}`);
-    let d = await r.json();
-    queue = d.results;
+    try {
+        let r = await fetch(`spin_generator.php?uid=${userId}`);
+        let d = await r.json();
+        if (d.results) {
+            queue = d.results;
+        }
+    } catch (e) {
+        console.error("Batch load failed", e);
+    }
 }
 
+// ২. স্পিন ফাংশন
 async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
     
-    playS('click');
-    playS('spin');
-    
     let data = queue.shift();
+    
+    // রীল ঘোরার এনিমেশন শুরু
     document.querySelectorAll('.reel').forEach(r => r.classList.add('reel-spinning'));
 
-    // টার্বো মোড অনুযায়ী স্পিন টাইম সেট করা
-    let delay = isTurbo ? 100 : 800;
+    let delay = isTurbo ? 50 : 800;
 
     setTimeout(async () => {
+        // ৩. রীল রেন্ডার করা
         data.reels.forEach((col, i) => {
             let el = document.getElementById(`reel-${i}`);
             el.classList.remove('reel-spinning');
@@ -29,14 +36,10 @@ async function handleSpin() {
                 </div>
             `).join('');
         });
-        
-        playS('stop');
 
+        // ৪. উইন চেক এবং হাইলাইট
         if (data.win_pos && data.win_pos.length > 0) {
-            // হাইলাইট ডিলে টার্বো অনুযায়ী অ্যাডজাস্ট করা
-            let highlightDelay = isTurbo ? 200 : 500;
-            
-            await new Promise(r => setTimeout(r, highlightDelay));
+            await new Promise(r => setTimeout(r, isTurbo ? 200 : 500));
             
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
@@ -45,7 +48,6 @@ async function handleSpin() {
                     cell.classList.add('win-highlight');
                 }
             });
-            playS('win');
 
             // ভ্যানিশ এনিমেশন
             await new Promise(r => setTimeout(r, isTurbo ? 400 : 800));
@@ -58,22 +60,25 @@ async function handleSpin() {
                 }
             });
 
+            // ওপর থেকে কার্ড নিচে ফেলার লজিক
             setTimeout(() => {
-                playS('drop');
                 processCascade();
             }, 300);
         }
 
-        if (parseFloat(data.win) > 0) playS('calculation');
+        // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;
         document.getElementById('win-amount').innerText = data.win;
         
         isSpinning = false;
+        
+        // কিউতে কার্ড কমে গেলে আবার নতুন করে আনা
         if (queue.length < 5) loadBatch();
         
     }, delay);
 }
 
+// ৫. কার্ড নিচে নামার লজিক
 function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);
@@ -84,29 +89,17 @@ function processCascade() {
         for (let n = 0; n < missing; n++) {
             let newCard = document.createElement('div');
             newCard.className = 'cell cell-fall';
-            // গোল্ডেন কার্ডের চান্সও এখানে রাখা হয়েছে (১০%)
             if(Math.random() < 0.1) newCard.classList.add('golden');
             newCard.innerHTML = `<img src="${Math.floor(Math.random()*10)+1}.png">`;
             reel.prepend(newCard);
         }
     }
 }
-// ১. নিশ্চিত করুন বাটন আইডি আপনার index.php এর সাথে মিলছে
-document.getElementById('spin-btn').onclick = function() {
+
+// ৬. বাটন কানেকশন (এটি সবচেয়ে জরুরি)
+document.getElementById('spin-btn').onclick = () => {
     handleSpin();
 };
 
-
-if (spinBtn) {
-    spinBtn.onclick = () => {
-        console.log("Spin Clicked!"); // চেক করার জন্য
-        handleSpin();
-    };
-}
-
-// ২. শুরুতে ডাটা লোড করা
-window.onload = () => {
-    loadBatch();
-};
-
-
+// গেম শুরুতেই ডাটা লোড করা
+loadBatch();

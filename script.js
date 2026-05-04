@@ -20,11 +20,47 @@ async function handleSpin() {
         playS('stop');
         if (data.win_pos.length > 0) {
             await new Promise(r => setTimeout(r, 500));
-            data.win_pos.forEach(p => document.getElementById(`c-${p.c}-${p.r}`)?.classList.add('win-highlight'));
+                        // ২৩ নম্বর লাইনের জায়গায় এটি বসান
+            data.win_pos.forEach(p => {
+                let cell = document.getElementById(`c-${p.c}-${p.r}`);
+                if (cell) {
+                    cell.classList.remove('golden');
+                    cell.classList.add('win-highlight');
+                }
+            });
             playS('win');
-            await new Promise(r => setTimeout(r, 1000));
-            playS('drop');
-            // Cascade লজিক এখানে কল হবে
+
+            await new Promise(r => setTimeout(r, 800));
+
+            // কার্ড ভ্যানিশ করা (ছোট হয়ে উধাও হবে)
+            data.win_pos.forEach(p => {
+                let cell = document.getElementById(`c-${p.c}-${p.r}`);
+                if (cell) {
+                    cell.style.transition = "all 0.4s ease";
+                    cell.style.transform = "scale(0)";
+                    cell.style.opacity = "0";
+                }
+            });
+
+            await new Promise(r => setTimeout(r, 400));
+
+            // ওপর থেকে নতুন কার্ড ফেলে গ্যাপ পূরণ করা
+            playS('drop'); 
+            for (let i = 0; i < 5; i++) {
+                let reel = document.getElementById(`reel-${i}`);
+                let cells = Array.from(reel.querySelectorAll('.cell'));
+                cells.forEach(c => { if (c.style.opacity === "0") c.remove(); });
+
+                let missing = 4 - reel.querySelectorAll('.cell').length;
+                for (let n = 0; n < missing; n++) {
+                    let newImg = Math.floor(Math.random() * 10 + 1) + ".png";
+                    let newCard = document.createElement('div');
+                    newCard.className = 'cell cell-fall';
+                    newCard.innerHTML = `<img src="${newImg}">`;
+                    reel.prepend(newCard); 
+                }
+            }
+
         }
         document.getElementById('bal-val').innerText = data.bal;
         document.getElementById('win-amount').innerText = data.win;

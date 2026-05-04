@@ -34,8 +34,11 @@ function updateMultiplierDisplay(level) {
 // ২. মেইন স্পিন ফাংশন
 async function handleSpin() {
  // ১৫ নম্বর লাইনের জায়গায় এটি বসান
-if (isSpinning && !isFreeMode) return; 
-if (queue.length === 0) return;
+if (isSpinning) return; 
+    if (queue.length === 0) {
+        loadBatch();
+        return;
+    }
    
     isSpinning = true;
         // ১৯ নম্বর লাইনে এই অংশটুকু বসান

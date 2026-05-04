@@ -48,8 +48,10 @@
 
     <!-- স্ক্রিপ্ট কানেকশন -->
     <script>
-        const userId = <?php echo isset($_GET['uid']) ? intval($_GET['uid']) : 1; ?>;
-    </script>
+    // নিশ্চিত করুন userId যেন ১ বা সঠিক ডাটাবেস আইডি হয়
+    const userId = <?php echo isset($_GET['uid']) ? intval($_GET['uid']) : 1; ?>;
+</script>
+
     <script src="sound_manager.js"></script>
     <script src="script.js"></script>
 </body>

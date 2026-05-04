@@ -92,7 +92,10 @@ function processCascade() {
     }
 }
 // ১. নিশ্চিত করুন বাটন আইডি আপনার index.php এর সাথে মিলছে
-const spinBtn = document.getElementById('spin-btn');
+document.getElementById('spin-btn').onclick = function() {
+    handleSpin();
+};
+
 
 if (spinBtn) {
     spinBtn.onclick = () => {

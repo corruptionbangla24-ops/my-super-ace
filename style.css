@@ -81,3 +81,38 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
     border: 1px solid white;
 }
 
+/* মোবাইল রেসপন্সিভ স্টাইল */
+@media (max-width: 768px) {
+    .game-container {
+        width: 95% !important; /* স্ক্রিনের দুই পাশে সামান্য জায়গা রেখে পুরোটা দখল করবে */
+        padding: 5px !important;
+    }
+
+    .reel {
+        margin: 1px !important; /* রীলগুলোর মাঝের গ্যাপ কমিয়ে আনা */
+    }
+
+    .cell {
+        width: 60px !important; /* মোবাইলের জন্য কার্ডের সাইজ ছোট করা */
+        height: 60px !important;
+    }
+
+    .cell img {
+        width: 50px !important; /* ছবিও ছোট করে দেওয়া */
+        height: 50px !important;
+    }
+
+    .multiplier-bar span {
+        padding: 5px 8px !important; /* মাল্টিপ্লায়ার বাটন ছোট করা */
+        font-size: 12px !important;
+    }
+
+    #spin-btn {
+        padding: 10px !important;
+        font-size: 18px !important;
+    }
+
+    .info-row .box div {
+        font-size: 14px !important; /* ব্যালেন্স এবং উইন টেক্সট ছোট করা */
+    }
+}

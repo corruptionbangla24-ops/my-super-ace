@@ -11,6 +11,8 @@ async function loadBatch() {
 async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
+    playS('click');
+playS('spin');
     let data = queue.shift();
     // ১৫ নম্বর লাইনের নিচে এই কোডটি বসান (আগের হাইলাইট মুছতে)
 document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highlight'));
@@ -23,8 +25,10 @@ document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highligh
                 <img src="${c.s}">
             </div>
         `).join('');
+        
 
     });
+    playS('stop');
 
     // ৩. হাইলাইট এবং ক্যাসকেড লজিক
     if (data.win_pos && data.win_pos.length > 0) {

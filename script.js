@@ -32,6 +32,7 @@ document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-highligh
 
     // ৩. হাইলাইট এবং ক্যাসকেড লজিক
     if (data.win_pos && data.win_pos.length > 0) {
+        playS('win');
 // ২৮ নম্বর লাইনের দিকে (id-টা ভালো করে মিলিয়ে নিন)
 data.win_pos.forEach(p => {
     let cell = document.getElementById(`c-${p.c}-${p.r}`);
@@ -40,10 +41,7 @@ data.win_pos.forEach(p => {
                     cell.classList.add('win-highlight');
                 }
 });
-// ৪২ নম্বর লাইনের নিচে এটি বসান
-if (data.win_pos && data.win_pos.length > 0) {
-    playS('win');
-}
+
 
         
         await new Promise(r => setTimeout(r, 600)); // হাইলাইট দেখার সময়

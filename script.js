@@ -11,6 +11,17 @@ async function loadBatch() {
         queue = d.results;
     } catch (e) { console.log("Load error:", e); }
 }
+// ১৫ নম্বর লাইনের উপরে এটি বসান
+function updateMultiplierDisplay(level) {
+    // সব স্প্যান থেকে active ক্লাস সরানো
+    document.querySelectorAll('.multiplier-bar span').forEach(s => s.classList.remove('active'));
+    
+    // বর্তমান লেভেল খুঁজে বের করে active ক্লাস দেওয়া
+    let mElement = document.getElementById(`m${level}`);
+    if (mElement) {
+        mElement.classList.add('active');
+    }
+}
 
 // ২. মেইন স্পিন ফাংশন
 async function handleSpin() {

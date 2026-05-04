@@ -208,27 +208,33 @@ function processCascade() {
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();
+// ফ্রি স্পিন মোড চালু করার ফাংশন
 function startFreeGames() {
     isFreeMode = true;
     freeSpinCount = 10;
-    isSpinning = false; // এটিই নতুন স্পিন শুরু করতে সাহায্য করবে
+    isSpinning = false; // এটি গুরুত্বপূর্ণ যাতে অটো স্পিন শুরু হতে পারে
 
+    // ১. মাল্টিপ্লায়ার বার পরিবর্তন (x2, x4, x6, x10)
     document.getElementById('m1').innerText = "x2";
     document.getElementById('m2').innerText = "x4";
     document.getElementById('m3').innerText = "x6";
     document.getElementById('m5').innerText = "x10";
 
-    alert("🎰 ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
-    
-    // ১.৫ সেকেন্ড পর প্রথম স্পিন চালু
+    // ২. গ্লো ইফেক্ট যোগ করা (গেমের বর্ডার সোনালী হবে)
+    document.querySelector('.game-container').style.borderColor = "gold";
+    document.querySelector('.game-container').style.boxShadow = "0 0 20px gold";
+
+    alert("🎰 অভিনন্দন! ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
+
+    // ৩. ১.৫ সেকেন্ড পর প্রথম অটো স্পিন শুরু
     setTimeout(function() {
         handleSpin();
     }, 1500);
 }
 
-
-// সাধারণ মোডে ফিরে যাওয়ার ফাংশন (এটিও নিচে বসান)
+// ফ্রি স্পিন শেষ হলে সাধারণ মোডে ফেরার ফাংশন
 function resetToNormalMode() {
+    isFreeMode = false;
     document.getElementById('m1').innerText = "x1";
     document.getElementById('m2').innerText = "x2";
     document.getElementById('m3').innerText = "x3";
@@ -236,4 +242,3 @@ function resetToNormalMode() {
     document.querySelector('.game-container').style.borderColor = "#333";
     document.querySelector('.game-container').style.boxShadow = "none";
 }
-

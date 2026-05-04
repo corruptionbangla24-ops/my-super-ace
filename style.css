@@ -129,3 +129,19 @@ body {
 #spin-btn:active {
     transform: scale(0.95);
 }
+/* কার্ড ওপর থেকে নিচে পড়ার এনিমেশন */
+@keyframes superDrop {
+    0% { transform: translateY(-150%); opacity: 0; }
+    60% { transform: translateY(10%); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.cell-fall {
+    animation: superDrop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* ঘোরার সময় হালকা ঝাপসা করার জন্য */
+.reel-spinning {
+    filter: blur(3px);
+    transition: transform 0.1s linear;
+}

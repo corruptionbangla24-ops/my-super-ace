@@ -41,13 +41,21 @@ if (isSpinning) return;
     }
    
     isSpinning = true;
-        // ১৯ নম্বর লাইনে এই অংশটুকু বসান
+           // ৪৪ থেকে ৫০ নম্বর লাইনের জায়গায় এটি বসান
     if (isFreeMode) {
-        freeSpinCount--; // একটি ফ্রি স্পিন কমে গেল
-        currentMultiplier = 2; // ফ্রি গেম x2 থেকে শুরু হয়
+        freeSpinCount--; // এক এক করে কমাবে
+        
+        // এই লাইনটিই আপনার স্ক্রিনের ১০ সংখ্যাটিকে কমিয়ে আপডেট করবে
+        let fsDisplay = document.getElementById('fs-count');
+        if (fsDisplay) {
+            fsDisplay.innerText = freeSpinCount;
+        }
+        
+        currentMultiplier = 2; // ফ্রি গেমে x2 থেকে শুরু
     } else {
-        currentMultiplier = 1; // সাধারণ গেম x1 থেকে শুরু হয়
+        currentMultiplier = 1; // সাধারণ গেমে x1 থেকে শুরু
     }
+ 
     updateMultiplierDisplay(currentMultiplier);
 
     playS('click');

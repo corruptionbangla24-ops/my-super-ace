@@ -40,43 +40,55 @@ async function handleSpin() {
         });
         
         playS('stop');
+        if (data.win_pos && data.win_pos.length > 0) {
+            await new Promise(r => setTimeout(r, 600)); // দেখার সময়
 
-              if (data.win_pos && data.win_pos.length > 0) {
-            // ১. হাইলাইট করার পর বিরতি (যাতে প্লেয়ার দেখতে পায়)
-            await new Promise(r => setTimeout(r, 1000)); 
-            
-            data.win_pos.forEach(p => {
-                let cell = document.getElementById(`c-${p.c}-${p.r}`);
-                if (cell) {
-                    cell.classList.add('win-highlight');
-                }
-            });
-            playS('win');
-
-            // ২. ভ্যানিশ হওয়ার আগে আরেকটু বিরতি (সবচেয়ে জরুরি)
-            await new Promise(r => setTimeout(r, 800));
-
+            // ধাপ ১: সাধারণ কার্ডগুলো উধাও হবে এবং Wild তৈরি হয়ে স্থির থাকবে
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
                 if (cell) {
                     let isGolden = cell.classList.contains('golden');
-                    cell.style.transition = "all 0.5s ease";
+                    cell.style.transition = "all 0.4s ease";
                     cell.style.transform = "scale(0)";
                     cell.style.opacity = "0";
 
-                    // ৩. গোল্ডেন কার্ড থেকে ওয়াইল্ড আসা (এনিমেশনসহ)
                     if (isGolden) {
                         setTimeout(() => {
                             let wild = document.createElement('div');
-                            wild.className = 'cell wild-explosion cell-fall win-highlight';
+                            // এটি শুধু wild-explosion ক্লাসে থাকবে, win-highlight এখন দেব না যাতে এটি সাথে সাথে ভ্যানিশ না হয়
+                            wild.className = 'cell wild-explosion cell-fall'; 
                             wild.id = `c-${p.c}-${p.r}`; 
                             wild.innerHTML = '<img src="wild.png">';
                             cell.parentElement.appendChild(wild);
                             playS('wild');
-                        }, 400);
+                        }, 350);
                     }
                 }
             });
+
+            // ধাপ ২: ওপর থেকে সাধারণ কার্ডগুলো পড়বে (Wild গুলো স্থির থাকবে)
+            setTimeout(() => {
+                processCascade(); // প্রথমবার ফিলআপ
+            }, 800);
+
+            // ধাপ ৩: ফিলআপ শেষ হওয়ার পর Wild কার্ডগুলো ভ্যানিশ হবে (সবচেয়ে জরুরি)
+            await new Promise(r => setTimeout(r, 1500)); // ফিলআপ শেষ হওয়ার জন্য অপেক্ষা
+
+            let wildCards = document.querySelectorAll('.wild-explosion');
+            if (wildCards.length > 0) {
+                wildCards.forEach(w => {
+                    w.style.transform = "scale(0)";
+                    w.style.opacity = "0";
+                });
+
+                // ধাপ ৪: Wild উধাও হওয়ার পর শেষবারের মতো ফিলআপ
+                setTimeout(() => {
+                    processCascade(); 
+                }, 400);
+            }
+        }
+
+      });
 
             // ৪. সবশেষে নতুন কার্ড পড়া (Cascade)
             setTimeout(() => {

@@ -34,26 +34,30 @@ async function handleSpin() {
 
             // কার্ড ভ্যানিশ করা (ছোট হয়ে উধাও হবে)
             data.win_pos.forEach(p => {
-                let cell = document.getElementById(`c-${p.c}-${p.r}`);
-                            if (cell) {
-                cell.style.transition = "all 0.4s ease";
-                cell.style.transform = "scale(0)";
-                cell.style.opacity = "0";
+    let cell = document.getElementById(`c-${p.c}-${p.r}`);
+    if (cell) {
+        // যদি এটি গোল্ডেন কার্ড হয়, তবেই Wild আসবে
+        let isGolden = cell.classList.contains('golden');
+        
+        cell.style.transition = "all 0.4s ease";
+        cell.style.transform = "scale(0)";
+        cell.style.opacity = "0";
 
-                // গোল্ডেন কার্ড হলে Wild কার্ড তৈরি করা
-                if (cell.classList.contains('golden')) {
-                    setTimeout(() => {
-                        let wild = document.createElement('div');
-                        wild.className = 'cell wild-card cell-fall';
-                        wild.innerHTML = `<img src="wild.png">`;
-                        // সঠিক জায়গায় Wild বসানো
-                        cell.parentNode.appendChild(wild);
-                        playS('wild'); 
-                    }, 400);
-                }
-            }
+        if (isGolden) {
+            setTimeout(() => {
+                let wildCard = document.createElement('div');
+                wildCard.className = 'cell wild-card cell-fall';
+                wildCard.id = `c-${p.c}-${p.r}`; 
+                wildCard.innerHTML = `<img src="wild.png">`;
+                
+                // রীলের ভেতর সঠিক জায়গায় Wild ঢুকিয়ে দেওয়া
+                cell.parentElement.appendChild(wildCard);
+                playS('wild'); 
+            }, 300);
+        }
+    }
+});
 
-            });
 
             await new Promise(r => setTimeout(r, 400));
 

@@ -85,16 +85,17 @@ if (isSpinning) return;
         
         playS('stop');
                 // ৩টি বা তার বেশি ৯ নম্বর কার্ড চেক করার চূড়ান্ত লজিক
-        let scatters = 0;
+                let scatters = 0;
         data.reels.forEach(col => {
             col.forEach(c => {
                 if (c.s === '9.png') scatters++;
             });
         });
 
-        if (scatters >= 3) {
+        if (scatters >= 3 && !isFreeMode) {
             console.log("Scatter Found: " + scatters);
-            playS('scatter'); 
+            playS('scatter');
+
             
             // সব ৯ নম্বর কার্ডগুলোতে সবুজ আভা দেওয়া
             document.querySelectorAll('img[src="9.png"]').forEach(img => {

@@ -35,11 +35,24 @@ async function handleSpin() {
             // কার্ড ভ্যানিশ করা (ছোট হয়ে উধাও হবে)
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
-                if (cell) {
-                    cell.style.transition = "all 0.4s ease";
-                    cell.style.transform = "scale(0)";
-                    cell.style.opacity = "0";
+                            if (cell) {
+                cell.style.transition = "all 0.4s ease";
+                cell.style.transform = "scale(0)";
+                cell.style.opacity = "0";
+
+                // গোল্ডেন কার্ড হলে Wild কার্ড তৈরি করা
+                if (cell.classList.contains('golden')) {
+                    setTimeout(() => {
+                        let wild = document.createElement('div');
+                        wild.className = 'cell wild-card cell-fall';
+                        wild.innerHTML = `<img src="wild.png">`;
+                        // সঠিক জায়গায় Wild বসানো
+                        cell.parentNode.appendChild(wild);
+                        playS('wild'); 
+                    }, 400);
                 }
+            }
+
             });
 
             await new Promise(r => setTimeout(r, 400));

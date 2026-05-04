@@ -75,19 +75,18 @@ if (isSpinning) return;
     let delay = isTurbo ? 100 : 800;
 
     setTimeout(async () => {
-        // ৩. রীল রেন্ডার করা
         data.reels.forEach((col, i) => {
-            let el = document.getElementById(`reel-${i}`);
-            el.classList.remove('reel-spinning');
-          el.innerHTML = col.map((c, j) => {
-    // যদি ছবির নাম wild.png হয়, তবে wild-explosion ক্লাস যোগ হবে
-    let isW = (c.s === 'wild.png'); 
-    return `<div class="cell ${c.g?'golden':''} ${isW?'wild-explosion':''}" id="c-${i}-${j}">
-                <img src="${c.s}">
-            </div>`;
-}).join('');
-  
-        });
+    let el = document.getElementById(`reel-${i}`);
+    el.classList.remove('reel-spinning');
+    
+    el.innerHTML = col.map((c, j) => `
+        <div class="cell ${c.g ? 'golden' : ''} cell-fall" 
+             style="animation-delay: ${j * 0.05}s"> 
+            <img src="${c.s}">
+        </div>
+    `).join('');
+});
+
         
         playS('stop');
                 // ৩টি বা তার বেশি ৯ নম্বর কার্ড চেক করার চূড়ান্ত লজিক

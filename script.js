@@ -151,24 +151,7 @@ if (isSpinning) return;
         // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;
         document.getElementById('win-amount').innerText = data.win;
-                isSpinning = false;
-
-        // ফ্রি স্পিন অটোমেটিক চালানোর লজিক
-        if (isFreeMode && freeSpinCount > 0) {
-            setTimeout(function() {
-                handleSpin();
-            }, 2000);
-        } else if (isFreeMode && freeSpinCount === 0) {
-            isFreeMode = false;
-            alert("ফ্রি স্পিন শেষ!");
-            resetToNormalMode();
-        }
-
-        if (queue.length < 5) loadBatch();
-        
-    }, delay);
-}
-        
+                
 
         
 function processCascade() {
@@ -202,19 +185,27 @@ function processCascade() {
     playS('drop');
 }
 
+        // ফ্রি স্পিন অটোমেটিক চালানোর লজিক
+        isSpinning = false;
+        if (isFreeMode && freeSpinCount > 0) {
+            setTimeout(function() {
+                handleSpin();
+            }, 2000);
+        } else if (isFreeMode && freeSpinCount === 0) {
+            isFreeMode = false;
+            alert("ফ্রি স্পিন শেষ!");
+            resetToNormalMode();
+        }
 
+        if (queue.length < 5) loadBatch();
+    }, delay);
+}
 
-// বাটন কানেক্ট করা
-document.getElementById('spin-btn').onclick = handleSpin;
-loadBatch();
 function startFreeGames() {
     isFreeMode = true;
     freeSpinCount = 10;
-    
-    // স্পিন লক খুলে দেওয়া যাতে অটোমেটিক নতুন স্পিন শুরু হতে পারে
-    isSpinning = false; 
+    isSpinning = false;
 
-    // ১. মাল্টিপ্লায়ার টেক্সট বদলে দেওয়া (x2, x4, x6, x10)
     if(document.getElementById('m1')) {
         document.getElementById('m1').innerText = "x2";
         document.getElementById('m2').innerText = "x4";
@@ -222,7 +213,6 @@ function startFreeGames() {
         document.getElementById('m5').innerText = "x10";
     }
 
-    // ২. কাউন্টার দেখানো
     if(document.getElementById('free-spin-info')) {
         document.getElementById('free-spin-info').style.display = 'block';
         document.getElementById('fs-count').innerText = freeSpinCount;
@@ -230,9 +220,25 @@ function startFreeGames() {
 
     alert("🎰 অভিনন্দন! ১০টি ফ্রি স্পিন শুরু হচ্ছে! 🎰");
     
-    // ৩. 'OK' দেওয়ার ১.৫ সেকেন্ড পর প্রথম অটো স্পিনটি চালু করা
     setTimeout(function() {
-        handleSpin(); 
+        handleSpin();
     }, 1500);
 }
+
+function resetToNormalMode() {
+    isFreeMode = false;
+    document.getElementById('m1').innerText = "x1";
+    document.getElementById('m2').innerText = "x2";
+    document.getElementById('m3').innerText = "x3";
+    document.getElementById('m5').innerText = "x5";
+    if(document.getElementById('free-spin-info')) {
+        document.getElementById('free-spin-info').style.display = 'none';
+    }
+}
+
+// বাটন কানেক্ট করা (এই লাইনটি খুব জরুরি)
+document.getElementById('spin-btn').onclick = handleSpin;
+loadBatch();
+
+
 

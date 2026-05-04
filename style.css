@@ -1,187 +1,35 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
+/* ১ নম্বর লাইন থেকে এটি বসান */
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden; /* স্ক্রিন কাঁপাকাঁপি বন্ধ */
     background-color: #000;
+}
+
+body {
     display: flex;
-    justify-content: center;
-    align-items: center; /* এটি গেমটিকে স্ক্রিনের মাঝখানে আনবে */
-    height: 100vh; /* পুরো স্ক্রিন উচ্চতা ব্যবহার করবে */
-    overflow: hidden; /* স্ক্রিন যেন নড়াচড়া না করে */
+    flex-direction: column;
+    justify-content: flex-start; /* ওপরে সামান্য গ্যাপ রেখে শুরু হবে */
+    align-items: center;
 }
 
 .game-container {
-    width: 98vw; /* মোবাইলের পুরো চওড়া স্ক্রিন */
+    width: 100vw; /* মোবাইলের পুরো চওড়া */
+    height: auto;
     max-width: 480px;
-    padding: 15px 5px;
-    background: linear-gradient(180deg, #1a1a1a, #000);
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+    padding-top: 10px; /* একদম ওপরের বর্ডার থেকে একটু নিচে */
     display: flex;
     flex-direction: column;
-    gap: 15px;
-}
-.multiplier-bar { display: flex; justify-content: space-around; margin-bottom: 10px; color: #666; font-weight: bold; }
-.multiplier-bar .active { color: gold; text-shadow: 0 0 10px gold; }
-.slot-machine { display: flex; gap: 5px; background: #000; padding: 5px; border-radius: 8px; height: 340px; overflow: hidden; }
-/* ১ নম্বর লাইন থেকে এটি আপডেট করুন */
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center; /* এটি গেমটিকে স্ক্রিনের মাঝখানে আনবে */
-    height: 100vh; /* পুরো স্ক্রিন উচ্চতা ব্যবহার করবে */
-    overflow: hidden; /* স্ক্রিন যেন নড়াচড়া না করে */
+    gap: 12px;
 }
 
-.game-container {
-    width: 98vw; /* মোবাইলের পুরো চওড়া স্ক্রিন */
-    max-width: 480px;
-    padding: 15px 5px;
-    background: linear-gradient(180deg, #1a1a1a, #000);
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* রীলগুলো যেন বড় দেখায় */
+/* রীলগুলো যেন স্ক্রিন অনুযায়ী বড় হয় */
 .reel-container {
     display: flex;
     justify-content: center;
     gap: 4px;
-}
-
-.cell {
-    flex: 1;
-    aspect-ratio: 1 / 1; /* কার্ডগুলো একদম বর্গাকার হবে */
-    background: #222;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.cell img {
-    width: 90%;
-    height: 90%;
-}
-
-/* গোল্ডেন কার্ডকে সাধারণ কার্ডের মতো বানানো */
-.golden { 
-    background: #222 !important; /* সাধারণ ডার্ক ব্যাকগ্রাউন্ড */
-    border: 1px solid #333 !important; 
-    box-shadow: none !important;
-}
-
-/* গোল্ডেন কার্ডের ভেতরের ছবিকেও সাধারণ রাখা */
-.golden img {
-    filter: none !important;
-}
-
-/* ২৩ থেকে ৩২ নম্বর লাইনের জায়গায় এটি বসান */
-.win-highlight { 
-    border: 3px solid #00ff00 !important; 
-    box-shadow: 0 0 20px #00ff00 !important;
-    z-index: 10;
-}
-
-.reel-spinning {
-    filter: blur(2px);
-    transition: transform 0.1s linear;
-}
-
-.cell-fall {
-    animation: superDrop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-@keyframes superDrop {
-    0% { transform: translateY(-100%); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-
-.wild-explosion {
-    background: radial-gradient(circle, #ff0000, #330000) !important;
-    border: 2px solid #ffd700 !important;
-    box-shadow: 0 0 20px #ff0000 !important;
-}
-.wild-explosion img {
-    filter: drop-shadow(0 0 5px #fff);
-}
-
-
-#spin-btn { 
-    width: 100%; 
-    padding: 15px; 
-    background: linear-gradient(#ff0000, #800); 
-    border: none; 
-    color: white; 
-    font-size: 22px; 
-    border-radius: 50px; 
-    margin-top: 15px; 
-    cursor: pointer; 
-    font-weight: bold;
-}
-
-#spin-btn:active { transform: scale(0.95); }
-
-.info-row { display: flex; justify-content: space-between; margin-top: 10px; text-align: center; }
-.box { flex: 1; background: #000; padding: 5px; border: 1px solid #333; border-radius: 5px; margin: 0 5px; }
-.box small { color: #888; font-size: 10px; display: block; }
-.box div { font-size: 18px; font-weight: bold; color: gold; }
-/* স্ক্যাটার কার্ডের গ্লো এনিমেশন */
-.scatter-glow {
-    animation: scatterFlash 1s infinite alternate;
-    box-shadow: 0 0 15px #00ff00 !important; /* সবুজ আভা */
-    border: 2px solid #00ff00 !important;
-    z-index: 100;
-}
-
-@keyframes scatterFlash {
-    from { filter: brightness(1); transform: scale(1); }
-    to { filter: brightness(1.5); transform: scale(1.05); }
-}
-.multiplier-bar span.active {
-    background: linear-gradient(180deg, #ffea00, #ff9100) !important;
-    color: black !important;
-    font-weight: bold;
-    box-shadow: 0 0 15px #ffea00 !important;
-    transform: scale(1.2);
-    border: 1px solid white;
-}
-
-/* মোবাইল ফার্স্ট ডিজাইন (ডেস্কটপ বাদ) */
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* ওপরে একটু জায়গা রেখে শুরু হবে */
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    overflow-x: hidden; /* সাইড স্ক্রল বন্ধ */
-}
-
-.game-container {
-    width: 100vw !important; /* মোবাইলের পুরো চওড়া */
-    max-width: 500px; /* ট্যাব বা বড় ফোনেও সুন্দর দেখাবে */
-    padding: 10px 5px;
-    background: linear-gradient(180deg, #1a1a1a, #000);
-    box-sizing: border-box;
-    border: none;
-}
-
-/* রীল এবং সেলগুলো মোবাইলে বড় করার জন্য */
-.reel-container {
-    display: flex;
-    justify-content: center;
-    gap: 3px; /* রীলের মাঝের গ্যাপ */
-    margin-top: 10px;
+    padding: 0 5px;
 }
 
 .reel {
@@ -189,15 +37,15 @@ body {
 }
 
 .cell {
-    width: 100% !important; 
-    aspect-ratio: 1 / 1; /* কার্ডগুলো একদম স্কয়ার (বর্গাকার) থাকবে */
-    background: #222;
-    border-radius: 4px;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* কার্ডগুলো সবসময় বর্গাকার থাকবে */
+    background: linear-gradient(145deg, #222, #111);
+    border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 3px;
-    box-shadow: inset 0 0 10px #000;
+    margin-bottom: 4px;
+    border: 1px solid #333;
 }
 
 .cell img {
@@ -205,29 +53,17 @@ body {
     height: 85%;
 }
 
-/* মাল্টিপ্লায়ার বার এবং বাটন মোবাইলের জন্য বড় করা */
-.multiplier-bar {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
-}
-
-.multiplier-bar span {
-    font-size: 14px;
-    padding: 4px 10px;
-    border-radius: 4px;
-}
-
+/* বাটন এবং ইনফো বক্সের সাইজ মোবাইলের জন্য বড় করা */
 #spin-btn {
     width: 90%;
-    margin: 15px auto;
-    height: 55px;
-    font-size: 24px;
-    display: block;
+    margin: 10px auto;
+    height: 60px;
+    font-size: 22px;
     border-radius: 50px;
-    text-transform: uppercase;
 }
 
 .info-row {
-    padding: 0 10px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
 }

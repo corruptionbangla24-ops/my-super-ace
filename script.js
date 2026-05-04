@@ -1,4 +1,4 @@
-let queue = [], isSpinning = false, isTurbo = false;
+leteue = [], isSpinning = false, isTurbo = false;
 let freeSpinCount = 0, isFreeMode = false;
 let currentMultiplier = 1; 
 const normalMulti = [1, 2, 3, 5];
@@ -111,6 +111,30 @@ if (isSpinning) return;
                     startFreeGames();
                 } else {
                     console.error("startFreeGames function is missing!");
+                    if (data.win_pos && data.win_pos.length > 0) {
+            // ১. মাল্টিপ্লায়ার লেভেল সেট করা
+            let levels = isFreeMode ? [2, 4, 6, 10] : [1, 2, 3, 5];
+            let currentIdx = levels.indexOf(currentMultiplier);
+            
+            if (currentIdx < levels.length - 1) {
+                currentMultiplier = levels[currentIdx + 1];
+            }
+
+            // ২. স্ক্রিনে ডিসপ্লে এবং উইন আপডেট করা
+            updateMultiplierDisplay(currentMultiplier);
+            
+            let totalWin = parseFloat(data.win) * currentMultiplier;
+            document.getElementById('win-amount').innerText = totalWin.toFixed(2);
+            
+            playS('calculation'); 
+
+            // ৩. উইন হাইলাইট করা (আপনার ১১৫ নম্বর লাইন থেকে যা শুরু হয়েছে)
+            data.win_pos.forEach(p => {
+                let cell = document.getElementById(`c-${p.c}-${p.r}`);
+                if (cell) cell.classList.add('win-highlight');
+            });
+            playS('win');
+        }
                 }
             }, 2000);
         }

@@ -35,14 +35,20 @@ for ($s = 0; $s < 50; $s++) {
         for ($c = 1; $c < 5; $c++) {
             $found = false;
             for ($row = 0; $row < 4; $row++) {
-                if ($reels[$c][$row]['s'] === $sym || $reels[$c][$row]['s'] === 'wild.png') { $match[] = [$c, $row]; $found = true; }
+                               // ৩৮ নম্বর লাইন থেকে ৪৫ নম্বর লাইনের জায়গায় এটি বসান
+                $curr = $reels[$c][$row]['s'];
+                if ($curr === $sym || $curr === 'wild.png' || $sym === 'wild.png') {
+                    $match[] = ['c' => $c, 'r' => $row];
+                    $found = true;
+                }
             }
             if (!$found) break;
         }
         if (count($match) >= 3) {
             $win_amount += count($match) * 5;
-            foreach($match as $m) $win_pos[$m[0].'-'.$m[1]] = ['c' => $m[0], 'r' => $m[1]];
+            foreach ($match as $m) $win_pos[$m['c'].'-'.$m['r']] = $m;
         }
+ 
     }
     $balance += $win_amount;
     $results[] = ['reels' => $reels, 'win_pos' => array_values($win_pos), 'win' => number_format($win_amount, 2, '.', ''), 'bal' => number_format($balance, 2, '.', '')];

@@ -19,18 +19,28 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
     filter: none !important;
 }
 
+/* ২৩ থেকে ৩২ নম্বর লাইনের জায়গায় এটি বসান */
+.win-highlight { 
+    border: 3px solid #00ff00 !important; 
+    box-shadow: 0 0 20px #00ff00 !important;
+    z-index: 10;
+}
 
-.win-highlight { border: 3px solid #00ff00 !important; box-shadow: 0 0 15px #00ff00 !important; z-index: 10; }
-.reel-spinning { animation: shake 0.1s infinite alternate; filter: blur(2px); }
-@keyframes shake { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
+.reel-spinning {
+    filter: blur(2px);
+    transition: transform 0.1s linear;
+}
+
 .cell-fall {
-    animation: superDrop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: superDrop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 @keyframes superDrop {
-    0% { transform: translateY(-350px); opacity: 0; }
+    0% { transform: translateY(-100%); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
 }
+
+
 .wild-explosion {
     background: radial-gradient(circle, #ff0000, #330000) !important;
     border: 2px solid #ffd700 !important;

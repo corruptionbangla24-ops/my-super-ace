@@ -4,39 +4,41 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    overflow: hidden; /* স্ক্রিন কাঁপাকাঁপি বন্ধ */
+    overflow-x: hidden; /* সাইড স্ক্রল বন্ধ */
     display: flex;
     justify-content: center;
 }
 
 .game-container {
-    width: 100vw;
-    max-width: 450px;
+    width: 100vw; /* মোবাইলের পুরো চওড়া */
+    max-width: 450px; /* ট্যাব বা বড় ফোনেও সুন্দর দেখাবে */
     padding: 10px 5px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
-/* রীলগুলো পাশাপাশি আনার প্রধান লজিক */
+/* রীলগুলো পাশাপাশি আনার আসল ম্যাজিক লজিক */
 .reel-container {
-    padding: 10px 5px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 8px;
-    margin-bottom: 15px;
+    display: flex !important; /* রীলগুলোকে এক লাইনে পাশাপাশি আনবে */
+    flex-direction: row !important;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px; /* রীলের মাঝের ফাঁকা জায়গা */
 }
+
 .reel {
-    flex: 1; /* প্রতিটি রীল সমান চওড়া হবে */
+    flex: 1; /* প্রতিটি রীল সমান জায়গা দখল করবে */
     display: flex;
     flex-direction: column;
 }
 
 .cell {
     width: 100%;
-    aspect-ratio: 1 / 1; /* কার্ডগুলো একদম বর্গাকার হবে */
+    aspect-ratio: 1 / 1; /* কার্ডগুলো সবসময় সুন্দর বর্গাকার থাকবে */
     background: #1a1a1a;
-    border-radius: 4px;
-    margin-bottom: 3px;
+    border-radius: 5px;
+    margin-bottom: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,27 +46,29 @@ html, body {
 }
 
 .cell img {
-    width: 90%;
-    height: 90%;
+    width: 85%;
+    height: 85%;
     object-fit: contain;
 }
 
-/* বাটন ও ইনফো সেকশন মোবাইলের জন্য */
+/* বাটন ও ইনফো সেকশন */
 #spin-btn {
     width: 90%;
     margin: 10px auto;
-    height: 50px;
-    background: linear-gradient(#f00, #800);
+    height: 55px;
+    background: linear-gradient(180deg, #ff0000, #8b0000);
     border-radius: 50px;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     border: none;
+    box-shadow: 0 4px 10px rgba(255,0,0,0.4);
 }
 
 .info-row {
     display: flex;
     justify-content: space-around;
+    width: 100%;
     color: gold;
     font-size: 14px;
 }

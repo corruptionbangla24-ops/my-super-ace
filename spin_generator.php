@@ -41,6 +41,14 @@ for ($s = 0; $s < 50; $s++) {
             $reels[rand(2, 4)][rand(0, 3)] = ['s' => 'wild.png', 'g' => false];
         }
     }
+    // ৪৪ নম্বর লাইনে এটি বসান (৩% সম্ভাবনা ৩টি Scatter আসার)
+    if (rand(1, 100) <= 3) {
+        $scatterCols = array_rand(range(0, 4), 3);
+        foreach ($scatterCols as $sc) {
+            $sr = rand(0, 3);
+            $reels[$sc][$sr] = ['s' => '9.png', 'g' => false];
+        }
+    }
 
     // ৫. উইন ক্যালকুলেশন
     $win_amount = 0;

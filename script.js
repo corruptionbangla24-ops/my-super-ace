@@ -42,16 +42,17 @@ async function handleSpin() {
         if (data.win_pos && data.win_pos.length > 0) {
             await new Promise(r => setTimeout(r, 500));
             
-            // হাইলাইট করা
+                      // ৪৫ থেকে ৭০ নম্বর লাইনের জায়গায় এটি বসান
+            // ১. হাইলাইট করা
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
                 if (cell) cell.classList.add('win-highlight');
             });
             playS('win');
-            
-            await new Promise(r => setTimeout(r, 1000));
-            
-            // ৫. কার্ড উধাও হওয়া (ভ্যানিশ) এবং Wild তৈরি
+
+            await new Promise(r => setTimeout(r, 800));
+
+            // ২. কার্ড উধাও করা (ভ্যানিশ লজিক)
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
                 if (cell) {
@@ -60,28 +61,25 @@ async function handleSpin() {
                     cell.style.transform = "scale(0)";
                     cell.style.opacity = "0";
 
-                                  if (isGolden) {
+                    // যদি গোল্ডেন কার্ড হয়, তবে Wild তৈরি হবে
+                    if (isGolden) {
                         setTimeout(() => {
                             let wild = document.createElement('div');
-                            // 'cell' এর সাথে 'wild-explosion' এবং 'cell-fall' দুটোই থাকবে
-                            wild.className = 'cell wild-explosion cell-fall';
-                            wild.id = `c-${p.c}-${p.r}`; // সবচেয়ে জরুরি: পুরনো ID-টাই দিতে হবে
+                            wild.className = 'cell wild-explosion cell-fall win-highlight';
+                            wild.id = `c-${p.c}-${p.r}`; 
                             wild.innerHTML = '<img src="wild.png">';
-                            
-                            // কার্ডটি ঠিক ওই পজিশনেই বসানো
                             cell.parentElement.appendChild(wild);
                             playS('wild');
                         }, 350);
                     }
-      
                 }
             });
 
-            // ৬. খালি জায়গা ফিলআপ করা
+            // ৩. ফিলআপ করার কল (Cascade)
             setTimeout(() => {
                 processCascade();
-            }, 500);
-        }
+            }, 600);
+          }
 
         // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;

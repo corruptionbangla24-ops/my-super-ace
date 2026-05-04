@@ -68,14 +68,13 @@ $user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
     <button id="spin-btn">SPIN</button>
 </div>
 
-<!-- জাভাস্ক্রিপ্ট ভেরিয়েবল পাস করা -->
 <script>
-    const userId = <?php echo $user_id; ?>;
+    // এটি নিশ্চিত করুন, না থাকলে কার্ড লোড হবে না
+    const userId = 1; 
 </script>
-
-<!-- স্ক্রিপ্ট ফাইল কানেক্ট করা -->
 <script src="sound_manager.js"></script>
 <script src="script.js"></script>
+
 
 </body>
 </html>

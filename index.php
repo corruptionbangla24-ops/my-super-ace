@@ -20,6 +20,10 @@
                 <div class="reel" id="reel-<?= $i ?>"><?php for($j=0;$j<4;$j++): ?><div class="cell"><img src="1.png"></div><?php endfor; ?></div>
             <?php endfor; ?>
         </div>
+         <div id="free-spin-info" style="display: none; color: gold; text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 14px;">
+    FREE SPINS LEFT: <span id="fs-count">0</span>
+</div>
+           
         <div class="controls">
             <div class="info-row">
                 <div class="box"><small>BALANCE</small><div id="bal-val">0.00</div></div>

@@ -60,4 +60,16 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
 .box { flex: 1; background: #000; padding: 5px; border: 1px solid #333; border-radius: 5px; margin: 0 5px; }
 .box small { color: #888; font-size: 10px; display: block; }
 .box div { font-size: 18px; font-weight: bold; color: gold; }
+/* স্ক্যাটার কার্ডের গ্লো এনিমেশন */
+.scatter-glow {
+    animation: scatterFlash 1s infinite alternate;
+    box-shadow: 0 0 15px #00ff00 !important; /* সবুজ আভা */
+    border: 2px solid #00ff00 !important;
+    z-index: 100;
+}
+
+@keyframes scatterFlash {
+    from { filter: brightness(1); transform: scale(1); }
+    to { filter: brightness(1.5); transform: scale(1.05); }
+}
 

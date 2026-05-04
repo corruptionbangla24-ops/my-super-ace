@@ -17,10 +17,16 @@ $balance = (float)$user['balance'];
 
 $results = [];
 
-// ৩. ৫০টি স্পিন জেনারেট করা
+// ২০ থেকে ২৩ নম্বর লাইনের জায়গায় এটি বসান
+$mode = isset($_GET['mode']) ? $_GET['mode'] : 'normal';
+
 for ($s = 0; $s < 50; $s++) {
-    if ($balance < $bet) break;
-    $balance -= $bet;
+    // যদি ফ্রি মোড না হয়, তবেই টাকা কাটবে
+    if ($mode !== 'free') {
+        if ($balance < $bet) break;
+        $balance -= $bet;
+    }
+
 
     // রীল জেনারেশন
     $reels = [];

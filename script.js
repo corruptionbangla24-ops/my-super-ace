@@ -126,12 +126,27 @@ async function handleSpin() {
         // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;
         document.getElementById('win-amount').innerText = data.win;
-        
+                // ১৩০ নম্বর লাইন থেকে এটি বসানো শুরু করুন
         isSpinning = false;
+
+        // ফ্রি স্পিন অটোমেটিক চালানোর লজিক
+        if (isFreeMode && freeSpinCount > 0) {
+            // ২ সেকেন্ড বিরতি দিয়ে পরের স্পিন নিজে নিজেই শুরু হবে
+            setTimeout(() => {
+                handleSpin();
+            }, 2000);
+        } else if (isFreeMode && freeSpinCount === 0) {
+            isFreeMode = false;
+            alert("ফ্রি স্পিন শেষ!");
+            resetToNormalMode(); // সাধারণ মোডে ফিরে যাওয়া
+        }
+
         if (queue.length < 5) loadBatch();
         
     }, delay);
 }
+
+        
 function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);

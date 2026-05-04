@@ -31,20 +31,15 @@ body { background: #0a0a0a; color: white; display: flex; justify-content: center
     0% { transform: translateY(-350px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
 }
-/* ৩৮ নম্বর লাইন থেকে শেষ পর্যন্ত এটি বসান */
 .wild-explosion {
     background: radial-gradient(circle, #ff0000, #330000) !important;
     border: 2px solid #ffd700 !important;
-    box-shadow: 0 0 30px #ff0000 !important;
-    z-index: 100;
-    transition: all 0.4s ease; /* এটিই কার্ডকে ছোট হতে সাহায্য করবে */
-    animation: explode 0.5s ease-out forwards;
+    box-shadow: 0 0 20px #ff0000 !important;
+}
+.wild-explosion img {
+    filter: drop-shadow(0 0 5px #fff);
 }
 
-@keyframes explode {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
 
 #spin-btn { 
     width: 100%; 

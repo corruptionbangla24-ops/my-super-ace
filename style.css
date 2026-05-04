@@ -9,14 +9,16 @@ html, body {
     justify-content: center;
 }
 
+/* style.css এ এটি নিশ্চিত করুন */
 .game-container {
-    width: 100vw; /* মোবাইলের পুরো চওড়া */
-    max-width: 450px; /* ট্যাব বা বড় ফোনেও সুন্দর দেখাবে */
-    padding: 10px 5px;
-    display: flex;
+    display: flex !important; /* এটি গেমটি সবসময় সামনে রাখবে */
     flex-direction: column;
-    gap: 12px;
+    width: 100vw;
+    max-width: 450px;
+    margin: 0 auto;
+    background: #000;
 }
+
 
 /* রীলগুলো পাশাপাশি আনার আসল ম্যাজিক লজিক */
 .reel-container {

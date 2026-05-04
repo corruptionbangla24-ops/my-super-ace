@@ -60,17 +60,38 @@ async function handleSpin() {
         
     }, delay);
 }
+function processCascade() {
+    for (let i = 0; i < 5; i++) {
+        let reel = document.getElementById(`reel-${i}`);
+        let cells = Array.from(reel.querySelectorAll('.cell'));
+        
+        // ১. উধাও হওয়া কার্ডগুলো রিমুভ করা
+        cells.forEach(c => { 
+            if (c.style.opacity === "0" || c.style.transform === "scale(0)") {
+                c.remove(); 
+            }
+        });
 
-function processCascade(winPos) {
-    winPos.forEach(p => {
-        let cell = document.getElementById(`c-${p.c}-${p.r}`);
-        if (cell) {
-            cell.style.transform = "scale(0)";
-            cell.style.opacity = "0";
-            setTimeout(() => cell.remove(), 400);
+        // ২. খালি জায়গা হিসেব করে নতুন কার্ড যোগ করা
+        let remaining = reel.querySelectorAll('.cell').length;
+        let missing = 4 - remaining;
+
+        for (let n = 0; n < missing; n++) {
+            let newImg = Math.floor(Math.random() * 10 + 1) + ".png";
+            let newCard = document.createElement('div');
+            // 'cell-fall' ক্লাসটি নিশ্চিত করবে যে কার্ড ওপর থেকে পড়ছে
+            newCard.className = 'cell cell-fall'; 
+            newCard.innerHTML = `<img src="${newImg}">`;
+            
+            // রীলের শুরুতে (উপরে) নতুন কার্ডটি ঢুকানো
+            reel.prepend(newCard); 
         }
-    });
+    }
+    // কার্ড পড়ার সাউন্ড
+    playS('drop'); 
 }
+
+
 
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;

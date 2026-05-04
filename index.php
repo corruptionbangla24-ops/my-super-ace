@@ -8,7 +8,13 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="multiplier-bar"><span id="m1" class="active">x1</span><span id="m2">x2</span><span id="m3">x3</span><span id="m5">x5</span></div>
+        <div class="multiplier-bar">
+    <span id="m1" class="active">x1</span>
+    <span id="m2">x2</span>
+    <span id="m3">x3</span>
+    <span id="m5">x5</span>
+</div>
+
         <div class="slot-machine">
             <?php for($i=0;$i<5;$i++): ?>
                 <div class="reel" id="reel-<?= $i ?>"><?php for($j=0;$j<4;$j++): ?><div class="cell"><img src="1.png"></div><?php endfor; ?></div>

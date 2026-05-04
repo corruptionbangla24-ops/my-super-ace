@@ -5,46 +5,44 @@ html, body {
     padding: 0;
     background-color: #000;
     overflow: hidden; /* স্ক্রিন কাঁপাকাঁপি বন্ধ */
-}
-
-body {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
 }
 
 .game-container {
     width: 100vw;
     max-width: 450px;
     padding: 10px 5px;
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* রীলগুলো পাশাপাশি বসার প্রধান লজিক */
+/* রীলগুলো পাশাপাশি আনার প্রধান লজিক */
 .reel-container {
-    display: flex; /* এটিই ৫টি রীলকে এক লাইনে আনবে */
+    display: flex !important; /* এটি ৫টি রীলকে এক লাইনে রাখবে */
+    flex-direction: row !important;
     justify-content: space-between;
-    gap: 4px;
     width: 100%;
+    gap: 2px;
 }
 
 .reel {
-    flex: 1; /* প্রতিটি রীল সমান জায়গা নেবে */
+    flex: 1; /* প্রতিটি রীল সমান চওড়া হবে */
     display: flex;
     flex-direction: column;
 }
 
 .cell {
     width: 100%;
-    aspect-ratio: 1 / 1.1; /* কার্ডগুলো সামান্য লম্বাটে সুন্দর দেখাবে */
+    aspect-ratio: 1 / 1; /* কার্ডগুলো একদম বর্গাকার হবে */
     background: #1a1a1a;
     border-radius: 4px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #333;
-    overflow: hidden;
 }
 
 .cell img {
@@ -53,15 +51,22 @@ body {
     object-fit: contain;
 }
 
-/* বাটন ও ইনফো সেকশন */
+/* বাটন ও ইনফো সেকশন মোবাইলের জন্য */
 #spin-btn {
     width: 90%;
     margin: 10px auto;
     height: 50px;
-    display: block;
     background: linear-gradient(#f00, #800);
     border-radius: 50px;
     color: white;
     font-size: 20px;
+    font-weight: bold;
     border: none;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-around;
+    color: gold;
+    font-size: 14px;
 }

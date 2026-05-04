@@ -149,14 +149,10 @@ if (queue.length === 0) return;
         // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;
         document.getElementById('win-amount').innerText = data.win;
-                // ১৩০ নম্বর লাইন থেকে এটি বসানো শুরু করুন
-        isSpinning = false;
+                isSpinning = false;
 
         // ফ্রি স্পিন অটোমেটিক চালানোর লজিক
-                // ১৪৪ থেকে ১৫৩ নম্বর লাইনের জায়গায় এটি বসান
         if (isFreeMode && freeSpinCount > 0) {
-            console.log("বাকি ফ্রি স্পিন:", freeSpinCount);
-            // বর্তমান স্পিন পুরোপুরি শেষ হওয়ার জন্য ২ সেকেন্ড বিরতি
             setTimeout(function() {
                 handleSpin();
             }, 2000);
@@ -170,6 +166,7 @@ if (queue.length === 0) return;
         
     }, delay);
 }
+        
 
         
 function processCascade() {

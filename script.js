@@ -41,30 +41,30 @@ async function handleSpin() {
         
         playS('stop');
 
-        // ৪. উইন চেক এবং এনিমেশন
-        if (data.win_pos && data.win_pos.length > 0) {
-            await new Promise(r => setTimeout(r, 500));
+              if (data.win_pos && data.win_pos.length > 0) {
+            // ১. হাইলাইট করার পর বিরতি (যাতে প্লেয়ার দেখতে পায়)
+            await new Promise(r => setTimeout(r, 1000)); 
             
-                      // ৪৫ থেকে ৭০ নম্বর লাইনের জায়গায় এটি বসান
-            // ১. হাইলাইট করা
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
-                if (cell) cell.classList.add('win-highlight');
+                if (cell) {
+                    cell.classList.add('win-highlight');
+                }
             });
             playS('win');
 
+            // ২. ভ্যানিশ হওয়ার আগে আরেকটু বিরতি (সবচেয়ে জরুরি)
             await new Promise(r => setTimeout(r, 800));
 
-            // ২. কার্ড উধাও করা (ভ্যানিশ লজিক)
             data.win_pos.forEach(p => {
                 let cell = document.getElementById(`c-${p.c}-${p.r}`);
                 if (cell) {
                     let isGolden = cell.classList.contains('golden');
-                    cell.style.transition = "all 0.4s ease";
+                    cell.style.transition = "all 0.5s ease";
                     cell.style.transform = "scale(0)";
                     cell.style.opacity = "0";
 
-                    // যদি গোল্ডেন কার্ড হয়, তবে Wild তৈরি হবে
+                    // ৩. গোল্ডেন কার্ড থেকে ওয়াইল্ড আসা (এনিমেশনসহ)
                     if (isGolden) {
                         setTimeout(() => {
                             let wild = document.createElement('div');
@@ -73,16 +73,17 @@ async function handleSpin() {
                             wild.innerHTML = '<img src="wild.png">';
                             cell.parentElement.appendChild(wild);
                             playS('wild');
-                        }, 350);
+                        }, 400);
                     }
                 }
             });
 
-            // ৩. ফিলআপ করার কল (Cascade)
+            // ৪. সবশেষে নতুন কার্ড পড়া (Cascade)
             setTimeout(() => {
                 processCascade();
-            }, 600);
-          }
+            }, 800);
+        }
+  
 
         // ব্যালেন্স আপডেট
         document.getElementById('bal-val').innerText = data.bal;

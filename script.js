@@ -92,30 +92,38 @@ async function handleSpin() {
         
     }, delay);
 }
-
-// ৭. কার্ড নিচে নামার লজিক (ফিলআপ)
 function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);
         let cells = Array.from(reel.querySelectorAll('.cell'));
 
+        // ১. উধাও হওয়া কার্ড এবং পুরনো ওয়াইল্ড কার্ড পরিষ্কার করা
         cells.forEach(c => {
-            if (c.style.opacity === "0" || c.style.transform === "scale(0)") {
+            // যদি কার্ডটি ছোট হয়ে যায় (scale 0) অথবা সেটি আমাদের সেই হাইলাইট হওয়া উইনিং কার্ড হয়
+            if (c.style.opacity === "0" || c.style.transform === "scale(0)" || c.classList.contains('win-highlight')) {
                 c.remove();
             }
         });
 
-        let missing = 4 - reel.querySelectorAll('.cell').length;
+        // ২. খালি জায়গা হিসেব করে নতুন কার্ড যোগ করা
+        let remaining = reel.querySelectorAll('.cell').length;
+        let missing = 4 - remaining;
+
         for (let n = 0; n < missing; n++) {
             let newImg = Math.floor(Math.random() * 10 + 1) + ".png";
             let newCard = document.createElement('div');
-            newCard.className = 'cell cell-fall';
+            newCard.className = 'cell cell-fall'; 
             newCard.innerHTML = `<img src="${newImg}">`;
-            reel.prepend(newCard);
+            
+            // রীলের শুরুতে (উপরে) নতুন কার্ডটি ঢুকানো
+            reel.prepend(newCard); 
         }
     }
+    // কার্ড পড়ার সাউন্ড
     playS('drop');
 }
+
+
 
 // বাটন কানেক্ট করা
 document.getElementById('spin-btn').onclick = handleSpin;

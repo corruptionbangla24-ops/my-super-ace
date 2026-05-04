@@ -20,13 +20,11 @@ html, body {
 
 /* রীলগুলো পাশাপাশি আনার প্রধান লজিক */
 .reel-container {
-    display: flex !important; /* এটি ৫টি রীলকে এক লাইনে রাখবে */
-    flex-direction: row !important;
-    justify-content: space-between;
-    width: 100%;
-    gap: 2px;
+    padding: 10px 5px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
-
 .reel {
     flex: 1; /* প্রতিটি রীল সমান চওড়া হবে */
     display: flex;

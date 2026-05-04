@@ -60,15 +60,20 @@ async function handleSpin() {
                     cell.style.transform = "scale(0)";
                     cell.style.opacity = "0";
 
-                    if (isGolden) {
+                                  if (isGolden) {
                         setTimeout(() => {
                             let wild = document.createElement('div');
+                            // 'cell' এর সাথে 'wild-explosion' এবং 'cell-fall' দুটোই থাকবে
                             wild.className = 'cell wild-explosion cell-fall';
+                            wild.id = `c-${p.c}-${p.r}`; // সবচেয়ে জরুরি: পুরনো ID-টাই দিতে হবে
                             wild.innerHTML = '<img src="wild.png">';
+                            
+                            // কার্ডটি ঠিক ওই পজিশনেই বসানো
                             cell.parentElement.appendChild(wild);
                             playS('wild');
                         }, 350);
                     }
+      
                 }
             });
 

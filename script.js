@@ -6,7 +6,7 @@ const normalMulti = [1, 2, 3, 5], freeMulti = [2, 4, 6, 10];
 // ১. ডাটা লোড করা
 async function loadBatch() {
     try {
-        let r = await fetch(`spin_generator.php?uid=${userId}`);
+        let r = await fetch(`spin_generator.php?uid=${userId}${isFreeMode ? '&mode=free' : ''}`);
         let d = await r.json();
         queue = d.results;
     } catch (e) { console.log("Load error:", e); }

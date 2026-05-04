@@ -210,7 +210,7 @@ function startFreeGames() {
     document.querySelector('.game-container').style.boxShadow = "0 0 20px #ffd700";
 
     // ৩. ৩টি ৯ (Scatter) পড়ার পর ১.৫ সেকেন্ড বিরতি দিয়ে অটো স্পিন শুরু
-    setTimeout(() => {
+    setTimeout(function() {
         handleSpin();
     }, 1500);
 }

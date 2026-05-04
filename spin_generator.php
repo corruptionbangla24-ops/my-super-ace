@@ -47,14 +47,15 @@ for ($s = 0; $s < 50; $s++) {
             $reels[rand(2, 4)][rand(0, 3)] = ['s' => 'wild.png', 'g' => false];
         }
     }
-// spin_generator.php এর ৪৪ নম্বর লাইনের আশেপাশে
-if (rand(1, 100) <= 1) { // ৩ এর জায়গায় ১ করে দিন
-    $scatterCols = array_rand(range(0, 4), 3);
-    foreach ($scatterCols as $sc) {
-        $sr = rand(0, 3);
-        $reels[$sc][$sr] = ['s' => '9.png', 'g' => false];
+    // ৪৪ নম্বর লাইনের আশেপাশে এটি আপডেট করুন (০.২৫% সম্ভাবনা)
+    if (rand(1, 400) <= 1) { 
+        $scatterCols = array_rand(range(0, 4), 3);
+        foreach ($scatterCols as $sc) {
+            $sr = rand(0, 3);
+            $reels[$sc][$sr] = ['s' => '9.png', 'g' => false];
+        }
     }
-}
+
 
 
     // ৫. উইন ক্যালকুলেশন

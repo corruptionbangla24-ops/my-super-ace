@@ -6,22 +6,23 @@ const normalMulti = [1, 2, 3, 5], freeMulti = [2, 4, 6, 10];
 // ১. ডাটা লোড করা
 async function loadBatch() {
     try {
-        let r = await fetch(`spin_generator.php?uid=${userId}${isFreeMode ? '&mode=free' : ''}`);
+        // এই লাইনটিই ফ্রি স্পিনে টাকা কাটা বন্ধ করবে
+        let url = `spin_generator.php?uid=${userId}${isFreeMode ? '&mode=free' : ''}`;
+        let r = await fetch(url);
         let d = await r.json();
         queue = d.results;
     } catch (e) { console.log("Load error:", e); }
 }
-// ১৫ নম্বর লাইনের উপরে এটি বসান
+
+// ২. মাল্টিপ্লায়ার ডিসপ্লে আপডেট করা
 function updateMultiplierDisplay(level) {
-    // সব স্প্যান থেকে active ক্লাস সরানো
     document.querySelectorAll('.multiplier-bar span').forEach(s => s.classList.remove('active'));
-    
-    // বর্তমান লেভেল খুঁজে বের করে active ক্লাস দেওয়া
     let mElement = document.getElementById(`m${level}`);
     if (mElement) {
         mElement.classList.add('active');
     }
 }
+
 
 // ২. মেইন স্পিন ফাংশন
 async function handleSpin() {

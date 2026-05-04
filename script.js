@@ -65,7 +65,7 @@ async function handleSpin() {
                 processCascade();
             }, 400);
         }
- 
+}); 
 function processCascade() {
     for (let i = 0; i < 5; i++) {
         let reel = document.getElementById(`reel-${i}`);

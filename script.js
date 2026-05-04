@@ -16,7 +16,15 @@ async function loadBatch() {
 async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
-    
+        // ১৯ নম্বর লাইনে এই অংশটুকু বসান
+    if (isFreeMode) {
+        freeSpinCount--; // একটি ফ্রি স্পিন কমে গেল
+        currentMultiplier = 2; // ফ্রি গেম x2 থেকে শুরু হয়
+    } else {
+        currentMultiplier = 1; // সাধারণ গেম x1 থেকে শুরু হয়
+    }
+    updateMultiplierDisplay(currentMultiplier);
+
     playS('click');
     playS('spin');
     

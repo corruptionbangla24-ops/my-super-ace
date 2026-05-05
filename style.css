@@ -15,11 +15,11 @@ body {
 .api-wrapper { 
     width: 100vw; 
     max-width: 450px; 
-    height: 100vh; 
+    height: 95vh; /* উচ্চতা কিছুটা কমিয়ে আনা হয়েছে */
     display: flex; 
     flex-direction: column; 
     justify-content: space-between; 
-    padding: 12px; 
+    padding: 10px; 
     box-sizing: border-box; 
     background: linear-gradient(180deg, #1a1a1a 0%, #000 100%); 
 }

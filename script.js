@@ -44,6 +44,7 @@ async function handleSpin() {
 
     setTimeout(() => {
         isSpinning = false;
+        playS('stop');
         if (data.win > 0) {
             document.getElementById('win-amount').innerText = parseFloat(data.win).toFixed(2);
             playS('win');

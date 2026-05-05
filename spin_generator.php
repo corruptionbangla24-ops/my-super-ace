@@ -49,7 +49,15 @@ while ($row = $get->fetch_assoc()) {
     $conn->query("UPDATE fix_pre_spin SET is_used = 1 WHERE id = ".$row['id']);
 }
 
-$conn->query("UPDATE users SET balance = balance - $bet + $tw WHERE id = $user_id");
+// ৫২ নম্বর লাইনের জায়গায় এটি বসান
+if (isset($_GET['mode']) && $_GET['mode'] == 'free') {
+    // ফ্রি স্পিন: শুধু জয় ($tw) যোগ হবে, বেট ($bet) কাটবে না
+    $conn->query("UPDATE users SET balance = balance + $tw WHERE id = $user_id");
+} else {
+    // নরমাল স্পিন: বেট ($bet) কাটবে এবং জয় ($tw) যোগ হবে
+    $conn->query("UPDATE users SET balance = balance - $bet + $tw WHERE id = $user_id");
+}
+
 $nb = $conn->query("SELECT balance FROM users WHERE id = $user_id")->fetch_assoc()['balance'];
 
 echo json_encode(['results' => $results, 'balance' => $nb, 'win' => $tw]);

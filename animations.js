@@ -12,3 +12,15 @@ function highlightWinningCards(winPos) {
         }
     });
 }
+
+
+async function processWinChain(winData) {
+    if (!winData || !winData.win_pos) return;
+
+    // আমরা যে ফাংশনটি বানালাম সেটি ডাকলাম
+    highlightWinningCards(winData.win_pos);
+    playS('win');
+
+    // ১ সেকেন্ড পর যেন পরের কাজ শুরু হয়
+    await new Promise(res => setTimeout(res, 1000));
+}

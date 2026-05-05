@@ -3,7 +3,9 @@ include 'db.php';
 header('Content-Type: application/json');
 
 $user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
-$bet = 10.00;
+// ৬ নম্বর লাইনে এটি বসান
+$bet = isset($_GET['bet']) ? floatval($_GET['bet']) : 10.00;
+
 
 $res = $conn->query("SELECT balance FROM users WHERE id = $user_id");
 if ($res && $res->num_rows > 0) {

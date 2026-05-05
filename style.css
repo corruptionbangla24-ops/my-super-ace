@@ -160,3 +160,63 @@ body {
     transform: scale(0.92);
     filter: brightness(1.2);
 }
+/* কন্ট্রোল সেকশন ডিজাইন */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto 15px;
+}
+
+.bet-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 15px;
+    border-radius: 50px;
+    gap: 20px;
+}
+
+.bet-adjust {
+    width: 35px;
+    height: 35px;
+    background: #333;
+    border: 1px solid gold;
+    color: gold;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.bet-info { text-align: center; min-width: 70px; }
+.bet-info small { color: #888; font-size: 10px; display: block; }
+.bet-info div { font-size: 18px; font-weight: bold; color: #fff; }
+
+.mode-section {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.mini-btn {
+    flex: 1;
+    background: #222;
+    border: 1px solid #444;
+    color: #888;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.mini-btn.active {
+    background: #444;
+    color: gold;
+    border-color: gold;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}

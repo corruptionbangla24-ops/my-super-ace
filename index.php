@@ -51,13 +51,12 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
             <button id="spin-btn">SPIN</button>
         </div>
     </div>
-
-    <!-- জাভাস্ক্রিপ্টে ইউজার আইডি পাঠানো -->
     <script>
-       const userId = 1; 
- 
+        const userId = <?php echo isset($uid) ? $uid : 1; ?>;
     </script>
     <script src="sound_manager.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
+    

@@ -28,12 +28,27 @@ if ($check->fetch_assoc()['total'] < 10) {
             }
             $reels[] = $column;
         }
+        // ১. ফিলআপের জন্য নতুন কার্ড জেনারেট করা (৩১ নম্বর লাইনের নিচে)
+        $next_reels = [];
+        for ($col = 0; $col < 5; $col++) {
+            $next_col = [];
+            for ($row = 0; $row < 4; $row++) {
+                $next_img = array_keys($card_paytable)[array_rand(array_keys($card_paytable))];
+                $next_col[] = ['s' => $next_img];
+            }
+            $next_reels[] = $next_col;
+        }
+
+        // ২. ডাইনামিক উইন পজিশন (যাতে সব সময় একই জায়গায় হাইলাইট না হয়)
+        $random_row = rand(0, 3); 
+        $dynamic_win_pos = ($win > 0) ? ["0,$random_row", "1,$random_row", "2,$random_row"] : [];
 
         $win = (rand(1, 100) <= $rtp) ? ($bet * (rand(1, 100)/10)) : 0;
         $spin_data = $conn->real_escape_string(json_encode([
             'reels' => $reels,
-            'next_combo' => $reels, // সিম্পল ফিলআপ ডাটা
-            'win_pos' => ($win > 0 ? ["0,1", "1,1", "2,1"] : []),
+                        'next_combo' => $next_reels, // ৩৫ নম্বর লাইনের জায়গায় এটি দিন
+            'win_pos' => $dynamic_win_pos, // ৩৬ নম্বর লাইনের জায়গায় এটি দিন
+
             'free_spins' => ($sc >= 3 ? 20 : 0)
         ]));
         $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $win)");

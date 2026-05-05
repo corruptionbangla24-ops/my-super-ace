@@ -293,34 +293,37 @@ body {
     50% { opacity: 1; }
     100% { opacity: 0.7; }
 }
-/* কয়েন বৃষ্টির এনিমেশন */
+/* --- বিগ উইন ও কয়েন বৃষ্টি ডিজাইন --- */
 .coin {
     position: fixed;
-    width: 25px;
-    height: 25px;
-    background: url('coin.png') no-repeat center/contain;
+    width: 35px;
+    height: 35px;
+    background: url('coin.png') no-repeat center/contain; /* নিশ্চিত করুন coin.png আপলোড করা আছে */
     top: -50px;
-    z-index: 999;
+    z-index: 9999;
     animation: coinFall linear forwards;
 }
 
 @keyframes coinFall {
-    to { transform: translateY(110vh) rotate(720deg); }
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(720deg); }
 }
 
-/* বিগ উইন টেক্সট */
-#big-win-text {
+#big-win-overlay {
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    font-size: 60px;
+    font-size: 70px;
     font-weight: bold;
     color: gold;
-    text-shadow: 0 0 20px #ff0000;
-    z-index: 1000;
-    transition: 0.5s;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px gold;
+    z-index: 10000;
+    text-align: center;
+    transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
 }
+
 /* নীল ইলেকট্রিক বর্ডার ইফেক্ট */
 .win-highlight {
     outline: 4px solid #00d2ff !important; /* উজ্জ্বল নীল বর্ডার */

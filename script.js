@@ -45,31 +45,34 @@ async function handleSpin() {
         if (queue.length < 5) loadBatch();
     }, 800);
 }
-
 function checkFreeSpin(data) {
-    // ১. ২০টি ফ্রি স্পিন শুরু করা (৩টি ৯.png পড়লে)
     if (data.free_spins > 0 && !isFreeMode) {
         isFreeMode = true;
-        freeSpinCount = data.free_spins; // ২০টি
+        freeSpinCount = 20; // আপনার চিরকুট অনুযায়ী ২০টি
         document.getElementById('fs-info').style.display = 'block';
         document.getElementById('fs-count').innerText = freeSpinCount;
         playS('scatter');
+        
+        // ১. ফ্রি স্পিন শুরু হওয়ার আগে কিউ (Queue) খালি করে নতুন ডাটা আনতে হবে
+        queue = []; 
+        loadBatch(); 
     }
 
-    // ২. অটো-স্পিন লজিক (এটি গেমকে থামতে দেবে না)
     if (isFreeMode && freeSpinCount > 0) {
-        isSpinning = false; // লক খুলে দেওয়া যাতে পরের স্পিন হতে পারে
+        isSpinning = false; // লক খুলে দেওয়া
         setTimeout(() => {
-            if (isFreeMode) handleSpin(); // অটোমেটিক পরের স্পিন শুরু
-        }, isTurbo ? 800 : 1500);
+            if (isFreeMode) handleSpin(); 
+        }, 1500);
     } else if (isFreeMode && freeSpinCount === 0) {
         isFreeMode = false;
         document.getElementById('fs-info').style.display = 'none';
         isSpinning = false;
+        loadBatch(); // আবার নরমাল ডাটা লোড করা
     } else {
-        isSpinning = false; // নরমাল স্পিন শেষে লক খোলা
+        isSpinning = false;
     }
 }
+
 
 
     

@@ -136,6 +136,38 @@ async function processWinChain(winData) {
     }
 
     playS('win');
+	    // ১৩৮ নম্বর লাইনের ঠিক নিচে এটি যোগ করুন
+    if (winData.win_pos) {
+        winData.win_pos.forEach(pos => {
+            let [r, c] = pos.split(','); // রীল এবং কার্ডের পজিশন আলাদা করা
+            let reelEl = document.getElementById(`reel-${r}`);
+            if (reelEl) {
+                let card = reelEl.children[c];
+                if (card) {
+                    card.classList.add('win-highlight'); // নীল বর্ডার যোগ (CSS থেকে)
+                }
+            }
+        });
+    }
+
+    // কার্ড উজ্জ্বল হয়ে থাকার জন্য ৬০০ মিলিসেকেন্ড সময় দিন
+    await new Promise(res => setTimeout(res, 600));
+
+    // এবার উজ্জ্বলতা সরিয়ে উধাও (Vanish) করার ফাংশন
+    if (winData.win_pos) {
+        winData.win_pos.forEach(pos => {
+            let [r, c] = pos.split(',');
+            let card = document.getElementById(`reel-${r}`).children[c];
+            if (card) {
+                card.classList.remove('win-highlight');
+                card.classList.add('explode'); // ভ্যানিশ ইফেক্ট যোগ
+            }
+        });
+    }
+
+    // কার্ড উধাও হওয়ার জন্য আরও ৫০০ মিলিসেকেন্ড অপেক্ষা
+    await new Promise(res => setTimeout(res, 500));
+
     
     // ১. জেতা কার্ডগুলো উধাও (Explode) করা
     if (winData.win_pos) {

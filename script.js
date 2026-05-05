@@ -54,6 +54,22 @@ async function handleSpin() {
             document.getElementById('win-amount').innerText = parseFloat(data.win).toFixed(2);
             
         }
+		        // ৫৬ নম্বর লাইনের নিচে এটি পেস্ট করুন
+        if (data.free_spins > 0 && !isFreeMode) {
+            isFreeMode = true;
+            freeSpinCount = data.free_spins; // ২০টি ফ্রি স্পিন সেট হবে
+            document.getElementById('fs-info').style.display = 'block';
+            document.getElementById('fs-count').innerText = freeSpinCount;
+            playS('scatter');
+        }
+
+        if (isFreeMode && freeSpinCount > 0) {
+            setTimeout(handleSpin, isTurbo ? 800 : 1500); 
+        } else if (isFreeMode && freeSpinCount === 0) {
+            isFreeMode = false;
+            document.getElementById('fs-info').style.display = 'none';
+        }
+
         if (queue.length < 5) loadBatch();
     }, 800);
 }

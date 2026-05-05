@@ -3,6 +3,8 @@ include 'db.php';
 header('Content-Type: application/json');
 
 $user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
+$is_free_mode = isset($_GET['mode']) && $_GET['mode'] == 'free';
+
 $bet = isset($_GET['bet']) ? floatval($_GET['bet']) : 10.00;
 $rtp = 90;
 

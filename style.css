@@ -336,34 +336,28 @@ body {
     from { transform: scale(1); }
     to { transform: scale(1.05); }
 }
-
-
-
-
-
-/* ২. কার্ড ভ্যানিশ (উধাও): জেতার পর কার্ডগুলো ফেটে ছোট হয়ে যাবে */
+/* ২ নম্বর ধাপ: কার্ড উধাও হওয়ার স্টাইল */
 .explode {
     transform: scale(0);
     opacity: 0;
-    transition: all 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-    filter: blur(5px) brightness(2); /* একটু ঘোলাটে এবং উজ্জ্বল হয়ে মিলিয়ে যাবে */
+    transition: all 0.4s ease-in;
+    filter: blur(5px) brightness(2);
 }
 
-/* ৩. ফিলআপ এনিমেশন: নতুন কার্ডগুলো ওপর থেকে স্লাইড করে পড়বে */
+/* ৩ নম্বর ধাপ: নতুন কার্ড ওপর থেকে পড়ার স্টাইল */
 .cell-new {
-    animation: slideInFromTop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: slideInDown 0.5s ease-out forwards;
 }
 
-@keyframes slideInFromTop {
-    0% {
-        transform: translateY(-120%); /* একদম ওপর থেকে শুরু হবে */
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+@keyframes slideInDown {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
+
+
+
+
+
 
 /* ৪. গোল্ডেন কার্ডের বিশেষ আভা (আপনার চিরকুটের লজিক অনুযায়ী) */
 .golden-cell {

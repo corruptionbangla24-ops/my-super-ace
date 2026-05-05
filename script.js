@@ -47,34 +47,32 @@ async function handleSpin() {
 }
 
 function checkFreeSpin(data) {
-    // ১. ২০টি ফ্রি স্পিন শুরু করার লজিক (৩টি scatter/৯ কার্ড পড়লে)
+    // ১. ২০টি ফ্রি স্পিন শুরু করা (৩টি ৯.png পড়লে)
     if (data.free_spins > 0 && !isFreeMode) {
         isFreeMode = true;
-        freeSpinCount = 20; // আপনার চিরকুট অনুযায়ী ২০টি
+        freeSpinCount = data.free_spins; // ২০টি
         document.getElementById('fs-info').style.display = 'block';
         document.getElementById('fs-count').innerText = freeSpinCount;
         playS('scatter');
-        console.log("ফ্রি স্পিন ট্রিগার হয়েছে!");
     }
 
-    // ২. অটো স্পিন লুপ (ফ্রি স্পিন মোডে থাকলে নিজে নিজে ঘুরবে)
+    // ২. অটো-স্পিন লজিক (এটি গেমকে থামতে দেবে না)
     if (isFreeMode && freeSpinCount > 0) {
-        // ১.৫ সেকেন্ড বিরতি দিয়ে আবার handleSpin কল করবে
+        isSpinning = false; // লক খুলে দেওয়া যাতে পরের স্পিন হতে পারে
         setTimeout(() => {
-            if (isFreeMode) handleSpin();
-        }, 1500);
+            if (isFreeMode) handleSpin(); // অটোমেটিক পরের স্পিন শুরু
+        }, isTurbo ? 800 : 1500);
     } else if (isFreeMode && freeSpinCount === 0) {
-        // ৩. ফ্রি স্পিন শেষ হলে নরমাল মোডে ফেরা
         isFreeMode = false;
         document.getElementById('fs-info').style.display = 'none';
-        alert("আপনার ২০টি ফ্রি স্পিন শেষ হয়েছে!");
-        isSpinning = false; // লক খুলে দেওয়া
-    } else {
-        // নরমাল স্পিন শেষে লক খুলে দেওয়া
         isSpinning = false;
+    } else {
+        isSpinning = false; // নরমাল স্পিন শেষে লক খোলা
     }
 }
 
+
+    
 
 function changeBet(val) {
     if (isSpinning) return;

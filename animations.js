@@ -43,6 +43,39 @@ function fillUpNewCards(winPos, nextCombo) {
     });
     playS('stop'); // কার্ড পড়ার শব্দ
 }
+// বিগ উইন ও কয়েন বৃষ্টির মাস্টার ফাংশন
+function triggerBigWin(amount) {
+    playS('bigwin'); // বিগ উইন সাউন্ড
+
+    // ১. বিগ উইন টেক্সট তৈরি
+    let winText = document.createElement('div');
+    winText.id = 'big-win-overlay';
+    winText.innerHTML = "BIG WIN<br>৳" + amount;
+    document.body.appendChild(winText);
+
+    // ২. কয়েন বৃষ্টি শুরু (৫০টি কয়েন)
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            let coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.style.left = Math.random() * 100 + 'vw';
+            coin.style.animationDuration = (Math.random() * 2 + 1) + 's'; // পড়ার গতি আলাদা হবে
+            document.body.appendChild(coin);
+            
+            // ৩ সেকেন্ড পর কয়েনটি রিমুভ করা
+            setTimeout(() => coin.remove(), 3000);
+        }, i * 100);
+    }
+
+    // টেক্সটটি বড় করে দেখানো
+    setTimeout(() => winText.style.transform = 'translate(-50%, -50%) scale(1)', 100);
+
+    // ৫ সেকেন্ড পর টেক্সটটি সরিয়ে ফেলা
+    setTimeout(() => {
+        winText.style.opacity = '0';
+        setTimeout(() => winText.remove(), 1000);
+    }, 5000);
+}
 
 
 async function processWinChain(winData) {

@@ -77,7 +77,9 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
         const userId = <?php echo isset($uid) ? $uid : 1; ?>;
     </script>
     <script src="sound_manager.js"></script>
-    <script src="script.js"></script>
+<script src="animations.js"></script> <!-- নতুন এনিমেশন ফাইল -->
+<script src="script.js"></script>
+
 </body>
 </html>
 

@@ -38,22 +38,47 @@ if ($check->fetch_assoc()['total'] < 10) {
             }
             $next_reels[] = $next_col;
         }
+        // --- ৪৩ নম্বর লাইনের জায়গায় এটি বসবে ---
+        $win_pos = [];
+        $total_multiplier = 0;
 
-        // ২. ডাইনামিক উইন পজিশন (যাতে সব সময় একই জায়গায় হাইলাইট না হয়)
-        $random_row = rand(0, 3); 
-        $dynamic_win_pos = ($win > 0) ? ["0,$random_row", "1,$random_row", "2,$random_row"] : [];
+        for ($r0 = 0; $r0 < 4; $r0++) {
+            $target = $reels[0][$r0]['s'];
+            if ($target === '9.png') continue; // স্কাটার আলাদা হিসাব হবে
 
-        $win = (rand(1, 100) <= $rtp) ? ($bet * (rand(1, 100)/10)) : 0;
+            $match_count = 1;
+            $temp_pos = ["0,$r0"];
+
+            for ($col = 1; $col < 5; $col++) {
+                $found = false;
+                for ($row = 0; $row < 4; $row++) {
+                    if ($reels[$col][$row]['s'] === $target || $reels[$col][$row]['s'] === 'wild.png') {
+                        $temp_pos[] = "$col,$row";
+                        $found = true;
+                    }
+                }
+                if ($found) $match_count++; else break;
+            }
+
+            if ($match_count >= 3) {
+                foreach ($temp_pos as $p) { if (!in_array($p, $win_pos)) $win_pos[] = $p; }
+                $val = isset($card_paytable[$target]) ? $card_paytable[$target] : 5;
+                $total_multiplier += ($val / 25) * ($match_count / 3);
+            }
+        }
+
+        $win_amount = $bet * $total_multiplier;
+        
         $spin_data = $conn->real_escape_string(json_encode([
             'reels' => $reels,
-                        'next_combo' => $next_reels, // ৩৫ নম্বর লাইনের জায়গায় এটি দিন
-            'win_pos' => $dynamic_win_pos, // ৩৬ নম্বর লাইনের জায়গায় এটি দিন
-
-            'free_spins' => ($sc >= 3 ? 20 : 0)
+            'next_combo' => $next_reels,
+            'win_pos' => $win_pos,
+            'free_spins' => ($sc_count >= 3 ? 20 : 0)
         ]));
-        $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $win)");
-    }
-}
+
+        $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $win_amount)");
+
+        
 
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
 $results = []; $tw = 0;

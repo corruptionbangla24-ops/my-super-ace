@@ -48,9 +48,17 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
         
         <!-- টোটাল উইন বক্স (মাঝখানে থাকবে) -->
         <div class="win-box-mini">
-            <small>TOTAL WIN</small>
-            <div id="win-amount">0.00</div>
-        </div>
+    <!-- বর্তমান বেট কত তা এখানে দেখাবে -->
+    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3px; margin-bottom: 3px;">
+        <small style="font-size: 8px; color: #888; display: block;">BET</small>
+        <div id="current-bet" style="font-size: 14px; font-weight: bold; color: gold;">10.00</div>
+    </div>
+    
+    <!-- টোটাল উইন এখানে দেখাবে -->
+    <small style="font-size: 8px; color: #888; display: block;">TOTAL WIN</small>
+    <div id="win-amount" style="font-size: 18px; font-weight: bold; color: #fff;">0.00</div>
+</div>
+
         
         <!-- প্লাস বাটন -->
         <button class="bet-adjust" onclick="changeBet(10)">+</button>

@@ -48,7 +48,42 @@ async function handleSpin() {
         if (queue.length < 5) loadBatch();
     }, 800);
 }
+// ৫২ থেকে ৫৮ লাইনের জায়গায় এটি বসান
+let currentBet = 10, isTurbo = false, isAuto = false, autoInterval;
 
+// ১. বেট কন্ট্রোল লজিক
+function changeBet(amount) {
+    if (isSpinning) return;
+    let newBet = currentBet + amount;
+    if (newBet >= 10 && newBet <= 500) {
+        currentBet = newBet;
+        document.getElementById('current-bet').innerText = currentBet.toFixed(2);
+        playS('click');
+        queue = []; 
+        loadBatch();
+    }
+}
+
+// ২. টার্বো ও অটো মোড হ্যান্ডেলার
+document.getElementById('turbo-btn').onclick = function() {
+    isTurbo = !isTurbo;
+    this.classList.toggle('active');
+    this.innerText = isTurbo ? "TURBO: ON" : "TURBO: OFF";
+};
+
+document.getElementById('auto-btn').onclick = function() {
+    isAuto = !isAuto;
+    this.classList.toggle('active');
+    this.innerText = isAuto ? "AUTO: ON" : "AUTO: OFF";
+    if (isAuto) startAutoCycle();
+};
+
+function startAutoCycle() {
+    if (isAuto && !isSpinning) handleSpin();
+    setTimeout(() => { if (isAuto) startAutoCycle(); }, isTurbo ? 1000 : 2500);
+}
+
+// ৩. মেইন বাটন কানেকশন ও ডাটা লোড
 document.getElementById('sound-toggle').onclick = function() {
     isMuted = !isMuted;
     this.innerText = isMuted ? "Sound: OFF" : "Sound: ON";
@@ -56,3 +91,4 @@ document.getElementById('sound-toggle').onclick = function() {
 
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();
+

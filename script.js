@@ -168,34 +168,7 @@ async function processWinChain(winData) {
         });
     }
 
-    // কার্ড উধাও হওয়ার জন্য আরও ৫০০ মিলিসেকেন্ড অপেক্ষা
-    await new Promise(res => setTimeout(res, 500));
 
-    
-    // ১. জেতা কার্ডগুলো উধাও (Explode) করা
-    if (winData.win_pos) {
-        winData.win_pos.forEach(pos => {
-            let [r, c] = pos.split(',');
-            let card = document.getElementById(`reel-${r}`).children[c];
-            if (card) card.classList.add('explode');
-        });
-    }
-
-    await new Promise(res => setTimeout(res, 500)); // ফাটার জন্য বিরতি
-
-    // ২. নতুন কার্ড দিয়ে ফিলআপ (Cascading)
-    if (winData.next_combo) {
-        winData.win_pos.forEach(pos => {
-            let [r, c] = pos.split(',');
-            let reelEl = document.getElementById(`reel-${r}`);
-            let card = reelEl.children[c];
-            let newImg = winData.next_combo[r][c].s;
-            card.innerHTML = `<img src="${newImg}">`;
-            card.classList.remove('explode');
-            card.classList.add('cell-new');
-        });
-        playS('stop');
-    }
 
     // ৩. উইন অ্যামাউন্ট আপডেট
     document.getElementById('win-amount').innerText = parseFloat(winData.win).toFixed(2);

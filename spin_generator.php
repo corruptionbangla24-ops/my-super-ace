@@ -1,76 +1,53 @@
-let queue = [], isSpinning = false, isFreeMode = false, freeSpinCount = 0;
-let currentBet = 10, isTurbo = false, isAuto = false, isMuted = false;
+<?php
+include 'db.php';
+header('Content-Type: application/json');
 
-async function loadBatch() {
-    try {
-        let url = `spin_generator.php?uid=${userId}&bet=${currentBet}${isFreeMode ? '&mode=free' : ''}`;
-        let r = await fetch(url);
-        let d = await r.json();
-        if (d.results) queue = d.results;
-        if (d.balance) document.getElementById('balance').innerText = parseFloat(d.balance).toFixed(2);
-    } catch (e) { console.error("Data error"); }
-}
+$user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
+$bet = isset($_GET['bet']) ? floatval($_GET['bet']) : 10.00;
+$rtp = 90;
 
-async function handleSpin() {
-    if (isSpinning || queue.length === 0) return;
-    isSpinning = true;
+$card_paytable = [
+    '2.png'=>100, '5.png'=>80, '10.png'=>60, '7.png'=>50, 
+    '3.png'=>40, '4.png'=>30, '1.png'=>20, '6.png'=>10, '8.png'=>5
+];
 
-    if (isFreeMode && freeSpinCount > 0) {
-        freeSpinCount--;
-        document.getElementById('fs-count').innerText = freeSpinCount;
-    }
-
-    let data = queue.shift();
-    playS('spin');
-
-    data.reels.forEach((col, i) => {
-        let el = document.getElementById(`reel-${i}`);
-        el.innerHTML = col.map((c, j) => `
-            <div class="cell cell-fall" style="animation-delay: ${j*0.05}s">
-                <img src="${c.s}">
-            </div>
-        `).join('');
-    });
-
-    setTimeout(async () => {
-        playS('stop');
-        if (data.win > 0) {
-            // এটি animations.js থেকে নীল হাইলাইট আর ভ্যানিশ চালাবে
-            await processWinChain(data); 
-        } else {
-            isSpinning = false;
+$check = $conn->query("SELECT COUNT(*) as total FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0");
+if ($check->fetch_assoc()['total'] < 10) {
+    for ($i = 0; $i < 50; $i++) {
+        $reels = []; $sc = 0;
+        for ($col = 0; $col < 5; $col++) {
+            $column = [];
+            for ($row = 0; $row < 4; $row++) {
+                $r = rand(1, 100);
+                if ($r <= 5) { $img = "9.png"; $sc++; }
+                elseif ($r <= 12) { $img = "wild.png"; }
+                else { $keys = array_keys($card_paytable); $img = $keys[array_rand($keys)]; }
+                $column[] = ['s' => $img, 'g' => (rand(1, 100) < 15)];
+            }
+            $reels[] = $column;
         }
 
-        checkFreeSpin(data);
-        if (queue.length < 5) loadBatch();
-    }, 800);
-}
-
-function checkFreeSpin(data) {
-    if (data.free_spins > 0 && !isFreeMode) {
-        isFreeMode = true;
-        freeSpinCount = data.free_spins;
-        document.getElementById('fs-info').style.display = 'block';
-        document.getElementById('fs-count').innerText = freeSpinCount;
-        playS('scatter');
-    }
-    if (isFreeMode && freeSpinCount > 0) setTimeout(handleSpin, isTurbo ? 800 : 1500);
-    else if (isFreeMode && freeSpinCount === 0) {
-        isFreeMode = false;
-        document.getElementById('fs-info').style.display = 'none';
+        $win = (rand(1, 100) <= $rtp) ? ($bet * (rand(1, 100)/10)) : 0;
+        $spin_data = $conn->real_escape_string(json_encode([
+            'reels' => $reels,
+            'next_combo' => $reels, // সিম্পল ফিলআপ ডাটা
+            'win_pos' => ($win > 0 ? ["0,1", "1,1", "2,1"] : []),
+            'free_spins' => ($sc >= 3 ? 20 : 0)
+        ]));
+        $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $win)");
     }
 }
 
-function changeBet(val) {
-    if (isSpinning) return;
-    currentBet = Math.max(10, Math.min(500, currentBet + val));
-    document.getElementById('current-bet').innerText = currentBet.toFixed(2);
-    queue = []; loadBatch();
+$get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
+$results = []; $tw = 0;
+while ($row = $get->fetch_assoc()) {
+    $d = json_decode($row['spin_data'], true);
+    $d['win'] = (float)$row['win_amount'];
+    $results[] = $d; $tw += $d['win'];
+    $conn->query("UPDATE fix_pre_spin SET is_used = 1 WHERE id = ".$row['id']);
 }
 
-document.getElementById('turbo-btn').onclick = () => { isTurbo = !isTurbo; document.getElementById('turbo-btn').classList.toggle('active'); };
-document.getElementById('auto-btn').onclick = () => { isAuto = !isAuto; document.getElementById('auto-btn').classList.toggle('active'); if(isAuto) handleSpin(); };
-document.getElementById('sound-toggle').onclick = () => { isMuted = !isMuted; document.getElementById('sound-toggle').innerText = isMuted ? "Sound: OFF" : "Sound: ON"; };
-document.getElementById('spin-btn').onclick = handleSpin;
+$conn->query("UPDATE users SET balance = balance - $bet + $tw WHERE id = $user_id");
+$nb = $conn->query("SELECT balance FROM users WHERE id = $user_id")->fetch_assoc()['balance'];
 
-loadBatch();
+echo json_encode(['results' => $results, 'balance' => $nb, 'win' => $tw]);

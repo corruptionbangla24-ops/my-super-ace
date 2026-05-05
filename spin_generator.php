@@ -16,22 +16,28 @@ $card_paytable = [
 $check = $conn->query("SELECT COUNT(*) as total FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0");
 $count = $check->fetch_assoc()['total'];
 
-// ২. ১০টির কম থাকলে নতুন ৫০টি স্পিন তৈরি করা
+// ২. যদি ১০টির কম থাকে, তবে নতুন ১০০টি স্পিন তৈরি করা
 if ($count < 10) {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 100; $i++) { // এখানে ১০০ করে দিলাম
         $reels = []; $sc_count = 0;
+        
+        // বর্তমান রীল জেনারেশন
         for ($col = 0; $col < 5; $col++) {
             $column = [];
             for ($row = 0; $row < 4; $row++) {
                 $rand = rand(1, 100);
-                if ($rand <= 5) { $img = "9.png"; $sc_count++; }
-                elseif ($rand <= 12) { $img = "wild.png"; }
-                else { $keys = array_keys($card_paytable); $img = $keys[array_rand($keys)]; }
-                $column[] = ['s' => $img, 'g' => (rand(1, 100) < 15)];
+                if ($rand <= 5) { $img = "9.png"; $sc_count++; } 
+                elseif ($rand <= 12) { $img = "wild.png"; }      
+                else { 
+                    $keys = array_keys($card_paytable);
+                    $img = $keys[array_rand($keys)]; 
+                }
+                $column[] = ['s' => $img];
             }
             $reels[] = $column;
         }
 
+        // ৩. ফিলআপের জন্য নেক্সট রীল (Next Combo)
         $next_reels = [];
         for ($col = 0; $col < 5; $col++) {
             $next_col = [];
@@ -42,9 +48,10 @@ if ($count < 10) {
             $next_reels[] = $next_col;
         }
 
-        $win_pos = []; $total_multiplier = 0;
+        // ৪. উইন পজিশন ক্যালকুলেশন (১০২৪ উপায়ে জয়ের লজিক)
+        $win_pos = []; $wa = 0;
         for ($r0 = 0; $r0 < 4; $r0++) {
-            $target = $reels[$r0]['s'];
+            $target = $reels[0][$r0]['s'];
             if ($target === '9.png' || $target === 'wild.png') continue;
             $match_count = 1; $temp_pos = ["0,$r0"];
             for ($c = 1; $c < 5; $c++) {
@@ -58,14 +65,14 @@ if ($count < 10) {
             }
             if ($match_count >= 3) {
                 foreach ($temp_pos as $p) { if (!in_array($p, $win_pos)) $win_pos[] = $p; }
-                $total_multiplier += ($card_paytable[$target] / 30) * ($match_count / 3);
+                $wa += ($card_paytable[$target] / 30) * ($match_count / 3) * $bet;
             }
         }
 
-        $wa = $bet * $total_multiplier;
         $spin_data = $conn->real_escape_string(json_encode([
             'reels' => $reels, 'next_combo' => $next_reels, 'win_pos' => $win_pos, 'free_spins' => ($sc_count >= 3 ? 20 : 0)
         ]));
+        
         $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount, is_used) VALUES ($user_id, '$spin_data', $wa, 0)");
     }
 }

@@ -54,7 +54,8 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
 
     <!-- জাভাস্ক্রিপ্টে ইউজার আইডি পাঠানো -->
     <script>
-        const userId = <?php echo $uid; ?>;
+       const userId = 1; 
+ 
     </script>
     <script src="sound_manager.js"></script>
     <script src="script.js"></script>

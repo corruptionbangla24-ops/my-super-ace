@@ -293,3 +293,31 @@ body {
     50% { opacity: 1; }
     100% { opacity: 0.7; }
 }
+/* কয়েন বৃষ্টির এনিমেশন */
+.coin {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    background: url('coin.png') no-repeat center/contain;
+    top: -50px;
+    z-index: 999;
+    animation: coinFall linear forwards;
+}
+
+@keyframes coinFall {
+    to { transform: translateY(110vh) rotate(720deg); }
+}
+
+/* বিগ উইন টেক্সট */
+#big-win-text {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 60px;
+    font-weight: bold;
+    color: gold;
+    text-shadow: 0 0 20px #ff0000;
+    z-index: 1000;
+    transition: 0.5s;
+}

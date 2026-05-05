@@ -27,6 +27,10 @@ function renderReels(data) {
 async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
+    if (isFreeMode && freeSpinCount > 0) {
+        freeSpinCount--;
+        document.getElementById('fs-count').innerText = freeSpinCount;
+    }
 
     let data = queue.shift();
     playS('spin');

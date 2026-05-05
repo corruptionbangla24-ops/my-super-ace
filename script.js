@@ -1,5 +1,8 @@
 let queue = [], isSpinning = false, isFreeMode = false, freeSpinCount = 0;
 let isMuted = false;
+// ১ ও ২ নম্বর লাইনের ঠিক নিচে এটি বসান
+let currentBet = 10, isTurbo = false, isAuto = false;
+
 
 async function loadBatch() {
     try {

@@ -112,15 +112,7 @@ function startAutoCycle() {
     if (isAuto && !isSpinning) handleSpin();
     setTimeout(() => { if (isAuto) startAutoCycle(); }, isTurbo ? 1000 : 2500);
 }
-// বিগ উইন (Big Win) ফাংশন
-function showBigWin(amount) {
-    let winDiv = document.createElement('div');
-    winDiv.style = "position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); color:gold; font-size:50px; font-weight:bold; text-shadow:0 0 20px red; z-index:1000; text-align:center;";
-    winDiv.innerHTML = "BIG WIN<br>৳" + amount;
-    document.body.appendChild(winDiv);
-    playS('bigwin');
-    setTimeout(() => winDiv.remove(), 4000);
-}
+
 // ৩. মেইন বাটন কানেকশন ও ডাটা লোড
 document.getElementById('sound-toggle').onclick = function() {
     isMuted = !isMuted;
@@ -137,38 +129,6 @@ async function processWinChain(winData) {
 
     playS('win');
 	
-
-    // বর্ডার জ্বলজ্বল করার জন্য ১ সেকেন্ড সময় দিন (যাতে আপনার চোখে পড়ে)
-    await new Promise(res => setTimeout(res, 1000));
-
-    // এবার উধাও করার কাজ শুরু
-    if (winData.win_pos) {
-        winData.win_pos.forEach(pos => {
-            let [r, c] = pos.split(',');
-            let card = document.getElementById(`reel-${r}`).children[c];
-            if (card) {
-                card.classList.add('explode'); // ভ্যানিশ ইফেক্ট
-            }
-        });
-    }
-
-
-    // কার্ড উজ্জ্বল হয়ে থাকার জন্য ৬০০ মিলিসেকেন্ড সময় দিন
-    await new Promise(res => setTimeout(res, 600));
-
-    // এবার উজ্জ্বলতা সরিয়ে উধাও (Vanish) করার ফাংশন
-    if (winData.win_pos) {
-        winData.win_pos.forEach(pos => {
-            let [r, c] = pos.split(',');
-            let card = document.getElementById(`reel-${r}`).children[c];
-            if (card) {
-                card.classList.remove('win-highlight');
-                card.classList.add('explode'); // ভ্যানিশ ইফেক্ট যোগ
-            }
-        });
-    }
-
-
 
     // ৩. উইন অ্যামাউন্ট আপডেট
     document.getElementById('win-amount').innerText = parseFloat(winData.win).toFixed(2);

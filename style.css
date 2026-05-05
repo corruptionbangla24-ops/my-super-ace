@@ -321,3 +321,39 @@ body {
     z-index: 1000;
     transition: 0.5s;
 }
+/* --- কার্ড উধাও ও ফিলআপ এনিমেশন --- */
+
+/* ১. জেতা কার্ডগুলো যখন ফাটবে (Explode) */
+.explode {
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    filter: brightness(2) gold; /* ফাটার সময় একটু উজ্জ্বল দেখাবে */
+}
+
+/* ২. নতুন কার্ড যখন ওপর থেকে এসে ফিলআপ করবে */
+.cell-new {
+    animation: slideInDown 0.5s ease-out forwards;
+}
+
+@keyframes slideInDown {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ৩. গোল্ডেন কার্ড ভাঙার বিশেষ ইফেক্ট */
+.golden-break {
+    animation: goldenSpark 0.5s ease-out;
+}
+
+@keyframes goldenSpark {
+    0% { box-shadow: 0 0 0px gold; }
+    50% { box-shadow: 0 0 30px gold; filter: brightness(2); }
+    100% { box-shadow: 0 0 0px gold; }
+}

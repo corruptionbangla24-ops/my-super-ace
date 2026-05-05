@@ -136,22 +136,7 @@ async function processWinChain(winData) {
     }
 
     playS('win');
-	    // ১৩৮ নম্বর লাইনে playS('win') এর ঠিক নিচে এটি বসান
-    console.log("উইন পজিশন চেক করছি:", winData.win_pos); // এটি কনসোলে দেখাবে
-
-    if (winData.win_pos) {
-        winData.win_pos.forEach(pos => {
-            let [r, c] = pos.split(',');
-            let reelEl = document.getElementById(`reel-${r}`);
-            if (reelEl) {
-                let card = reelEl.children[c];
-                if (card) {
-                    console.log("বর্ডার যোগ করছি পজিশনে:", r, c);
-                    card.classList.add('win-highlight'); // নীল বর্ডার
-                }
-            }
-        });
-    }
+	
 
     // বর্ডার জ্বলজ্বল করার জন্য ১ সেকেন্ড সময় দিন (যাতে আপনার চোখে পড়ে)
     await new Promise(res => setTimeout(res, 1000));

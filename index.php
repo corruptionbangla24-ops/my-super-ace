@@ -48,6 +48,22 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
                 <small>TOTAL WIN</small>
                 <div id="win-amount">0.00</div>
             </div>
+                    <!-- এটি ৫০ এবং ৫১ নম্বর লাইনের মাঝখানে বসান -->
+        <div class="game-controls">
+            <div class="bet-section">
+                <button class="bet-adjust" onclick="changeBet(-10)">-</button>
+                <div class="bet-info">
+                    <small>BET</small>
+                    <div id="current-bet">10.00</div>
+                </div>
+                <button class="bet-adjust" onclick="changeBet(10)">+</button>
+            </div>
+            <div class="mode-section">
+                <button id="turbo-btn" class="mini-btn">TURBO</button>
+                <button id="auto-btn" class="mini-btn">AUTO</button>
+            </div>
+        </div>
+
             <button id="spin-btn">SPIN</button>
         </div>
     </div>

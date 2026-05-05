@@ -84,7 +84,15 @@ function startAutoCycle() {
     if (isAuto && !isSpinning) handleSpin();
     setTimeout(() => { if (isAuto) startAutoCycle(); }, isTurbo ? 1000 : 2500);
 }
-
+// বিগ উইন (Big Win) ফাংশন
+function showBigWin(amount) {
+    let winDiv = document.createElement('div');
+    winDiv.style = "position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); color:gold; font-size:50px; font-weight:bold; text-shadow:0 0 20px red; z-index:1000; text-align:center;";
+    winDiv.innerHTML = "BIG WIN<br>৳" + amount;
+    document.body.appendChild(winDiv);
+    playS('bigwin');
+    setTimeout(() => winDiv.remove(), 4000);
+}
 // ৩. মেইন বাটন কানেকশন ও ডাটা লোড
 document.getElementById('sound-toggle').onclick = function() {
     isMuted = !isMuted;

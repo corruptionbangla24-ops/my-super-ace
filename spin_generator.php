@@ -100,6 +100,10 @@ for ($s = 0; $s < 50; $s++) {
 
 // ৬. ডাটাবেসে ব্যালেন্স আপডেট
 $conn->query("UPDATE users SET balance = $balance WHERE id = $user_id");
+// ৭. আউটপুট (এটিতে ব্যালেন্স এবং উইন দুটোই যোগ করা হয়েছে)
+echo json_encode([
+    'results' => $results,
+    'balance' => $balance, // এই লাইনটিই আপনার সাড়ে ৯ লাখ টাকা স্ক্রিনে পাঠাবে
+    'win' => $total_win    // বর্তমান স্পিনের উইন কত তাও পাঠাবে
+]);
 
-// ৭. আউটপুট
-echo json_encode(['results' => $results]);

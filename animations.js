@@ -1,15 +1,24 @@
-// ১. কার্ড হাইলাইট (নীল বর্ডার)
+// ১. উইনিং কার্ড নীল আভা নিয়ে উজ্জ্বল করার ফাংশন
 function highlightWinningCards(winPos) {
-    if (!winPos) return;
+    if (!winPos || winPos.length === 0) return;
+
+    // প্রথমে স্ক্রিনে থাকা পুরনো সব নীল হাইলাইট মুছে ফেলা
+    document.querySelectorAll('.win-highlight').forEach(el => {
+        el.classList.remove('win-highlight');
+    });
+
+    // এখন নতুন জেতা কার্ডগুলোতে নীল বর্ডার যোগ করা
     winPos.forEach(pos => {
-        let [r, c] = pos.split(',');
+        let [r, c] = pos.split(','); // রীল এবং সারির পজিশন আলাদা করা (যেমন: "0,1")
         let reelEl = document.getElementById(`reel-${r}`);
-        if (reelEl) {
+        if (reelEl && reelEl.children[c]) {
             let card = reelEl.children[c];
-            if (card) card.classList.add('win-highlight');
+            card.classList.add('win-highlight'); // নীল হাইলাইট ক্লাস যোগ
+            console.log(`পজিশন ${r},${c} হাইলাইট করা হয়েছে`);
         }
     });
 }
+
 
 // ২. কার্ড উধাও (Vanish)
 function vanishWinningCards(winPos) {

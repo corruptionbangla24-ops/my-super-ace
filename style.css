@@ -321,20 +321,23 @@ body {
     z-index: 1000;
     transition: 0.5s;
 }
-/* ১. উইনিং কার্ড হাইলাইট: জেতা কার্ডগুলো সোনার মতো জ্বলবে */
+/* জেতা কার্ডগুলো এখন ইলেকট্রিক নীল আভা নিয়ে জ্বলবে */
 .win-highlight {
-    border: 3px solid gold !important;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8) !important;
+    border: 3px solid #00d2ff !important; /* উজ্জ্বল নীল বর্ডার */
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.9) !important; /* নীল আলো */
+    transform: scale(1.1); 
     z-index: 100;
-    transform: scale(1.1); /* কার্ডটি সামান্য বড় হয়ে সামনে আসবে */
     transition: all 0.3s ease;
-    animation: glowPulse 0.5s infinite alternate;
+    animation: blueGlow 0.5s infinite alternate;
 }
 
-@keyframes glowPulse {
-    from { filter: brightness(1); }
-    to { filter: brightness(1.8); }
+@keyframes blueGlow {
+    from { filter: brightness(1) contrast(1.2); }
+    to { filter: brightness(1.5) contrast(1.5); }
 }
+
+
+
 
 /* ২. কার্ড ভ্যানিশ (উধাও): জেতার পর কার্ডগুলো ফেটে ছোট হয়ে যাবে */
 .explode {

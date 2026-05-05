@@ -1,4 +1,4 @@
-// ১. সাউন্ড ফাইলগুলোর অবজেক্ট তৈরি
+// ১. সাউন্ডের তালিকা (যাতে ব্রাউজার ফাইলগুলো চেনে)
 const sounds = {
     click: new Audio('click.mp3'),
     spin: new Audio('spin.mp3'),
@@ -8,30 +8,23 @@ const sounds = {
     bigwin: new Audio('bigwin.mp3')
 };
 
-// ২. সাউন্ড প্লে করার মাস্টার ফাংশন
+// ২. বাজানোর ফাংশন (এটিই আসল কাজ করবে)
 function playS(name) {
-    // script.js থেকে আসা isMuted চেক করা
-    if (typeof isMuted !== 'undefined' && isMuted) {
-        return; // সাউন্ড মিউট থাকলে বাজবে না
-    }
+    // যদি আপনি Sound: OFF করে রাখেন, তবে বাজবে না
+    if (typeof isMuted !== 'undefined' && isMuted) return;
 
     if (sounds[name]) {
         try {
-            // সাউন্ডটি রিসেট করা (যাতে একটার ওপর একটা সুন্দরভাবে বাজে)
+            // আগের সাউন্ড চললে তা থামিয়ে শুরু থেকে বাজাবে
             sounds[name].pause();
             sounds[name].currentTime = 0;
             
-            // সাউন্ড প্লে করা
-            let playPromise = sounds[name].play();
-
-            // ব্রাউজারের অটো-প্লে বাধা হ্যান্ডেল করা
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.warn("সাউন্ড প্লে হতে ব্রাউজার বাধা দিয়েছে:", name);
-                });
+            let p = sounds[name].play();
+            if (p !== undefined) {
+                p.catch(e => console.log("সাউন্ড প্লে হতে বাধা পেয়েছে।"));
             }
         } catch (e) {
-            console.error("সাউন্ড ম্যানেজার এরর:", e);
+            console.error("সাউন্ড ফাইলে সমস্যা:", e);
         }
     }
 }

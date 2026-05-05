@@ -40,33 +40,30 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
         </div>
 
         <!-- ফুটার সেকশন: উইন ডিসপ্লে এবং স্পিন বাটন -->
-        <div class="footer">
-            <div id="fs-info" style="display:none; color: gold; font-weight: bold; margin-bottom: 5px;">
-                FREE SPINS: <span id="fs-count">0</span>
-            </div>
-            
-                    <!-- এটি ৫০ এবং ৫১ নম্বর লাইনের মাঝখানে বসান -->
-        <div class="game-controls">
-            <div class="bet-section">
-                <button class="bet-adjust" onclick="changeBet(-10)">-</button>
-                <div class="bet-info">
-                    <small>BET</small>
-                    <div id="current-bet">10.00</div>
-                </div>
-                <button class="bet-adjust" onclick="changeBet(10)">+</button>
-            </div>
-			<div class="win-box">
-                <small>TOTAL WIN</small>
-                <div id="win-amount">0.00</div>
-            </div>
-            <div class="mode-section">
-                <button id="turbo-btn" class="mini-btn">TURBO</button>
-                <button id="auto-btn" class="mini-btn">AUTO</button>
-            </div>
+        <!-- ফুটার সেকশনে এটি এভাবে সাজান -->
+<div class="footer">
+    <div class="bet-win-container">
+        <!-- মাইনাস বাটন -->
+        <button class="bet-adjust" onclick="changeBet(-10)">-</button>
+        
+        <!-- টোটাল উইন বক্স (মাঝখানে থাকবে) -->
+        <div class="win-box-mini">
+            <small>TOTAL WIN</small>
+            <div id="win-amount">0.00</div>
         </div>
+        
+        <!-- প্লাস বাটন -->
+        <button class="bet-adjust" onclick="changeBet(10)">+</button>
+    </div>
 
-            <button id="spin-btn">SPIN</button>
-        </div>
+    <div class="mode-section">
+        <button id="turbo-btn" class="mini-btn">TURBO</button>
+        <button id="auto-btn" class="mini-btn">AUTO</button>
+    </div>
+
+    <button id="spin-btn">SPIN</button>
+</div>
+
     </div>
     <script>
         const userId = <?php echo isset($uid) ? $uid : 1; ?>;

@@ -66,6 +66,18 @@ if ($check->fetch_assoc()['total'] < 10) {
                 $total_multiplier += ($val / 25) * ($match_count / 3);
             }
         }
+        // ৭০ নম্বর লাইনের ঠিক উপরে এটি বসান
+        // ১. পুরনো (খেলা হয়ে গেছে এমন) স্পিনগুলো মুছে ফেলা
+        $conn->query("DELETE FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 1");
+
+        // ২. বর্তমান অব্যবহৃত স্পিন কয়টি আছে চেক করা
+        $check_count = $conn->query("SELECT COUNT(*) as total FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0");
+        $total_left = $check_count->fetch_assoc()['total'];
+
+        // ৩. যদি স্পিন ৫০টির কম হয়, তবেই নতুন ১০০টি তৈরি হবে
+        if ($total_left > 50) {
+            break; // ৫০টির বেশি ব্যাকআপ থাকলে লুপ থেকে বের হয়ে যাবে
+        }
 
         $win_amount = $bet * $total_multiplier;
         

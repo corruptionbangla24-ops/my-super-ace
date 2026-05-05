@@ -77,7 +77,7 @@ if ($check->fetch_assoc()['total'] < 10) {
         // ৩. যদি স্পিন ৫০টির কম হয়, তবেই নতুন ১০০টি তৈরি হবে
         if ($total_left > 50) {
             break; // ৫০টির বেশি ব্যাকআপ থাকলে লুপ থেকে বের হয়ে যাবে
-        
+        }
 
         $win_amount = $bet * $total_multiplier;
         
@@ -89,7 +89,7 @@ if ($check->fetch_assoc()['total'] < 10) {
         ]));
 
         $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $win_amount)");
-        }
+        
         
 
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
@@ -113,3 +113,4 @@ if (isset($_GET['mode']) && $_GET['mode'] == 'free') {
 $nb = $conn->query("SELECT balance FROM users WHERE id = $user_id")->fetch_assoc()['balance'];
 
 echo json_encode(['results' => $results, 'balance' => $nb, 'win' => $tw]);
+    }

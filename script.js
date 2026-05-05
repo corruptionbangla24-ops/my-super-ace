@@ -46,8 +46,9 @@ async function handleSpin() {
         isSpinning = false;
         playS('stop');
         if (data.win > 0) {
+			playS('win');
             document.getElementById('win-amount').innerText = parseFloat(data.win).toFixed(2);
-            playS('win');
+            
         }
         if (queue.length < 5) loadBatch();
     }, 800);

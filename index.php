@@ -45,7 +45,11 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
     <div class="bet-win-container">
         <!-- মাইনাস বাটন -->
         <button class="bet-adjust" onclick="changeBet(-10)">-</button>
-        
+        <!-- ফ্রি স্পিন কাউন্টার (এটি index.php এ বসান) -->
+<div id="fs-info" style="display:none; background: rgba(255, 215, 0, 0.2); border: 1px solid gold; border-radius: 50px; padding: 5px 15px; color: #fff; font-weight: bold; text-align: center; width: fit-content; margin: 5px auto; font-size: 14px; box-shadow: 0 0 10px gold;">
+    FREE SPINS: <span id="fs-count">0</span>
+</div>
+
         <!-- টোটাল উইন বক্স (মাঝখানে থাকবে) -->
         <div class="win-box-mini">
     <!-- বর্তমান বেট কত তা এখানে দেখাবে -->

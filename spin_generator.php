@@ -114,3 +114,5 @@ $nb = $conn->query("SELECT balance FROM users WHERE id = $user_id")->fetch_assoc
 
 echo json_encode(['results' => $results, 'balance' => $nb, 'win' => $tw]);
     }
+}
+?>

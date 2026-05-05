@@ -95,7 +95,9 @@ async function processWinChain(winData) {
     // ৪. নতুন কার্ড দিয়ে ফিলআপ (Fill-up)
     fillUpNewCards(winData.win_pos, winData.next_combo);
     await new Promise(res => setTimeout(res, 500));
-
+if (winData.win >= (currentBet * 10)) {
+        triggerBigWin(winData.win.toFixed(2));
+    }
     // এনিমেশন শেষ, এবার লক খুলে দেওয়া যাতে আবার স্পিন করা যায়
     isSpinning = false; 
 

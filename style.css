@@ -143,3 +143,25 @@ body {
     z-index: 10; 
     transform: scale(1.05); 
 }
+/* ২. গোল্ডেন কার্ড: গোল্ডেন কার্ডগুলো যেন আলাদা চেনা যায় */
+.golden {
+    border: 2px solid gold !important;
+    background: linear-gradient(145deg, #443300, #111) !important;
+}
+
+/* ৩. ফ্রি স্পিন ইনফো বক্সের ডিজাইন */
+#fs-info {
+    background: rgba(255, 215, 0, 0.15);
+    padding: 8px;
+    border-radius: 50px;
+    border: 1px solid gold;
+    width: fit-content;
+    margin: 0 auto 10px;
+    font-size: 14px;
+}
+
+/* ৪. মোবাইল বাটন এক্টিভ ইফেক্ট */
+.nav-btn:active, #spin-btn:active {
+    transform: scale(0.92);
+    filter: brightness(1.2);
+}

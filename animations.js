@@ -62,6 +62,6 @@ async function processWinChain(winData) {
     }
 
     // ৪. সেশন শেষ (লক খুলে দেওয়া যাতে নেক্সট স্পিন করা যায়)
-    isSpinning = false; 
+    
     console.log("উইন এনিমেশন শেষ, নেক্সট স্পিন রেডি!");
 }

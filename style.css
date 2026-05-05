@@ -76,6 +76,7 @@ body {
     display: flex; 
     gap: 5px; 
     flex: 1; 
+    min-height: 200px; /* কার্ড না থাকলেও যেন জায়গা দখল করে রাখে */
     margin: 10px 0; 
 }
 .reel { 

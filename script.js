@@ -51,8 +51,7 @@ async function handleSpin() {
         if (queue.length < 5) loadBatch();
     }, 800);
 }
-// ৫২ থেকে ৫৮ লাইনের জায়গায় এটি বসান
-let currentBet = 10, isTurbo = false, isAuto = false, autoInterval;
+
 
 // ১. বেট কন্ট্রোল লজিক
 function changeBet(amount) {

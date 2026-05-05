@@ -23,4 +23,9 @@ async function processWinChain(winData) {
 
     // ১ সেকেন্ড পর যেন পরের কাজ শুরু হয়
     await new Promise(res => setTimeout(res, 1000));
+
+
+    
 }
+
+

@@ -321,20 +321,22 @@ body {
     z-index: 1000;
     transition: 0.5s;
 }
-/* জেতা কার্ডগুলো এখন ইলেকট্রিক নীল আভা নিয়ে জ্বলবে */
+/* নীল ইলেকট্রিক বর্ডার ইফেক্ট */
 .win-highlight {
-    border: 3px solid #00d2ff !important; /* উজ্জ্বল নীল বর্ডার */
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.9) !important; /* নীল আলো */
-    transform: scale(1.1); 
-    z-index: 100;
-    transition: all 0.3s ease;
-    animation: blueGlow 0.5s infinite alternate;
+    outline: 4px solid #00d2ff !important; /* উজ্জ্বল নীল বর্ডার */
+    outline-offset: -4px;
+    box-shadow: 0 0 30px #00d2ff, inset 0 0 15px #00d2ff !important; /* বাইরে ও ভেতরে নীল আলো */
+    z-index: 100 !important;
+    position: relative;
+    filter: brightness(1.3); /* কার্ডটি একটু বেশি উজ্জ্বল দেখাবে */
+    animation: bluePulse 0.5s infinite alternate; /* হালকা কাঁপবে */
 }
 
-@keyframes blueGlow {
-    from { filter: brightness(1) contrast(1.2); }
-    to { filter: brightness(1.5) contrast(1.5); }
+@keyframes bluePulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
 }
+
 
 
 

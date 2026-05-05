@@ -321,24 +321,37 @@ body {
     z-index: 1000;
     transition: 0.5s;
 }
-/* --- কার্ড উধাও ও ফিলআপ এনিমেশন --- */
+/* ১. উইনিং কার্ড হাইলাইট: জেতা কার্ডগুলো সোনার মতো জ্বলবে */
+.win-highlight {
+    border: 3px solid gold !important;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8) !important;
+    z-index: 100;
+    transform: scale(1.1); /* কার্ডটি সামান্য বড় হয়ে সামনে আসবে */
+    transition: all 0.3s ease;
+    animation: glowPulse 0.5s infinite alternate;
+}
 
-/* ১. জেতা কার্ডগুলো যখন ফাটবে (Explode) */
+@keyframes glowPulse {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.8); }
+}
+
+/* ২. কার্ড ভ্যানিশ (উধাও): জেতার পর কার্ডগুলো ফেটে ছোট হয়ে যাবে */
 .explode {
     transform: scale(0);
     opacity: 0;
-    transition: all 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-    filter: brightness(2) gold; /* ফাটার সময় একটু উজ্জ্বল দেখাবে */
+    transition: all 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    filter: blur(5px) brightness(2); /* একটু ঘোলাটে এবং উজ্জ্বল হয়ে মিলিয়ে যাবে */
 }
 
-/* ২. নতুন কার্ড যখন ওপর থেকে এসে ফিলআপ করবে */
+/* ৩. ফিলআপ এনিমেশন: নতুন কার্ডগুলো ওপর থেকে স্লাইড করে পড়বে */
 .cell-new {
-    animation: slideInDown 0.5s ease-out forwards;
+    animation: slideInFromTop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes slideInDown {
+@keyframes slideInFromTop {
     0% {
-        transform: translateY(-100%);
+        transform: translateY(-120%); /* একদম ওপর থেকে শুরু হবে */
         opacity: 0;
     }
     100% {
@@ -347,13 +360,17 @@ body {
     }
 }
 
-/* ৩. গোল্ডেন কার্ড ভাঙার বিশেষ ইফেক্ট */
-.golden-break {
-    animation: goldenSpark 0.5s ease-out;
+/* ৪. গোল্ডেন কার্ডের বিশেষ আভা (আপনার চিরকুটের লজিক অনুযায়ী) */
+.golden-cell {
+    border: 2px solid gold;
+    background: linear-gradient(145deg, #3d2b00, #111);
+    position: relative;
+}
+.golden-cell::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 15px gold;
+    border-radius: 5px;
 }
 
-@keyframes goldenSpark {
-    0% { box-shadow: 0 0 0px gold; }
-    50% { box-shadow: 0 0 30px gold; filter: brightness(2); }
-    100% { box-shadow: 0 0 0px gold; }
-}

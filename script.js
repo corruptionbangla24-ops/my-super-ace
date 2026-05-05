@@ -195,8 +195,14 @@ if (isSpinning) return;
 
 
         // ব্যালেন্স আপডেট
-        document.getElementById('bal-val').innerText = data.bal;
-        document.getElementById('win-amount').innerText = data.win;
+        // script.js এ এই ২ লাইন আপডেট করুন
+if (data.balance !== undefined) {
+    document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
+}
+if (data.win !== undefined) {
+    document.getElementById('win-amount').innerText = parseFloat(data.win).toFixed(2);
+}
+
                 
 
         

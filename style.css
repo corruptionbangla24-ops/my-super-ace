@@ -1,147 +1,29 @@
-/* ১. গেমের ব্যাকগ্রাউন্ড ও বডি সেটআপ */
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-}
+body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; }
+.api-wrapper { height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; box-sizing: border-box; }
 
-/* ২. মেইন গেম বক্স (সবসময় শো করবে) */
-.game-container {
-    display: flex !important;
-    flex-direction: column;
-    width: 98vw;
-    max-width: 450px;
-    background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
-    padding: 10px 5px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-    margin-top: 10px;
-}
+/* হেডার স্টাইল */
+.header { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+.balance-container { text-align: center; }
+.balance-container small { color: gold; font-size: 10px; }
+.balance-container div { font-size: 18px; font-weight: bold; }
+.nav-btn { background: #333; border: 1px solid #555; color: #fff; padding: 5px 12px; border-radius: 5px; font-size: 12px; }
 
-/* ৩. মাল্টিপ্লায়ার বার (উপরে থাকবে) */
-.multiplier-bar {
-    display: flex;
-    justify-content: space-around;
-    background: #111;
-    padding: 8px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #333;
-}
+/* মাল্টিপ্লায়ার বার */
+.m-bar { display: flex; justify-content: space-around; margin: 10px 0; }
+.m-bar span { padding: 5px 15px; background: #222; border-radius: 4px; color: #666; font-weight: bold; }
+.m-bar span.active { background: gold; color: #000; box-shadow: 0 0 15px gold; transform: scale(1.1); }
 
-.multiplier-bar span {
-    color: #555;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 2px 10px;
-    border-radius: 3px;
-}
+/* রীল ডিজাইন */
+.reel-container { display: flex; gap: 4px; flex: 1; margin: 10px 0; }
+.reel { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.cell { width: 100%; aspect-ratio: 1/1.1; background: #111; border: 1px solid #222; border-radius: 5px; display: flex; justify-content: center; align-items: center; position: relative; }
+.cell img { width: 85%; height: 85%; }
 
-.multiplier-bar span.active {
-    background: linear-gradient(180deg, #fff700, #ffae00);
-    color: #000;
-    box-shadow: 0 0 10px #ffae00;
-}
+/* ফুটার ও বাটন */
+.footer { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.win-box { text-align: center; color: gold; }
+#spin-btn { width: 80%; height: 60px; background: linear-gradient(180deg, #ff0000, #800); border: none; border-radius: 50px; color: #fff; font-size: 24px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,0,0,0.4); }
 
-/* ৪. রীল কন্টেইনার (এটিই ৫টি রীলকে পাশাপাশি রাখবে) */
-.reel-container {
-    display: flex !important;
-    justify-content: space-between;
-    gap: 4px;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    border-radius: 5px;
-    min-height: 250px; /* রীল না আসলেও যেন জায়গা খালি থাকে */
-}
-
-.reel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.cell {
-    width: 100%;
-    aspect-ratio: 1 / 1.1;
-    background: #222;
-    border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #333;
-}
-
-.cell img {
-    width: 85%;
-    height: 85%;
-    object-fit: contain;
-}
-
-/* ৫. ব্যালেন্স ও উইন ইনফো */
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background: #111;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.box {
-    text-align: center;
-}
-
-.box small {
-    color: gold;
-    font-size: 10px;
-    display: block;
-}
-
-.box div {
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-}
-
-/* ৬. রাজকীয় স্পিন বাটন */
-#spin-btn {
-    width: 90%;
-    margin: 15px auto 5px;
-    height: 60px;
-    background: linear-gradient(180deg, #ff0000 0%, #8b0000 100%);
-    border: none;
-    border-radius: 50px;
-    color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
-    cursor: pointer;
-}
-
-#spin-btn:active {
-    transform: scale(0.95);
-}
-/* কার্ড ওপর থেকে নিচে পড়ার এনিমেশন */
-@keyframes superDrop {
-    0% { transform: translateY(-150%); opacity: 0; }
-    60% { transform: translateY(10%); opacity: 1; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-.cell-fall {
-    animation: superDrop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-/* ঘোরার সময় হালকা ঝাপসা করার জন্য */
-.reel-spinning {
-    filter: blur(3px);
-    transition: transform 0.1s linear;
-}
+/* এনিমেশন */
+.cell-fall { animation: drop 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+@keyframes drop { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }

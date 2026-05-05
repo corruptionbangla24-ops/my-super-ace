@@ -44,10 +44,7 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
             <div id="fs-info" style="display:none; color: gold; font-weight: bold; margin-bottom: 5px;">
                 FREE SPINS: <span id="fs-count">0</span>
             </div>
-            <div class="win-box">
-                <small>TOTAL WIN</small>
-                <div id="win-amount">0.00</div>
-            </div>
+            
                     <!-- এটি ৫০ এবং ৫১ নম্বর লাইনের মাঝখানে বসান -->
         <div class="game-controls">
             <div class="bet-section">
@@ -57,6 +54,10 @@ $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
                     <div id="current-bet">10.00</div>
                 </div>
                 <button class="bet-adjust" onclick="changeBet(10)">+</button>
+            </div>
+			<div class="win-box">
+                <small>TOTAL WIN</small>
+                <div id="win-amount">0.00</div>
             </div>
             <div class="mode-section">
                 <button id="turbo-btn" class="mini-btn">TURBO</button>

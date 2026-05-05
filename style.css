@@ -115,18 +115,11 @@ body {
 .win-box small { font-size: 11px; letter-spacing: 1px; }
 .win-box div { font-size: 28px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
 
+/* ৪. বাটনটাকে একটু ছোট ও স্মার্ট করা */
 #spin-btn { 
-    width: 90%; 
-    height: 60px; 
-    background: linear-gradient(180deg, #ff0000 0%, #8b0000 100%); 
-    border: none; 
-    border-radius: 50px; 
-    color: #fff; 
-    font-size: 24px; 
-    font-weight: bold; 
-    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4); 
-    cursor: pointer;
-    text-transform: uppercase;
+    width: 85%; 
+    height: 50px; /* উচ্চতা সামান্য কমানো হয়েছে */
+    font-size: 20px;
 }
 #spin-btn:active { transform: scale(0.95); }
 

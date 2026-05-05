@@ -46,14 +46,20 @@ async function handleSpin() {
         }
     });
 
-    setTimeout(() => {
-        isSpinning = false;
+    // ৪৯ নম্বর লাইনে এটি লিখুন
+setTimeout(async () => {
+        // ৫০ থেকে ৫৬ নম্বর লাইনের জায়গায় এটি বসবে
         playS('stop');
+        
         if (data.win > 0) {
-			playS('win');
-            document.getElementById('win-amount').innerText = parseFloat(data.win).toFixed(2);
-            
+            // চেইন উইন শুরু হবে (কার্ড ফাটবে ও নতুন কার্ড আসবে)
+            await processWinChain(data); 
+        } else {
+            // যদি কোনো উইন না থাকে, তবেই স্পিন শেষ হবে
+            isSpinning = false; 
         }
+
+        
 		        // ৫৬ নম্বর লাইনের নিচে এটি পেস্ট করুন
         if (data.free_spins > 0 && !isFreeMode) {
             isFreeMode = true;
@@ -123,4 +129,48 @@ document.getElementById('sound-toggle').onclick = function() {
 
 document.getElementById('spin-btn').onclick = handleSpin;
 loadBatch();
+async function processWinChain(winData) {
+    if (!winData || winData.win <= 0) {
+        isSpinning = false;
+        return;
+    }
+
+    playS('win');
+    
+    // ১. জেতা কার্ডগুলো উধাও (Explode) করা
+    if (winData.win_pos) {
+        winData.win_pos.forEach(pos => {
+            let [r, c] = pos.split(',');
+            let card = document.getElementById(`reel-${r}`).children[c];
+            if (card) card.classList.add('explode');
+        });
+    }
+
+    await new Promise(res => setTimeout(res, 500)); // ফাটার জন্য বিরতি
+
+    // ২. নতুন কার্ড দিয়ে ফিলআপ (Cascading)
+    if (winData.next_combo) {
+        winData.win_pos.forEach(pos => {
+            let [r, c] = pos.split(',');
+            let reelEl = document.getElementById(`reel-${r}`);
+            let card = reelEl.children[c];
+            let newImg = winData.next_combo[r][c].s;
+            card.innerHTML = `<img src="${newImg}">`;
+            card.classList.remove('explode');
+            card.classList.add('cell-new');
+        });
+        playS('stop');
+    }
+
+    // ৩. উইন অ্যামাউন্ট আপডেট
+    document.getElementById('win-amount').innerText = parseFloat(winData.win).toFixed(2);
+
+    // ৪. লুপ: যদি আরও উইন থাকে (চেইন রিঅ্যাকশন)
+    if (winData.has_next_win && winData.next_data) {
+        await new Promise(res => setTimeout(res, 800));
+        await processWinChain(winData.next_data); // আবার নিজেকে কল করবে
+    } else {
+        isSpinning = false; // সব উইন শেষ হলে তবেই লক খুলবে
+    }
+}
 

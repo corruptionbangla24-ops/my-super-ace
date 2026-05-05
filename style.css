@@ -110,10 +110,30 @@ body {
     gap: 5px;
     padding-bottom: 20px; /* নিচে সামান্য জায়গা রাখা হয়েছে */
 }
+/* এটি আপনার style.css এ আপডেট করুন */
+.win-box {
+    text-align: center;
+    background: rgba(255, 215, 0, 0.1); /* হালকা সোনালী ব্যাকগ্রাউন্ড */
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    margin: 10px 0; /* ওপর-নিচে ফাঁকা জায়গা */
+    width: 80%;
+}
 
-.win-box { text-align: center; color: gold; }
-.win-box small { font-size: 11px; letter-spacing: 1px; }
-.win-box div { font-size: 28px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+.win-box small {
+    color: gold;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.win-box div {
+    font-size: 32px; /* লেখাটি আরও বড় ও স্পষ্ট করা হলো */
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 15px gold;
+}
+
 
 /* ৪. বাটনটাকে একটু ছোট ও স্মার্ট করা */
 #spin-btn { 

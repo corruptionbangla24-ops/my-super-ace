@@ -1,31 +1,37 @@
-// ১. সাউন্ড অবজেক্ট তৈরি (সরাসরি ফাইল নেম ব্যবহার করা হয়েছে)
+// ১. সাউন্ড ফাইলগুলোর অবজেক্ট তৈরি
 const sounds = {
     click: new Audio('click.mp3'),
+    spin: new Audio('spin.mp3'),
     win: new Audio('win.mp3'),
     stop: new Audio('stop.mp3'),
-    bigwin: new Audio('bigwin.mp3'),
-    wild: new Audio('wild.mp3'),
-    scatter: new Audio('scatter.mp3')
+    scatter: new Audio('scatter.mp3'),
+    bigwin: new Audio('bigwin.mp3')
 };
 
-// ২. সাউন্ড বাজানোর মাস্টার ফাংশন
+// ২. সাউন্ড প্লে করার মাস্টার ফাংশন
 function playS(name) {
+    // script.js থেকে আসা isMuted চেক করা
+    if (typeof isMuted !== 'undefined' && isMuted) {
+        return; // সাউন্ড মিউট থাকলে বাজবে না
+    }
+
     if (sounds[name]) {
         try {
-            // সাউন্ডটি আগে থেকে বাজতে থাকলে তা থামিয়ে শুরু থেকে প্লে করবে
+            // সাউন্ডটি রিসেট করা (যাতে একটার ওপর একটা সুন্দরভাবে বাজে)
             sounds[name].pause();
             sounds[name].currentTime = 0;
-
-            // প্লে করার সময় প্রমিজ হ্যান্ডেল করা (ব্রাউজার এরর এড়াতে)
+            
+            // সাউন্ড প্লে করা
             let playPromise = sounds[name].play();
 
+            // ব্রাউজারের অটো-প্লে বাধা হ্যান্ডেল করা
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.log(name + " বাজাতে সমস্যা হয়েছে:", error);
+                    console.warn("সাউন্ড প্লে হতে ব্রাউজার বাধা দিয়েছে:", name);
                 });
             }
         } catch (e) {
-            console.warn("Audio play error:", e);
+            console.error("সাউন্ড ম্যানেজার এরর:", e);
         }
     }
 }

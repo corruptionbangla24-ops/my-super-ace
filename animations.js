@@ -101,11 +101,29 @@ if (winData.win >= (currentBet * 10)) {
     }
     // এনিমেশন শেষ, এবার লক খুলে দেওয়া যাতে আবার স্পিন করা যায়
         // ১০৩ নম্বর লাইনের ঠিক উপরে এটি বসান
-    // উইনিং ব্যালেন্স স্ক্রিনে আপডেট করা
-    let winDisplay = document.getElementById('win-amount');
-    if (winDisplay && winData.win >= 0) {
-        winDisplay.innerText = parseFloat(winData.win).toFixed(2);
+        // ১০৪ নম্বর লাইনের ঠিক উপরে এটি বসান
+    if (winData.win > 0) {
+        let winEl = document.getElementById('win-amount');
+        let startWin = 0, endWin = parseFloat(winData.win);
+        let duration = 1000, startTime = null;
+
+        function countWin(currentTime) {
+            if (!startTime) startTime = currentTime;
+            let progress = currentTime - startTime;
+            let currentWin = Math.min(startWin + (endWin - startWin) * (progress / duration), endWin);
+            if (winEl) winEl.innerText = currentWin.toFixed(2);
+            if (progress < duration) requestAnimationFrame(countWin);
+            else {
+                if (winEl) {
+                    winEl.innerText = endWin.toFixed(2);
+                    winEl.style.transform = "scale(1.2)";
+                    setTimeout(() => winEl.style.transform = "scale(1)", 200);
+                }
+            }
+        }
+        requestAnimationFrame(countWin);
     }
+
 
     isSpinning = false; 
     

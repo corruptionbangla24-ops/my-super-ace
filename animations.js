@@ -76,27 +76,7 @@ function triggerBigWin(amount) {
         setTimeout(() => winText.remove(), 1000);
     }, 5000);
 }
-// স্কাটার ট্রিগার এনিমেশন
-function triggerScatterDrama(scatterPos) {
-    playS('scatter_intro'); // একটি ভয়ানক শুরুর সাউন্ড (যদি থাকে)
-    
-    // ১. পুরো গেম বোর্ড কাঁপানো শুরু
-    document.querySelector('.game-board').classList.add('shake-screen');
-    
-    // ২. স্কাটার কার্ডগুলোকে লাল করে জ্বালিয়ে দেওয়া
-    scatterPos.forEach(pos => {
-        let [r, c] = pos.split(',');
-        let card = document.getElementById(`reel-${r}`).children[c];
-        if (card) card.classList.add('scatter-blast');
-    });
 
-    // ৩. ৩ সেকেন্ড পর ড্রামা শেষ করে ফ্রি স্পিন শুরু করা
-    setTimeout(() => {
-        document.querySelector('.game-board').classList.remove('shake-screen');
-        document.querySelectorAll('.scatter-blast').forEach(el => el.classList.remove('scatter-blast'));
-        console.log("ভয়ানক ড্রামা শেষ, এবার ফ্রি স্পিন!");
-    }, 3000);
-}
 
 
 async function processWinChain(winData) {
@@ -121,9 +101,35 @@ if (winData.win >= (currentBet * 10)) {
     }
     // এনিমেশন শেষ, এবার লক খুলে দেওয়া যাতে আবার স্পিন করা যায়
     isSpinning = false; 
-
-
     
+}
+// ১০৭ নম্বর লাইনের নিচে এটি বসান
+function triggerScatterDrama(scatterPos) {
+    if (!scatterPos) return;
+    
+    playS('scatter_intro'); // ভয়ানক সাউন্ড শুরু
+    
+    // ১. পুরো গেম বোর্ড কাঁপানো (Shake) শুরু
+    let board = document.querySelector('.reels-container');
+    if (board) board.classList.add('shake-screen');
+
+    // ২. স্কাটার কার্ডগুলোকে (৯ নম্বর কার্ড) ভয়ানক লাল আভা দেওয়া
+    scatterPos.forEach(pos => {
+        let [r, c] = pos.split(',');
+        let reelEl = document.getElementById(`reel-${r}`);
+        if (reelEl) {
+            let card = reelEl.children[c];
+            if (card) card.classList.add('scatter-blast');
+        }
+    });
+
+    // ৩. ৩ সেকেন্ড পর ড্রামা বন্ধ করা
+    setTimeout(() => {
+        if (board) board.classList.remove('shake-screen');
+        document.querySelectorAll('.scatter-blast').forEach(el => {
+            el.classList.remove('scatter-blast');
+        });
+    }, 3000);
 }
 
 

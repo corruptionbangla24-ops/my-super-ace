@@ -3,25 +3,21 @@ let currentBet = 10, isTurbo = false, isAuto = false, isMuted = false;
 
 async function loadBatch() {
     try {
-        // এই সেই জাদুকরী লাইন যা সার্ভারের সাথে কথা বলবে
         let url = `spin_generator.php?uid=${userId}&bet=${currentBet}${isFreeMode ? '&mode=free' : ''}`;
+        let r = await fetch(url, { cache: "no-store" }); // ক্যাশ মেমোরি যেন ঝামেলা না করে
         
-        let r = await fetch(url);
+        if (!r.ok) throw new Error("Network issues");
+        
         let d = await r.json();
-
-        console.log("সার্ভার থেকে ডাটা আসলো:", d); // এটি কনসোলে চেক করবেন
-
-        if (d.results) {
-            queue = d.results; // সার্ভার থেকে আসা স্পিনগুলো জমা হলো
-        }
-        if (d.balance) {
-            // ব্যালেন্স আপডেট করা
-            document.getElementById('balance').innerText = parseFloat(d.balance).toFixed(2);
-        }
+        if (d.results) queue = d.results;
+        if (d.balance) document.getElementById('balance').innerText = parseFloat(d.balance).toFixed(2);
     } catch (e) {
-        console.error("ডাটা লোড করতে সমস্যা হয়েছে:", e);
+        console.log("ডাটা লোড করতে সমস্যা হয়েছে, আবার চেষ্টা করছি...");
+        // ৩ সেকেন্ড পর আবার চেষ্টা করবে
+        setTimeout(loadBatch, 3000); 
     }
 }
+
 
 
 async function handleSpin() {

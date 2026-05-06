@@ -73,10 +73,14 @@ function generateRandomReels($card_paytable) {
     }
     return $reels;
 }
-
-// ৪. ডাটাবেসে স্পিন রিফিল লজিক (২০-৩০-৫০ কোটা অনুযায়ী)
+// ১. চেক করা কয়টি অব্যবহৃত স্পিন বাকি আছে
 $check = $conn->query("SELECT COUNT(*) as total FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0");
-if ($check->fetch_assoc()['total'] < 10) {
+$res_count = $check->fetch_assoc();
+$count = $res_count['total'];
+
+// ২. অটো-রিফিল লজিক: যদি ৩০টি বা তার কম বাকি থাকে (অর্থাৎ ৭০টি শেষ হয়েছে)
+// তখন নতুন ১০০টি স্পিন তৈরি করে টেবিলে যোগ করবে
+if ($count <= 30) { 
     $total_spins = 100;
     $indexes = range(0, $total_spins - 1);
     shuffle($indexes);
@@ -84,15 +88,15 @@ if ($check->fetch_assoc()['total'] < 10) {
     $small_win_indexes = array_slice($indexes, 20, 30); // ৩০টি ছোট উইন
 
     for ($i = 0; $i < $total_spins; $i++) {
-        $reels = generateRandomReels($card_paytable);
+        $reels = generateRandomReels($card_paytable); // রীল তৈরির ফাংশন কল
 
         if (in_array($i, $big_win_indexes)) {
-            // ২০টি বড় চেইন উইন
+            // ২০টি বড় চেইন উইন লজিক
             while (calculateWin($reels, $bet, $card_paytable)['amount'] < ($bet * 2)) { $reels = generateRandomReels($card_paytable); }
             $chain = generateChain($reels, $bet, $card_paytable);
             $final_win = $chain['total_win_so_far'];
         } elseif (in_array($i, $small_win_indexes)) {
-            // ৩০টি ছোট সাধারণ উইন (চেইন ছাড়া)
+            // ৩০টি ছোট উইন লজিক
             while (calculateWin($reels, $bet, $card_paytable)['amount'] == 0 || calculateWin($reels, $bet, $card_paytable)['amount'] > ($bet * 1.5)) { $reels = generateRandomReels($card_paytable); }
             $w = calculateWin($reels, $bet, $card_paytable);
             $chain = ['reels' => $reels, 'win_pos' => $w['pos'], 'win' => $w['amount'], 'next_win_data' => null];
@@ -103,10 +107,13 @@ if ($check->fetch_assoc()['total'] < 10) {
             $chain = ['reels' => $reels, 'win_pos' => [], 'win' => 0];
             $final_win = 0;
         }
+
         $spin_data = $conn->real_escape_string(json_encode($chain));
-        $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $final_win)");
+        $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount, is_used) VALUES ($user_id, '$spin_data', $final_win, 0)");
     }
 }
+
+
 // ৫. ডাটা পাঠানো ও ব্যালেন্স আপডেট (সংশোধিত)
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
 $results = []; 

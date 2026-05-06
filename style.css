@@ -375,4 +375,29 @@ body {
     box-shadow: inset 0 0 15px gold;
     border-radius: 5px;
 }
+/* ১. স্ক্রিন কাঁপানো (Screen Shake) */
+.shake-screen {
+    animation: earthquake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
+}
+
+@keyframes earthquake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
+/* ২. স্কাটার কার্ড জ্বলজ্বল করা */
+.scatter-blast {
+    border: 5px solid red !important;
+    box-shadow: 0 0 50px red, inset 0 0 30px #fff !important;
+    transform: scale(1.3);
+    z-index: 9999;
+    animation: flash 0.2s infinite;
+}
+
+@keyframes flash {
+    0% { filter: brightness(1); }
+    100% { filter: brightness(3); }
+}
 

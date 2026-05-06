@@ -107,17 +107,38 @@ if ($check->fetch_assoc()['total'] < 10) {
         $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount) VALUES ($user_id, '$spin_data', $final_win)");
     }
 }
-
-// ৫. ডাটা পাঠানো ও ব্যালেন্স আপডেট
+// ৫. ডাটা পাঠানো ও ব্যালেন্স আপডেট (সংশোধিত)
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
-$results = []; $tw = 0;
+$results = []; 
+$tw = 0;
+
 while ($row = $get->fetch_assoc()) {
     $d = json_decode($row['spin_data'], true);
     $d['win'] = (float)$row['win_amount'];
-    $results[] = $d; $tw += $d['win'];
+    $results[] = $d; 
+    $tw += $d['win'];
+    // স্পিনটি ব্যবহার হয়েছে হিসেবে মার্ক করা
     $conn->query("UPDATE fix_pre_spin SET is_used = 1 WHERE id = ".$row['id']);
 }
 
-$conn->query("UPDATE users SET balance = balance - ($is_free_mode ? 0 : $bet) + $tw WHERE id = $user_id");
-$nb = $conn->query("SELECT balance FROM users WHERE id = $user_id")->fetch_assoc()['balance'];
-echo json_encode(['results' => $results, 'balance' => $nb, 'win' => $tw]);
+// মেইন ব্যালেন্স আপডেট লজিক
+if ($is_free_mode) {
+    // ফ্রি স্পিন: শুধু উইন যোগ হবে
+    $conn->query("UPDATE users SET balance = balance + $tw WHERE id = $user_id");
+} else {
+    // নরমাল স্পিন: বেট কাটবে + উইন যোগ হবে
+    $conn->query("UPDATE users SET balance = balance - $bet + $tw WHERE id = $user_id");
+}
+
+// ডাটাবেস থেকে টাটকা ব্যালেন্স তুলে আনা (সরাসরি পাঠানোর জন্য)
+$res_bal = $conn->query("SELECT balance FROM users WHERE id = $user_id");
+$user_data = $res_bal->fetch_assoc();
+$new_balance = (float)$user_data['balance'];
+
+// ফাইনাল আউটপুট (নিশ্চিত করুন balance কি পাঠাচ্ছেন)
+echo json_encode([
+    'results' => $results, 
+    'balance' => $new_balance, // এখানে ভুল হলে স্ক্রিনে ব্যালেন্স আপডেট হবে না
+    'win' => $tw
+]);
+

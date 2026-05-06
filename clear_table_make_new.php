@@ -1,5 +1,5 @@
 <?php
-set_time_limit(60);
+set_time_limit(120); // সময় বাড়িয়ে দেওয়া হলো
 include 'db.php';
 header('Content-Type: text/html; charset=utf-8');
 
@@ -7,7 +7,24 @@ $user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
 $bet = 10.00;
 $card_paytable = ['2.png'=>100,'5.png'=>80,'10.png'=>60,'7.png'=>50,'3.png'=>40,'4.png'=>30,'1.png'=>20,'6.png'=>10,'8.png'=>5];
 
-// ১. ১০২৪ উপায়ে উইন চেক ফাংশন
+// ১. পুরাতন টেবিল মুছে একদম নতুন করে তৈরি করা (SQL DROP & CREATE)
+$conn->query("DROP TABLE IF EXISTS fix_pre_spin");
+$sql = "CREATE TABLE fix_pre_spin (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    spin_data LONGTEXT NOT NULL,
+    win_amount DECIMAL(10,2) DEFAULT 0.00,
+    is_used TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+if ($conn->query($sql)) {
+    echo "<h3 style='color:blue;'>✔️ পুরাতন টেবিল মুছে নতুন টেবিল স্ট্রাকচার তৈরি করা হয়েছে।</h3>";
+} else {
+    die("❌ টেবিল তৈরিতে সমস্যা: " . $conn->error);
+}
+
+// ২. ১০২৪ উপায়ে উইন চেক ফাংশন
 function calculateWin($reels, $bet, $card_paytable) {
     $win_pos = []; $multiplier = 0;
     for ($r0 = 0; $r0 < 4; $r0++) {
@@ -33,7 +50,7 @@ function calculateWin($reels, $bet, $card_paytable) {
     return ['pos' => $win_pos, 'amount' => round($bet * $multiplier, 2)];
 }
 
-// ২. আনলিমিটেড চেইন জেনারেটর
+// ৩. রিকার্সিভ চেইন জেনারেটর
 function generateChain($current_reels, $bet, $card_paytable, $total_win = 0) {
     $win_data = calculateWin($current_reels, $bet, $card_paytable);
     if (empty($win_data['pos'])) return null;
@@ -50,7 +67,7 @@ function generateChain($current_reels, $bet, $card_paytable, $total_win = 0) {
     ];
 }
 
-// ৩. র্যান্ডম রীল জেনারেটর
+// ৪. র্যান্ডম রীল জেনারেটর
 function generateRandomReels($card_paytable) {
     $reels = [];
     for ($col = 0; $col < 5; $col++) {
@@ -66,15 +83,13 @@ function generateRandomReels($card_paytable) {
     return $reels;
 }
 
-// ৪. টেবিল পরিষ্কার করা
-$conn->query("DELETE FROM fix_pre_spin WHERE user_id = $user_id");
-echo "<h3 style='color:red;'>🗑️ পুরনো অকেজো টেবিল ডাটা মুছে ফেলা হয়েছে...</h3>";
-
-// ৫. ৫০টি স্পিন তৈরি (১০ বড় উইন, ১৫ ছোট উইন, ২৫ লস)
+// ৫. ৫০টি স্পিন তৈরির কোটা (১০ বড়, ১৫ ছোট, ২৫ লস)
 $total_spins = 50;
 $indexes = range(0, $total_spins - 1); shuffle($indexes);
 $big_wins = array_slice($indexes, 0, 10);
 $small_wins = array_slice($indexes, 10, 15);
+
+echo "<h3>⚙️ নতুন ৫০টি স্পিন জেনারেট হচ্ছে...</h3>";
 
 for ($i = 0; $i < $total_spins; $i++) {
     $reels = generateRandomReels($card_paytable);
@@ -96,7 +111,6 @@ for ($i = 0; $i < $total_spins; $i++) {
     $conn->query("INSERT INTO fix_pre_spin (user_id, spin_data, win_amount, is_used) VALUES ($user_id, '$spin_data', $final_win, 0)");
 }
 
-echo "<h2 style='color:green;'>✅ আলহামদুলিল্লাহ! ৫০টি নতুন অপ্টিমাইজড স্পিন তৈরি হয়েছে।</h2>";
-echo "<p>এখন গেমটি রেন্ডার সার্ভারে একদম স্মুথ চলবে।</p>";
+echo "<h2 style='color:green;'>✅ আলহামদুলিল্লাহ! টেবিল রিসেট এবং নতুন ৫০টি স্পিন তৈরি সম্পন্ন হয়েছে।</h2>";
 echo "<a href='index.php?uid=$user_id' style='padding:10px 20px; background:gold; color:black; text-decoration:none; font-weight:bold; border-radius:5px;'>গেম শুরু করুন</a>";
 ?>

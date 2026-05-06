@@ -104,7 +104,7 @@ function changeBet(val) {
     if (isSpinning) return;
     currentBet = Math.max(10, Math.min(500, currentBet + val));
     document.getElementById('current-bet').innerText = currentBet.toFixed(2);
-    queue = []; loadBatch();
+    
 }
 
 document.getElementById('turbo-btn').onclick = () => { isTurbo = !isTurbo; document.getElementById('turbo-btn').classList.toggle('active'); };

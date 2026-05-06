@@ -1,5 +1,6 @@
 <?php
-set_time_limit(60); // সার্ভারকে ১ মিনিট সময় দেওয়া
+// ১. সার্ভার কনফিগারেশন ও এরর হ্যান্ডলিং
+set_time_limit(60); 
 ini_set('memory_limit', '128M');
 include 'db.php';
 header('Content-Type: application/json');
@@ -10,7 +11,7 @@ $is_free_mode = isset($_GET['mode']) && $_GET['mode'] == 'free';
 
 $card_paytable = ['2.png'=>100,'5.png'=>80,'10.png'=>60,'7.png'=>50,'3.png'=>40,'4.png'=>30,'1.png'=>20,'6.png'=>10,'8.png'=>5];
 
-// ১. ১০২৪ উপায়ে উইন চেক ফাংশন
+// ২. ১০২৪ উপায়ে উইন চেক করার স্মার্ট লজিক
 function calculateWin($reels, $bet, $card_paytable) {
     $win_pos = []; $multiplier = 0;
     for ($r0 = 0; $r0 < 4; $r0++) {
@@ -36,7 +37,7 @@ function calculateWin($reels, $bet, $card_paytable) {
     return ['pos' => $win_pos, 'amount' => round($bet * $multiplier, 2)];
 }
 
-// ২. আনলিমিটেড চেইন জেনারেটর
+// ৩. রিকার্সিভ চেইন জেনারেটর (আনলিমিটেড কম্বো)
 function generateChain($current_reels, $bet, $card_paytable, $total_win = 0) {
     $win_data = calculateWin($current_reels, $bet, $card_paytable);
     if (empty($win_data['pos'])) return null;
@@ -53,7 +54,7 @@ function generateChain($current_reels, $bet, $card_paytable, $total_win = 0) {
     ];
 }
 
-// ৩. র্যান্ডম রীল জেনারেটর
+// ৪. র্যান্ডম রীল জেনারেটর
 function generateRandomReels($card_paytable) {
     $reels = [];
     for ($col = 0; $col < 5; $col++) {
@@ -69,15 +70,15 @@ function generateRandomReels($card_paytable) {
     return $reels;
 }
 
-// ৪. অটো-রিফিল লজিক: ১০টির নিচে নামলে নতুন ৫০টি তৈরি হবে
+// ৫. অটো-রিফিল সিস্টেম (৩০টি স্পিন নিচে নামলে ৫০টি নতুন জেনারেট করবে)
 $check = $conn->query("SELECT COUNT(*) as total FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0");
-$count = $check->fetch_assoc()['total'];
+$total_left = $check->fetch_assoc()['total'];
 
-if ($count <= 10) {
-    $total_spins = 50; // রেন্ডারের জন্য ৫০টি নিরাপদ
+if ($total_left <= 30) {
+    $total_spins = 50; 
     $indexes = range(0, $total_spins - 1); shuffle($indexes);
-    $big_wins = array_slice($indexes, 0, 10);   // ১০টি বড় চেইন
-    $small_wins = array_slice($indexes, 10, 15); // ১৫টি ছোট উইন
+    $big_wins = array_slice($indexes, 0, 10);   // ১০টি চেইন উইন (২০%)
+    $small_wins = array_slice($indexes, 10, 15); // ১৫টি ছোট উইন (৩০%)
 
     for ($i = 0; $i < $total_spins; $i++) {
         $reels = generateRandomReels($card_paytable);
@@ -100,19 +101,24 @@ if ($count <= 10) {
     }
 }
 
-// ৫. ডাটা পাঠানো
+// ৬. ডাটা ডেলিভারি ও রিয়েল-টাইম ব্যালেন্স সিঙ্ক
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
 $results = []; $tw = 0;
+
 while ($row = $get->fetch_assoc()) {
     $d = json_decode($row['spin_data'], true);
     $d['win'] = (float)$row['win_amount'];
-    $results[] = $d; $tw += $d['win'];
+    $results[] = $d; 
+    $tw += $d['win'];
     $conn->query("UPDATE fix_pre_spin SET is_used = 1 WHERE id = ".$row['id']);
 }
 
-$conn->query("UPDATE users SET balance = balance - ($is_free_mode ? 0 : $bet) + $tw WHERE id = $user_id");
-$nb_res = $conn->query("SELECT balance FROM users WHERE id = $user_id");
-$nb = $nb_res->fetch_assoc()['balance'];
+// ব্যালেন্স আপডেট
+$cost = $is_free_mode ? 0 : ($bet * count($results)); 
+$conn->query("UPDATE users SET balance = balance - $cost + $tw WHERE id = $user_id");
 
-echo json_encode(['results' => $results, 'balance' => (float)$nb, 'win' => $tw]);
+$nb_res = $conn->query("SELECT balance FROM users WHERE id = $user_id");
+$new_balance = (float)$nb_res->fetch_assoc()['balance'];
+
+echo json_encode(['results' => $results, 'balance' => $new_balance, 'win' => $tw]);
 ?>

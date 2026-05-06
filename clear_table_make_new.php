@@ -5,29 +5,42 @@ header('Content-Type: text/html; charset=utf-8');
 $user_id = isset($_GET['uid']) ? intval($_GET['uid']) : 1;
 $bet = 10.00; // আপনার ডিফল্ট বেট
 
-// ১. ১০২৪ উপায়ে উইন চেক করার ফাংশন
 function calculateWin($reels, $bet, $card_paytable) {
-    $win_pos = []; $multiplier = 0;
+    $win_pos = []; 
+    $multiplier = 0;
+    
+    // ১. প্রথম কলামের কার্ডগুলো নিয়ে লুপ শুরু
     for ($r0 = 0; $r0 < 4; $r0++) {
-        $target = $reels[$r0]['s'];
+        // রীল ডাটা পড়ার সময় সঠিক কি (key) ব্যবহার করা
+        if (!isset($reels[0][$r0]['s'])) continue;
+        
+        $target = $reels[0][$r0]['s'];
         if ($target === '9.png' || $target === 'wild.png') continue;
-        $match_count = 1; $temp_pos = ["0,$r0"];
+        
+        $match_count = 1; 
+        $temp_pos = ["0,$r0"];
+        
+        // ২. পরের কলামগুলোতে মিল চেক করা
         for ($c = 1; $c < 5; $c++) {
             $found = false;
             for ($r = 0; $r < 4; $r++) {
-                if ($reels[$c][$r]['s'] === $target || $reels[$c][$r]['s'] === 'wild.png') {
-                    $temp_pos[] = "$c,$r"; $found = true;
+                if (isset($reels[$c][$r]['s']) && ($reels[$c][$r]['s'] === $target || $reels[$c][$r]['s'] === 'wild.png')) {
+                    $temp_pos[] = "$c,$r"; 
+                    $found = true;
                 }
             }
             if ($found) $match_count++; else break;
         }
+        
         if ($match_count >= 3) {
             foreach ($temp_pos as $p) { if (!in_array($p, $win_pos)) $win_pos[] = $p; }
-            $multiplier += ($card_paytable[$target] / 40) * ($match_count / 3);
+            $val = isset($card_paytable[$target]) ? $card_paytable[$target] : 5;
+            $multiplier += ($val / 40) * ($match_count / 3);
         }
     }
     return ['pos' => $win_pos, 'amount' => round($bet * $multiplier, 2)];
 }
+
 
 // ২. আনলিমিটেড চেইন জেনারেটর (Recursive)
 function generateChain($current_reels, $bet, $card_paytable, $total_win = 0) {

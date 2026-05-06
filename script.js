@@ -27,7 +27,17 @@ async function loadBatch() {
 async function handleSpin() {
     if (isSpinning || queue.length === 0) return;
     isSpinning = true;
+if (!isFreeMode) {
+        let balEl = document.getElementById('balance');
+        if (balEl) {
+            let currentBal = parseFloat(balEl.innerText);
+            balEl.innerText = (currentBal - currentBet).toFixed(2);
+        }
+    }
 
+    let winEl = document.getElementById('win-amount');
+    if (winEl) winEl.innerText = "0.00";
+    
     if (isFreeMode && freeSpinCount > 0) {
         freeSpinCount--;
         document.getElementById('fs-count').innerText = freeSpinCount;

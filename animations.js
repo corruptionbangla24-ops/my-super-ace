@@ -100,6 +100,13 @@ if (winData.win >= (currentBet * 10)) {
         triggerBigWin(winData.win.toFixed(2));
     }
     // এনিমেশন শেষ, এবার লক খুলে দেওয়া যাতে আবার স্পিন করা যায়
+        // ১০৩ নম্বর লাইনের ঠিক উপরে এটি বসান
+    // উইনিং ব্যালেন্স স্ক্রিনে আপডেট করা
+    let winDisplay = document.getElementById('win-amount');
+    if (winDisplay && winData.win >= 0) {
+        winDisplay.innerText = parseFloat(winData.win).toFixed(2);
+    }
+
     isSpinning = false; 
     
 }

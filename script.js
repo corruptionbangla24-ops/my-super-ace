@@ -60,16 +60,26 @@ async function handleSpin() {
 }
 function checkFreeSpin(data) {
     if (data.free_spins > 0 && !isFreeMode) {
-        isFreeMode = true;
-        freeSpinCount = 20; // আপনার চিরকুট অনুযায়ী ২০টি
-        document.getElementById('fs-info').style.display = 'block';
-        document.getElementById('fs-count').innerText = freeSpinCount;
-        playS('scatter');
-        
-        // ১. ফ্রি স্পিন শুরু হওয়ার আগে কিউ (Queue) খালি করে নতুন ডাটা আনতে হবে
-        queue = []; 
-        loadBatch(); 
+        // ১. ভয়ানক ড্রামা শুরু (৩ সেকেন্ড চলবে)
+        if (data.scatter_pos) triggerScatterDrama(data.scatter_pos);
+
+        // ২. ৩.৫ সেকেন্ড পর ফ্রি স্পিন মোড সচল হবে
+        setTimeout(() => {
+            isFreeMode = true;
+            freeSpinCount = 20; // আপনার চিরকুট অনুযায়ী ২০টি
+            document.getElementById('fs-info').style.display = 'block';
+            document.getElementById('fs-count').innerText = freeSpinCount;
+            playS('scatter');
+
+            queue = [];
+            loadBatch();
+            
+            // ড্রামা শেষে অটোমেটিক প্রথম ফ্রি স্পিন শুরু
+            handleSpin();
+        }, 3500); 
+        return; // ড্রামা চলাকালীন অন্য কিছু যেন না ঘটে
     }
+
 
     if (isFreeMode && freeSpinCount > 0) {
         isSpinning = false; // লক খুলে দেওয়া

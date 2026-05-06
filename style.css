@@ -356,12 +356,6 @@ body {
     0% { transform: translateY(-100%); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
 }
-
-
-
-
-
-
 /* ৪. গোল্ডেন কার্ডের বিশেষ আভা (আপনার চিরকুটের লজিক অনুযায়ী) */
 .golden-cell {
     border: 2px solid gold;
@@ -375,29 +369,28 @@ body {
     box-shadow: inset 0 0 15px gold;
     border-radius: 5px;
 }
-/* ১. স্ক্রিন কাঁপানো (Screen Shake) */
+/* স্ক্রিন কাঁপানোর এনিমেশন */
 .shake-screen {
-    animation: earthquake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
+    animation: earthquake 0.5s infinite;
 }
-
 @keyframes earthquake {
-    10%, 90% { transform: translate3d(-2px, 0, 0); }
-    20%, 80% { transform: translate3d(4px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
-    40%, 60% { transform: translate3d(8px, 0, 0); }
+    0% { transform: translate(0,0); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, -5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0,0); }
 }
 
-/* ২. স্কাটার কার্ড জ্বলজ্বল করা */
+/* স্কাটার ব্লাস্ট ইফেক্ট */
 .scatter-blast {
-    border: 5px solid red !important;
-    box-shadow: 0 0 50px red, inset 0 0 30px #fff !important;
-    transform: scale(1.3);
-    z-index: 9999;
-    animation: flash 0.2s infinite;
+    border: 4px solid red !important;
+    box-shadow: 0 0 40px red !important;
+    transform: scale(1.2);
+    animation: scatterFlash 0.3s infinite alternate;
+}
+@keyframes scatterFlash {
+    from { filter: brightness(1); }
+    to { filter: brightness(2.5); }
 }
 
-@keyframes flash {
-    0% { filter: brightness(1); }
-    100% { filter: brightness(3); }
-}
 

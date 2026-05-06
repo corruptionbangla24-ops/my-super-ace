@@ -1,6 +1,7 @@
 <?php
-// ১. সার্ভার কনফিগারেশন
-set_time_limit(60); 
+set_time_limit(120); // ২ মিনিট সময় দেওয়া হলো
+ignore_user_abort(true); // ইউজার ব্রাউজার বন্ধ করলেও যেন কাজ শেষ হয়
+
 ini_set('memory_limit', '128M');
 include 'db.php';
 header('Content-Type: application/json');

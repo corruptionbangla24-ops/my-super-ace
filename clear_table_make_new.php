@@ -66,11 +66,16 @@ function generateChain($current_reels, $bet, $card_paytable, $total_win = 0, $de
     }
 
     $total_win += $win_data['amount'];
+       // ৬৯ নম্বর লাইনে এটি রিপ্লেস হবে
     return [
-        'reels' => $current_reels, 'next_combo' => $next_reels, 'win_pos' => $win_data['pos'],
-        'win' => $win_data['amount'], 'total_win_so_far' => $total_win,
+        'reels' => $current_reels,
+        'next_combo' => $next_reels, // এটি মিসিং ছিল
+        'win_pos' => $win_data['pos'], // এটিও মিসিং ছিল
+        'win' => $win_data['amount'],
+        'total_win_so_far' => $total_win,
         'next_win_data' => generateChain($next_reels, $bet, $card_paytable, $total_win, $depth + 1)
     ];
+ 
 }
 
 // ৫. র্যান্ডম ৫x৪ গ্রিড রীল জেনারেটর

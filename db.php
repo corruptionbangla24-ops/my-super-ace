@@ -13,4 +13,10 @@ mysqli_real_connect($conn, $host, $user, $pass, $db, $port);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
+       
+    mysqli_query($conn, "SET WAIT_TIMEOUT=300");
+    mysqli_query($conn, "SET INTERACTIVE_TIMEOUT=300");
+    
+
+ 
 ?>

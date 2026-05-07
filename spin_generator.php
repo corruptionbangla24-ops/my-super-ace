@@ -111,24 +111,49 @@ if ($count <= 10) {
     }
 }
 
-// ৬. ডাটা পাঠানো ও মেইন ব্যালেন্স সিঙ্ক
+// ==========================================
+// ৬. ডাটা পাঠানো ও মেইন ব্যালেন্স ১০০% নিখুঁত সিঙ্ক
+// ==========================================
 $get = $conn->query("SELECT id, spin_data, win_amount FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 0 LIMIT 10");
-$results = []; $tw = 0;
+$results = []; 
+$tw = 0;
+
 while ($row = $get->fetch_assoc()) {
     $d = json_decode($row['spin_data'], true);
+    
+    // 🛡️ মাস্টার প্রটেকশন চেক: যদি ডাটাবেসের ডাটাতে কোনো কি (Key) মিসিং থাকে, তবে জোর করে ফাঁকা অবজেক্ট বসিয়ে দেওয়া হবে যাতে গেম জ্যাম না হয়
+    if (!is_array($d)) {
+        $d = ['reels' => getQuickReels($card_paytable)];
+    }
+    if (!isset($d['win_pos'])) $d['win_pos'] = [];
+    if (!isset($d['win'])) $d['win'] = 0;
+    if (!isset($d['next_combo'])) $d['next_combo'] = $d['reels'];
+    
     $d['win'] = (float)$row['win_amount'];
-    $results[] = $d; $tw += $d['win'];
+    $results[] = $d; 
+    $tw += $d['win'];
+    
+    // স্পিনটি ব্যবহার হয়েছে হিসেবে ডাটাবেসে আপডেট করা
     $conn->query("UPDATE fix_pre_spin SET is_used = 1 WHERE id = ".$row['id']);
 }
 
+// পুরাতন বা বাসি খেলা হয়ে যাওয়া রোগাক্রান্ত রোগুলো ডিলিট করা যাতে ডাটাবেস হালকা থাকে
 $conn->query("DELETE FROM fix_pre_spin WHERE user_id = $user_id AND is_used = 1");
 
+// ব্যালেন্স আপডেট লজিক
 $cost = $is_free_mode ? 0 : ($bet * count($results));
 $conn->query("UPDATE users SET balance = balance - $cost + $tw WHERE id = $user_id");
 
+// ডাটাবেস থেকে একদম টাটকা রিয়েল-টাইম ব্যালেন্স তুলে আনা
 $nb_res = $conn->query("SELECT balance FROM users WHERE id = $user_id");
-$nb = $nb_res->fetch_assoc()['balance'];
+$user_bal_data = $nb_res->fetch_assoc();
+$new_balance = isset($user_bal_data['balance']) ? (float)$user_bal_data['balance'] : 0.00;
 
-echo json_encode(['results' => $results, 'balance' => (float)$nb, 'win' => $tw]);
+// চূড়ান্ত ক্লিন JSON আউটপুট যা জাভাস্ক্রিপ্ট মাখনের মতো পড়তে পারবে
+echo json_encode([
+    'results' => $results, 
+    'balance' => $new_balance, 
+    'win' => $tw
+]);
 $conn->close();
 ?>

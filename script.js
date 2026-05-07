@@ -1,121 +1,68 @@
-let queue = [], isSpinning = false, isFreeMode = false, freeSpinCount = 0;
-let currentBet = 10, isTurbo = false, isAuto = false, isMuted = false;
-
-async function loadBatch() {
-    try {
-        let url = `spin_generator.php?uid=${userId}&bet=${currentBet}${isFreeMode ? '&mode=free' : ''}`;
-        let r = await fetch(url, { cache: "no-store" }); // ক্যাশ মেমোরি যেন ঝামেলা না করে
-        
-        if (!r.ok) throw new Error("Network issues");
-        
-        let d = await r.json();
-        if (d.results) queue = d.results;
-        if (d.balance) document.getElementById('balance').innerText = parseFloat(d.balance).toFixed(2);
-    } catch (e) {
-        console.log("ডাটা লোড করতে সমস্যা হয়েছে, আবার চেষ্টা করছি...");
-        // ৩ সেকেন্ড পর আবার চেষ্টা করবে
-        setTimeout(loadBatch, 3000); 
-    }
-}
-
-
-
-async function handleSpin() {
-    if (isSpinning || queue.length === 0) return;
-    isSpinning = true;
-if (!isFreeMode) {
-        let balEl = document.getElementById('balance');
-        if (balEl) {
-            let currentBal = parseFloat(balEl.innerText);
-            balEl.innerText = (currentBal - currentBet).toFixed(2);
-        }
-    }
-
-    let winEl = document.getElementById('win-amount');
-    if (winEl) winEl.innerText = "0.00";
-    
-    if (isFreeMode && freeSpinCount > 0) {
-        freeSpinCount--;
-        document.getElementById('fs-count').innerText = freeSpinCount;
-    }
-
-    let data = queue.shift();
-    playS('spin');
-
-    data.reels.forEach((col, i) => {
-        let el = document.getElementById(`reel-${i}`);
-        el.innerHTML = col.map((c, j) => `
-            <div class="cell cell-fall" style="animation-delay: ${j*0.05}s">
-                <img src="${c.s}">
-            </div>
-        `).join('');
-    });
-
-    setTimeout(async () => {
-        playS('stop');
-        if (data.win > 0) {
-            // এটি animations.js থেকে নীল হাইলাইট আর ভ্যানিশ চালাবে
-            await processWinChain(data); 
-        } else {
-            isSpinning = false;
-        }
-
-        checkFreeSpin(data);
-        if (queue.length < 5) loadBatch();
-    }, 800);
-}
-function checkFreeSpin(data) {
-    if (data.free_spins > 0 && !isFreeMode) {
-        // ১. ভয়ানক ড্রামা শুরু (৩ সেকেন্ড চলবে)
-        if (data.scatter_pos) triggerScatterDrama(data.scatter_pos);
-
-        // ২. ৩.৫ সেকেন্ড পর ফ্রি স্পিন মোড সচল হবে
-        setTimeout(() => {
-            isFreeMode = true;
-            freeSpinCount = 20; // আপনার চিরকুট অনুযায়ী ২০টি
-            document.getElementById('fs-info').style.display = 'block';
-            document.getElementById('fs-count').innerText = freeSpinCount;
-            playS('scatter');
-
-            queue = [];
-            loadBatch();
-            
-            // ড্রামা শেষে অটোমেটিক প্রথম ফ্রি স্পিন শুরু
-            handleSpin();
-        }, 3500); 
-        return; // ড্রামা চলাকালীন অন্য কিছু যেন না ঘটে
-    }
-
-
-    if (isFreeMode && freeSpinCount > 0) {
-        isSpinning = false; // লক খুলে দেওয়া
-        setTimeout(() => {
-            if (isFreeMode) handleSpin(); 
-        }, 1500);
-    } else if (isFreeMode && freeSpinCount === 0) {
-        isFreeMode = false;
-        document.getElementById('fs-info').style.display = 'none';
-        isSpinning = false;
-        loadBatch(); // আবার নরমাল ডাটা লোড করা
-    } else {
-        isSpinning = false;
-    }
-}
-
-
-
-    
+    let currentBet = 1.00; // ১ টাকা থেকে শুরু
+let isSpinning = false;
+let userId = 1;
 
 function changeBet(val) {
     if (isSpinning) return;
-    currentBet = Math.max(10, Math.min(500, currentBet + val));
-    document.getElementById('current-bet').innerText = currentBet.toFixed(2);
-    
+    currentBet = Math.max(1.00, Math.min(500.00, currentBet + val));
+    let betEl = document.getElementById('current-bet');
+    if (betEl) betEl.innerText = currentBet.toFixed(2);
 }
 
-document.getElementById('turbo-btn').onclick = () => { isTurbo = !isTurbo; document.getElementById('turbo-btn').classList.toggle('active'); };
-document.getElementById('auto-btn').onclick = () => { isAuto = !isAuto; document.getElementById('auto-btn').classList.toggle('active'); if(isAuto) handleSpin(); };
-document.getElementById('sound-toggle').onclick = () => { isMuted = !isMuted; document.getElementById('sound-toggle').innerText = isMuted ? "Sound: OFF" : "Sound: ON"; };
-document.getElementById('spin-btn').onclick = handleSpin;
+function updateReelsOnScreen(reelsData) {
+    for (let c = 0; c < 5; c++) {
+        let reelEl = document.getElementById(`reel-${c}`);
+        if (reelEl && reelsData[c]) {
+            for (let r = 0; r < 4; r++) {
+                let card = reelEl.children[r];
+                if (card && reelsData[c][r]) {
+                    card.innerHTML = `<img src="${reelsData[c][r].s}">`;
+                }
+            }
+        }
+    }
+}
 
-loadBatch();
+async function handleSpinButton() {
+    if (isSpinning) return;
+    
+    let balEl = document.getElementById('balance');
+    if (!balEl) return;
+    
+    let currentBal = parseFloat(balEl.innerText);
+    
+    if (currentBal < currentBet && !isFreeMode) {
+        alert("পরপ্ত ব্যালেন্স নেই!");
+        return;
+    }
+    
+    isSpinning = true;
+    if (typeof playS === "function") playS('spin');
+
+    if (!isFreeMode) {
+        balEl.innerText = (currentBal - currentBet).toFixed(2);
+    }
+    
+    let winEl = document.getElementById('win-amount');
+    if (winEl) winEl.innerText = "0.00";
+    
+    try {
+        let url = `spin_generator.php?uid=${userId}&bet=${currentBet}${isFreeMode ? '&mode=free' : ''}`;
+        let res = await fetch(url, { cache: "no-store" });
+        let data = await res.json();
+        
+        if (data.reels) {
+            updateReelsOnScreen(data.reels);
+            await new Promise(r => setTimeout(r, 600)); // চাকা থামা বিরতি
+            
+            totalSpinWin = 0; 
+            currentCombo = 1;
+            await processWinChainLive(); // লাইভ এনিমেশন ইঞ্জিন চালু
+        } else {
+            isSpinning = false;
+        }
+    } catch (e) {
+        console.error(e);
+        isSpinning = false;
+    }
+}

@@ -1,198 +1,123 @@
-const cardPaytable = {'2.png':100, '5.png':80, '10.png':60, '7.png':50, '3.png':40, '4.png':30, '1.png':20, '6.png':10, '8.png':5};
-let currentCombo = 1;
-let totalSpinWin = 0;
-let isFreeMode = false;
-let freeSpinCount = 0;
-
-function getCurrentReelsFromScreen() {
-    let reels = [];
-    for (let c = 0; c < 5; c++) {
-        let column = [];
-        let reelEl = document.getElementById(`reel-${c}`);
-        if (reelEl) {
-            for (let r = 0; r < 4; r++) {
-                let imgEl = reelEl.children[r]?.querySelector('img');
-                let imgSrc = imgEl ? imgEl.src.split('/').pop() : '8.png';
-                column.push({ s: imgSrc });
-            }
-        }
-        reels.push(column);
-    }
-    return reels;
-}
-
-function calculateLiveWin(reels) {
-    let winPos = [];
-    let totalMultiplier = 0;
-    let scatterCount = 0;
-    let scatterPos = [];
-
-    for (let c = 0; c < 5; c++) {
-        for (let r = 0; r < 4; r++) {
-            if (reels[c] && reels[c][r] && reels[c][r].s === '9.png') {
-                scatterCount++;
-                scatterPos.push(`${c},${r}`);
-            }
-        }
-    }
-
-    for (let r0 = 0; r0 < 4; r0++) {
-        if (!reels || !reels[r0]) continue;
-        let target = reels[r0].s;
-        if (target === '9.png' || target === 'wild.png') continue;
-
-        let matchCount = 1;
-        let tempPos = [`0,${r0}`];
-
-        for (let col = 1; col < 5; col++) {
-            let foundInCol = false;
-            for (let row = 0; row < 4; row++) {
-                if (reels[col] && reels[col][row]) {
-                    let cur = reels[col][row].s;
-                    if (cur === target || cur === 'wild.png') {
-                        tempPos.push(`${col},${row}`);
-                        foundInCol = true;
-                    }
-                }
-            }
-            if (foundInCol) matchCount++; else break;
-        }
-
-        if (matchCount >= 3) {
-            tempPos.forEach(p => { if (!winPos.includes(p)) winPos.push(p); });
-            let payout = cardPaytable[target] || 5;
-            totalMultiplier += (payout / 40) * (matchCount / 3);
-        }
-    }
-    return { pos: winPos, multiplier: totalMultiplier, scatters: scatterCount, scatterPos: scatterPos };
-}
-
-// মাস্টার ভয়ানক স্কাটার ড্রামা
-function triggerScatterDrama(scatterPos) {
-    if (typeof playS === "function") playS('scatter_intro');
-    let board = document.querySelector('.reels-container');
-    if (board) board.classList.add('shake-screen');
-    scatterPos.forEach(pos => {
+// ১. কার্ড নীল বর্ডারে হাইলাইট করা (১০২৪ উপায়ের জন্য)
+function highlightWinningCards(winPos) {
+    if (!winPos) return;
+    winPos.forEach(pos => {
         let [r, c] = pos.split(',');
-        document.getElementById(`reel-${r}`)?.children[c]?.classList.add('scatter-blast');
+        let reelEl = document.getElementById(`reel-${r}`);
+        if (reelEl && reelEl.children[c]) {
+            reelEl.children[c].classList.add('win-highlight');
+        }
     });
-    setTimeout(() => {
-        if (board) board.classList.remove('shake-screen');
-        document.querySelectorAll('.scatter-blast').forEach(el => el.classList.remove('scatter-blast'));
-    }, 3000);
 }
 
-async function processWinChainLive() {
-    let currentReels = getCurrentReelsFromScreen();
-    let winData = calculateLiveWin(currentReels);
-
-    // ৩টি স্কাটার ডিটেকশন ও ২০টি ফ্রি স্পিন মেকানিজম
-    if (winData.scatters >= 3 && !isFreeMode) {
-        triggerScatterDrama(winData.scatterPos);
-        isFreeMode = true;
-        freeSpinCount = 20;
-        
-        let fsInfo = document.getElementById('fs-info');
-        let fsCount = document.getElementById('fs-count');
-        if (fsInfo) fsInfo.style.display = 'block';
-        if (fsCount) fsCount.innerText = freeSpinCount;
-        
-        await new Promise(res => setTimeout(res, 3500));
-    }
-
-    if (winData.pos.length === 0) {
-        currentCombo = 1;
-        updateMultiplierUI(1);
-        
-        // ফ্রি স্পিন অটোমেটিক লুপ
-        if (isFreeMode && freeSpinCount > 0) {
-            freeSpinCount--;
-            let fsCount = document.getElementById('fs-count');
-            if (fsCount) fsCount.innerText = freeSpinCount;
-            
-            if (freeSpinCount === 0) {
-                isFreeMode = false;
-                let fsInfo = document.getElementById('fs-info');
-                if (fsInfo) fsInfo.style.display = 'none';
-            }
-            await new Promise(res => setTimeout(res, 1000));
-            if (typeof handleSpinButton === "function") handleSpinButton();
-        } else {
-            isSpinning = false;
+// ২. কার্ড উধাও (Vanish/Explode) করা
+function vanishWinningCards(winPos) {
+    if (!winPos) return;
+    winPos.forEach(pos => {
+        let [r, c] = pos.split(',');
+        let reelEl = document.getElementById(`reel-${r}`);
+        if (reelEl && reelEl.children[c]) {
+            let card = reelEl.children[c];
+            card.classList.remove('win-highlight');
+            card.classList.add('explode');
         }
+    });
+}
+
+// ৩. নতুন কার্ড ওপর থেকে নেমে ফিলআপ হওয়া (Cascading Drop)
+function fillUpNewCards(winPos, nextCombo) {
+    if (!winPos || !nextCombo) return;
+    winPos.forEach(pos => {
+        let [r, c] = pos.split(',');
+        let reelEl = document.getElementById(`reel-${r}`);
+        if (reelEl && reelEl.children[c]) {
+            let card = reelEl.children[c];
+            if (nextCombo[r] && nextCombo[r][c]) {
+                card.innerHTML = `<img src="${nextCombo[r][c].s}">`;
+                card.classList.remove('explode');
+                card.classList.add('cell-new');
+            }
+        }
+    });
+    if (typeof playS === 'function') playS('stop');
+}
+
+// ৪. ওপরে থাকা মাল্টিপ্লায়ার (x1, x2, x3, x5) হলুদ বাটন কন্ট্রোল করার ম্যাজিক
+function updateMultiplierDisplay(level) {
+    // সব বাটন থেকে একটিভ ক্লাস সরানো
+    ['x1', 'x2', 'x3', 'x5'].forEach(id => {
+        let el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    // বর্তমান কম্বো লেভেল অনুযায়ী লাইট জ্বালানো
+    let currentId = level === 1 ? 'x1' : (level === 2 ? 'x2' : (level === 3 ? 'x3' : 'x5'));
+    let activeEl = document.getElementById(currentId);
+    if (activeEl) {
+        activeEl.classList.add('active');
+    }
+}
+
+// ৫. মূল চেইন রিঅ্যাকশন ইঞ্জিন (Recursive Loop)
+async function processWinChain(winData, level = 1) {
+    if (!winData || !winData.win_pos || winData.win_pos.length === 0) {
+        isSpinning = false;
+        updateMultiplierDisplay(1); // চেইন শেষ হলে আবার x1-এ ব্যাক করবে
         return;
     }
 
-    let activeMultiplier = 1;
-    if (currentCombo === 2) activeMultiplier = 2;
-    else if (currentCombo === 3) activeMultiplier = 3;
-    else if (currentCombo >= 4) activeMultiplier = 5;
+    // মাল্টিপ্লায়ার লাইট সচল করা
+    updateMultiplierDisplay(level);
 
-    updateMultiplierUI(currentCombo);
+    // A. কার্ড হাইলাইট করা
+    highlightWinningCards(winData.win_pos);
+    if (typeof playS === 'function') playS('win');
+    await new Promise(res => setTimeout(res, 800));
 
-    let stepWin = currentBet * winData.multiplier * activeMultiplier;
-    totalSpinWin += stepWin;
+    // B. কার্ড ভ্যানিশ করা
+    vanishWinningCards(winData.win_pos);
+    await new Promise(res => setTimeout(res, 500));
 
-    // A. হাইলাইট
-    winData.pos.forEach(pos => {
-        let [r, c] = pos.split(',');
-        document.getElementById(`reel-${r}`)?.children[c]?.classList.add('win-highlight');
-    });
-    if (typeof playS === "function") playS('win');
-    await new Promise(res => setTimeout(res, 700));
+    // C. নতুন কার্ড ফিলআপ
+    fillUpNewCards(winData.win_pos, winData.next_combo);
+    await new Promise(res => setTimeout(res, 500));
 
-    // B. ভ্যানিশ
-    winData.pos.forEach(pos => {
-        let [r, c] = pos.split(',');
-        let card = document.getElementById(`reel-${r}`)?.children[c];
-        if (card) { card.classList.remove('win-highlight'); card.classList.add('explode'); }
-    });
-    await new Promise(res => setTimeout(res, 400));
+    // D. টাকা গোনার রিয়েল-টাইম এনিমেশন (মাল্টিপ্লায়ার সহ গুণফল)
+    if (winData.win > 0) {
+        let winEl = document.getElementById('win-amount');
+        if (winEl) {
+            let startWin = parseFloat(winEl.innerText) || 0;
+            let currentMulti = level === 1 ? 1 : (level === 2 ? 2 : (level === 3 ? 3 : 5));
+            let endWin = parseFloat(winData.total_win_so_far || winData.win) * currentMulti;
+            let duration = 800, startTime = null;
 
-    // C. নতুন ভিন্ন ভিন্ন ছবি রিফিল
-    winData.pos.forEach(pos => {
-        let [r, c] = pos.split(',');
-        let card = document.getElementById(`reel-${r}`)?.children[c];
-        if (card) {
-            let keys = Object.keys(cardPaytable);
-            let randomImg = keys[Math.floor(Math.random() * keys.length)];
-            card.innerHTML = `<img src="${randomImg}">`;
-            card.classList.remove('explode');
-            card.classList.add('cell-new');
+            function countWin(currentTime) {
+                if (!startTime) startTime = currentTime;
+                let progress = currentTime - startTime;
+                let currentWin = Math.min(startWin + (endWin - startWin) * (progress / duration), endWin);
+                winEl.innerText = currentWin.toFixed(2);
+                if (progress < duration) {
+                    requestAnimationFrame(countWin);
+                } else {
+                    winEl.innerText = endWin.toFixed(2);
+                }
+            }
+            requestAnimationFrame(countWin);
         }
-    });
-    if (typeof playS === "function") playS('stop');
-    
-    animateWinText(totalSpinWin);
-    await new Promise(res => setTimeout(res, 600));
-
-    // সার্ভারে লাইভ জয়ের ডাটা পাঠানো
-    try { await fetch(`update_live_win.php?uid=${userId}&win=${stepWin}`); } catch(e){}
-
-    currentCombo++;
-    await processWinChainLive();
-}
-
-function animateWinText(targetAmount) {
-    let winEl = document.getElementById('win-amount');
-    if (!winEl) return;
-    let start = parseFloat(winEl.innerText) || 0;
-    let duration = 500, startT = null;
-    function step(currT) {
-        if (!startT) startT = currT;
-        let progress = currT - startT;
-        let currV = Math.min(start + (targetAmount - start) * (progress / duration), targetAmount);
-        winEl.innerText = currV.toFixed(2);
-        if (progress < duration) requestAnimationFrame(step);
-        else winEl.innerText = targetAmount.toFixed(2);
     }
-    requestAnimationFrame(step);
-}
 
-function updateMultiplierUI(combo) {
-    document.querySelectorAll('.mult-box').forEach(el => el.classList.remove('active'));
-    if (combo === 1) document.getElementById('m1')?.classList.add('active');
-    else if (combo === 2) document.getElementById('m2')?.classList.add('active');
-    else if (combo === 3) document.getElementById('m3')?.classList.add('active');
-    else if (combo >= 4) document.getElementById('m5')?.classList.add('active');
+    // E. আনলিমিটেড লুপ: যদি ডাটাবেস থেকে পরবর্তী কম্বো পাঠানো হয়ে থাকে
+    if (winData.next_win_data) {
+        await new Promise(res => setTimeout(res, 1000));
+        let nextLevel = Math.min(level + 1, 4); // ৪ নম্বর লেভেল মানে x5 বাটন
+        await processWinChain(winData.next_win_data, nextLevel); 
+    } else {
+        // সব চেইন বিক্রিয়া শেষ হলে টাটকা ব্যালেন্স মেইন বক্সে সিঙ্ক করা
+        if (winData.balance) {
+            let balEl = document.getElementById('balance');
+            if (balEl) balEl.innerText = parseFloat(winData.balance).toFixed(2);
+        }
+        isSpinning = false;
+        setTimeout(() => updateMultiplierDisplay(1), 1000); // পুনরায় x1-এ ব্যাক
+    }
 }

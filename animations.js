@@ -78,6 +78,18 @@ async function processWinChain(winData, level = 1) {
     // A. কার্ড হাইলাইট করা
     highlightWinningCards(winData.win_pos);
     if (typeof playS === 'function') playS('win');
+            // আপনার বর্তমান ৮০ নম্বর লাইন
+        if (typeof playS === 'function') {
+            
+            // নতুন যোগ করা লজিক (বিগ উইন চেক)
+            if (winData.win >= (currentBet * 5)) {
+                playS('bigwin');
+            } else {
+                playS('win');
+            }
+            
+        } // ৮০ নম্বর লাইনের শেষ অংশ
+
     await new Promise(res => setTimeout(res, 800));
 
     // B. কার্ড ভ্যানিশ করা

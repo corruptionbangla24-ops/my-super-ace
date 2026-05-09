@@ -55,16 +55,16 @@
 
             <button class="circle-btn" onclick="changeBet(10)">+</button>
         </div>
-<button id="turbo-btn" class="mode-btn">TURBO</button>
-<button id="auto-btn" class="mode-btn">AUTO</button>
-
-        
-
-        <!-- মেইন হোয়াইট স্পিন বাটন -->
-        <div class="spin-area">
-            <button id="spin-btn" onclick="handleSpin()">SPIN</button>
-        </div>
+<!-- নিচের মেইন বাটন সেকশন -->
+<div class="main-action-area">
+    <button id="turbo-btn" class="mode-btn side-btn">TURBO</button>
+    
+    <div class="spin-wrapper">
+        <button id="spin-btn" onclick="handleSpin()">SPIN</button>
     </div>
+    
+    <button id="auto-btn" class="mode-btn side-btn">AUTO</button>
+</div>
 
     <script>const userId = <?php echo $user_id; ?>;</script>
     <script src="animations.js"></script>

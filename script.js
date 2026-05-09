@@ -18,6 +18,10 @@ async function handleSpin() {
     renderBoard(data.reels);
     await processWinChain(data, 1);
     loadBatch();
+    // ২০ নম্বর লাইনের ঠিক নিচে এটি যোগ করুন
+isSpinning = false;
+checkNextAuto();
+
 }
 
 function renderBoard(reels) {

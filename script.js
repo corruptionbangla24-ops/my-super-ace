@@ -57,34 +57,39 @@ document.querySelectorAll('.nav-btn, .top-btn')[1].addEventListener('click', fun
     this.style.color = isMuted ? "#666" : "#ffd700";
 });
 
-// --- টার্বো বাটন ---
-let isTurbo = false;
+// টার্বো বাটন লজিক
 const turboBtn = document.getElementById('turbo-btn');
+let isTurbo = false; // এটি গ্লোবাল থাকতে হবে
+
 if (turboBtn) {
-    turboBtn.addEventListener('click', function() {
+    turboBtn.onclick = () => {
         isTurbo = !isTurbo;
-        this.classList.toggle('turbo-active');
-        this.innerText = isTurbo ? "TURBO ON" : "TURBO OFF";
-    });
+        turboBtn.classList.toggle('turbo-active'); // সিএসএস এ হলুদ বর্ডার দিবে
+        turboBtn.innerText = isTurbo ? "TURBO ON" : "TURBO OFF";
+        turboBtn.style.color = isTurbo ? "#ffd700" : "#888";
+    };
 }
 
-// --- অটো বাটন ---
-let isAuto = false;
+// অটো বাটন লজিক
 const autoBtn = document.getElementById('auto-btn');
+let isAuto = false;
+
 if (autoBtn) {
-    autoBtn.addEventListener('click', function() {
+    autoBtn.onclick = () => {
         isAuto = !isAuto;
-        this.classList.toggle('auto-active');
-        this.innerText = isAuto ? "AUTO ON" : "AUTO OFF";
+        autoBtn.classList.toggle('auto-active');
+        autoBtn.innerText = isAuto ? "AUTO ON" : "AUTO OFF";
+        autoBtn.style.color = isAuto ? "#ffd700" : "#888";
         if (isAuto && !isSpinning) handleSpin();
-    });
+    };
 }
 
 // অটো স্পিন কন্টিনিউ করার ফাংশন
 function checkNextAuto() {
     if (isAuto && !isSpinning) {
-        setTimeout(handleSpin, isTurbo ? 300 : 1200);
+        setTimeout(handleSpin, isTurbo ? 200 : 1200);
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", loadBatch);

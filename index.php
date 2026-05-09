@@ -55,12 +55,10 @@
 
             <button class="circle-btn" onclick="changeBet(10)">+</button>
         </div>
+<button id="turbo-btn" class="mode-btn">TURBO</button>
+<button id="auto-btn" class="mode-btn">AUTO</button>
 
-        <!-- টার্বো ও অটো বাটন -->
-        <div class="mode-bar">
-            <button class="mode-btn turbo-active">TURBO</button>
-            <button class="mode-btn">AUTO</button>
-        </div>
+        
 
         <!-- মেইন হোয়াইট স্পিন বাটন -->
         <div class="spin-area">

@@ -31,6 +31,8 @@ function vanishWinningCards(winPos) {
 // ৩. নতুন কার্ড ওপর থেকে নেমে ফিলআপ হওয়া (Cascading Drop)
 function fillUpNewCards(winPos, nextCombo) {
     if (!winPos || !nextCombo) return;
+    playS('stop');
+
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
         let reelEl = document.getElementById(`reel-${r}`);

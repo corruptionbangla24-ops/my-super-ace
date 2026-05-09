@@ -49,6 +49,8 @@ function renderBoard(reels) {
 
 function changeBet(val) {
     if (isSpinning) return;
+    playS('click');
+
     currentBet = Math.max(10, Math.min(500, currentBet + val));
     document.getElementById('current-bet').innerText = currentBet.toFixed(2);
     queue = []; loadBatch();
@@ -71,6 +73,8 @@ const turboBtn = document.getElementById('turbo-btn');
 let isTurbo = false; // এটি গ্লোবাল থাকতে হবে
 
 if (turboBtn) {
+    playS('click');
+
     turboBtn.onclick = () => {
         isTurbo = !isTurbo;
         turboBtn.classList.toggle('turbo-active'); // সিএসএস এ হলুদ বর্ডার দিবে
@@ -85,6 +89,8 @@ let isAuto = false;
 
 if (autoBtn) {
     autoBtn.onclick = () => {
+        playS('click');
+
         isAuto = !isAuto;
         autoBtn.classList.toggle('auto-active');
         autoBtn.innerText = isAuto ? "AUTO ON" : "AUTO OFF";

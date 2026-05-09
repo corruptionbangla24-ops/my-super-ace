@@ -28,10 +28,12 @@ function vanishWinningCards(winPos) {
     });
 }
 
-// ৩. নতুন কার্ড ওপর থেকে নেমে ফিলআপ হওয়া (Cascading Drop)
+// ৩. নতুন কার্ড ওপর থেকে নেমে ফিলআপ হওয়ার এনিমেশন
 function fillUpNewCards(winPos, nextCombo) {
     if (!winPos || !nextCombo) return;
-    playS('stop');
+    
+    // কার্ড পড়ার শব্দ বাজানো
+    if (typeof playS === 'function') playS('stop');
 
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
@@ -39,14 +41,26 @@ function fillUpNewCards(winPos, nextCombo) {
         if (reelEl && reelEl.children[c]) {
             let card = reelEl.children[c];
             if (nextCombo[r] && nextCombo[r][c]) {
+                // নতুন ইমেজ বসানো
                 card.innerHTML = `<img src="${nextCombo[r][c].s}">`;
+                
+                // উধাও হওয়ার ক্লাস মুছে পড়ার ক্লাস যোগ করা
                 card.classList.remove('explode');
-                card.classList.add('cell-new');
+                card.classList.add('card-dropping'); 
+                
+                // এনিমেশন শেষ হলে ক্লাসটি সরিয়ে ফেলা
+                setTimeout(() => {
+                    card.classList.remove('card-dropping');
+                }, 500);
             }
         }
     });
-    if (typeof playS === 'function') playS('stop');
+
+    if (typeof playS === 'function') {
+        // অতিরিক্ত কোনো লজিক থাকলে এখানে দিতে পারেন
+    }
 }
+
 
 // ৪. ওপরে থাকা মাল্টিপ্লায়ার (x1, x2, x3, x5) হলুদ বাটন কন্ট্রোল করার ম্যাজিক
 function updateMultiplierDisplay(level) {

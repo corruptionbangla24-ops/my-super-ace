@@ -33,38 +33,69 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .win-section { padding-top: 3px; text-align: center; }
 .small-lbl-gold { color: #ffd700; font-size: 10px; font-weight: bold; display: block; }
 #win-amount { color: #fff; font-size: 22px; font-weight: bold; }
-
-/* বাটনগুলোকে পাশাপাশি এবং সঠিক পজিশনে রাখার জন্য */
-.mode-bar {
+/* মেইন বাটন এরিয়া */
+.main-action-area {
     display: flex;
-    justify-content: space-between; /* বাটন দুটির মাঝে সমান দূরত্ব থাকবে */
-    gap: 15px; /* বাটন দুটির মাঝে ফাঁকা জায়গা */
-    margin: 15px 0; /* স্পিন বাটনের ওপরে গ্যাপ তৈরি করবে */
-    width: 100%; /* পুরো জায়গা জুড়ে থাকবে */
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
 }
 
-.mode-btn {
-    flex: 1; /* দুটি বাটন সমান সাইজের হবে */
+/* টার্বো এবং অটো বাটন (ছোট সাইড বাটন) */
+.side-btn {
+    flex: 1;
     background: #1a1a1a;
     color: #888;
     border: 1px solid #444;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 10px 5px;
+    border-radius: 10px;
+    font-size: 12px;
     font-weight: bold;
-    font-size: 14px;
+    min-width: 80px;
+    height: 50px;
     cursor: pointer;
-    text-align: center;
 }
 
-/* টার্বো বা অটো অন থাকলে এই স্টাইলটি হবে (যা আপনি ছবিতে দেখছেন) */
+/* গোল স্পিন বাটন (মাঝখানে বড়) */
+.spin-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#spin-btn {
+    width: 85px;
+    height: 85px;
+    background: #ffffff; /* অথবা গোল্ডেন #ffd700 দিতে পারেন */
+    color: #000;
+    border: none;
+    border-radius: 50%; /* একদম গোল করার জন্য */
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: transform 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+}
+
+#spin-btn:active {
+    transform: scale(0.9);
+}
+
+/* একটিভ স্টেট (হলুদ বর্ডার) */
 .turbo-active, .auto-active {
     border-color: #ffd700 !important;
     color: #ffd700 !important;
 }
 
-
-/* হোয়াইট স্পিন বাটন */
-#spin-btn { width: 100%; background: #fff; color: #000; border: none; padding: 16px; font-size: 24px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 
 /* হাইলাইট */
 .win-highlight { border: 2.5px solid #00daff !important; box-shadow: 0 0 10px #00daff; }

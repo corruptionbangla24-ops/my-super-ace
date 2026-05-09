@@ -67,7 +67,10 @@
 </div>
 
     <script>const userId = <?php echo $user_id; ?>;</script>
-    <script src="animations.js"></script>
-    <script src="script.js"></script>
+<!-- ৭০ নম্বর লাইনের আগে এটি যোগ করুন -->
+<script src="sound_manager.js"></script> 
+<script src="animations.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>

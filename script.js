@@ -11,11 +11,20 @@ async function loadBatch() {
 
 async function handleSpin() {
     if (isSpinning) return;
+    // অডিও সিস্টেম আনলক করা
+if (typeof sounds !== 'undefined') {
+    Object.values(sounds).forEach(s => {
+        s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
+    });
+}
+
     if (queue.length === 0) { await loadBatch(); if(queue.length===0) return; }
     isSpinning = true;
     let data = queue.shift();
     document.getElementById('win-amount').innerText = "0.00";
     renderBoard(data.reels);
+    playS('spin');
+
     await processWinChain(data, 1);
     loadBatch();
     // ২০ নম্বর লাইনের ঠিক নিচে এটি যোগ করুন

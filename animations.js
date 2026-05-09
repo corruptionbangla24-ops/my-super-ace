@@ -1,6 +1,8 @@
 // ১. কার্ড নীল বর্ডারে হাইলাইট করা (১০২৪ উপায়ের জন্য)
 function highlightWinningCards(winPos) {
     if (!winPos) return;
+    playS('win');
+
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
         let reelEl = document.getElementById(`reel-${r}`);

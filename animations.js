@@ -120,6 +120,8 @@ await new Promise(res => setTimeout(res, isTurbo ? 200 : 800));
             if (balEl) balEl.innerText = parseFloat(winData.balance).toFixed(2);
         }
         isSpinning = false;
+        if (typeof checkNextAuto === 'function') checkNextAuto();
+
         setTimeout(() => updateMultiplierDisplay(1), 1000); // পুনরায় x1-এ ব্যাক
     }
 }

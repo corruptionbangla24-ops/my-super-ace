@@ -108,7 +108,9 @@ async function processWinChain(winData, level = 1) {
 
     // E. আনলিমিটেড লুপ: যদি ডাটাবেস থেকে পরবর্তী কম্বো পাঠানো হয়ে থাকে
     if (winData.next_win_data) {
-        await new Promise(res => setTimeout(res, 1000));
+        // ১১১ নম্বর লাইনে এটি বসান
+await new Promise(res => setTimeout(res, isTurbo ? 200 : 800));
+
         let nextLevel = Math.min(level + 1, 4); // ৪ নম্বর লেভেল মানে x5 বাটন
         await processWinChain(winData.next_win_data, nextLevel); 
     } else {

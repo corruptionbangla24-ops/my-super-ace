@@ -15,6 +15,8 @@ function highlightWinningCards(winPos) {
 // ২. কার্ড উধাও (Vanish/Explode) করা
 function vanishWinningCards(winPos) {
     if (!winPos) return;
+    playS('stop');
+
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
         let reelEl = document.getElementById(`reel-${r}`);

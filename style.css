@@ -96,30 +96,47 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
     color: #ffd700 !important;
 }
 
+/* ১০০ নম্বর লাইন থেকে শুরু করুন */
 
-/* হাইলাইট */
-.win-highlight { border: 2.5px solid #00daff !important; box-shadow: 0 0 10px #00daff; }
-/* উপর থেকে পড়ার এনিমেশন */
+/* ১. উইন হাইলাইট (নীল বর্ডার) */
+.win-highlight { 
+    border: 2.5px solid #00daff !important; 
+    box-shadow: 0 0 15px #00daff;
+    z-index: 10;
+}
+
+/* ২. উপর থেকে পড়ার স্মুথ এনিমেশন */
 @keyframes dropCard {
     0% {
-        transform: translateY(-150%); /* স্ক্রিনের অনেক উপর থেকে শুরু হবে */
+        transform: translateY(-100%);
         opacity: 0;
     }
-    60% {
-        transform: translateY(10%); /* একটু নিচে গিয়ে বাউন্স করবে */
+    100% {
+        transform: translateY(0);
         opacity: 1;
     }
-    100% {
-        transform: translateY(0); /* সঠিক জায়গায় সেট হবে */
-    }
 }
 
-/* নতুন কার্ড যখন আসবে তখন এই ক্লাসটি লাগবে */
+/* ৩. নতুন কার্ড যখন আসবে তখন এই ক্লাসটি লাগবে */
 .card-dropping {
-    animation: dropCard 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: dropCard 0.4s ease-out forwards;
 }
 
-/* কার্ডের ভেতরের ইমেজের জন্য একটু স্মুথনেস */
-.card-cell img, .cell img {
-    transition: transform 0.2s;
+/* ৪. কার্ডের সেল ডিজাইন (এটিই ডিজাইন ঠিক রাখবে) */
+.card-cell, .cell {
+    position: relative;
+    overflow: hidden; /* কার্ড যেন বক্সের বাইরে না যায় */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+/* ৫. কার্ডের ইমেজের জন্য স্মুথ ট্রানজিশন */
+.card-cell img, .cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s;
+    display: block;
+}
+

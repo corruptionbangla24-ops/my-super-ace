@@ -34,10 +34,34 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .small-lbl-gold { color: #ffd700; font-size: 10px; font-weight: bold; display: block; }
 #win-amount { color: #fff; font-size: 22px; font-weight: bold; }
 
-/* মোড বাটন */
-.mode-bar { display: flex; gap: 10px; margin-bottom: 15px; }
-.mode-btn { flex: 1; background: #222; border: 1px solid #444; color: #666; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; }
-.turbo-active { border-color: #ffd700; color: #ffd700; }
+/* বাটনগুলোকে পাশাপাশি এবং সঠিক পজিশনে রাখার জন্য */
+.mode-bar {
+    display: flex;
+    justify-content: space-between; /* বাটন দুটির মাঝে সমান দূরত্ব থাকবে */
+    gap: 15px; /* বাটন দুটির মাঝে ফাঁকা জায়গা */
+    margin: 15px 0; /* স্পিন বাটনের ওপরে গ্যাপ তৈরি করবে */
+    width: 100%; /* পুরো জায়গা জুড়ে থাকবে */
+}
+
+.mode-btn {
+    flex: 1; /* দুটি বাটন সমান সাইজের হবে */
+    background: #1a1a1a;
+    color: #888;
+    border: 1px solid #444;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* টার্বো বা অটো অন থাকলে এই স্টাইলটি হবে (যা আপনি ছবিতে দেখছেন) */
+.turbo-active, .auto-active {
+    border-color: #ffd700 !important;
+    color: #ffd700 !important;
+}
+
 
 /* হোয়াইট স্পিন বাটন */
 #spin-btn { width: 100%; background: #fff; color: #000; border: none; padding: 16px; font-size: 24px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }

@@ -40,5 +40,47 @@ function changeBet(val) {
     document.getElementById('current-bet').innerText = currentBet.toFixed(2);
     queue = []; loadBatch();
 }
+// --- হোম বাটন ---
+document.querySelectorAll('.nav-btn, .top-btn')[0].addEventListener('click', () => {
+    window.location.href = 'index.php'; 
+});
+
+// --- সাউন্ড বাটন (৩য় বাটনটি সাধারণত সাউন্ডের হয়) ---
+let isMuted = false;
+document.querySelectorAll('.nav-btn, .top-btn')[1].addEventListener('click', function() {
+    isMuted = !isMuted;
+    this.innerText = isMuted ? "Sound: OFF" : "Sound: ON";
+    this.style.color = isMuted ? "#666" : "#ffd700";
+});
+
+// --- টার্বো বাটন ---
+let isTurbo = false;
+const turboBtn = document.getElementById('turbo-btn');
+if (turboBtn) {
+    turboBtn.addEventListener('click', function() {
+        isTurbo = !isTurbo;
+        this.classList.toggle('turbo-active');
+        this.innerText = isTurbo ? "TURBO ON" : "TURBO OFF";
+    });
+}
+
+// --- অটো বাটন ---
+let isAuto = false;
+const autoBtn = document.getElementById('auto-btn');
+if (autoBtn) {
+    autoBtn.addEventListener('click', function() {
+        isAuto = !isAuto;
+        this.classList.toggle('auto-active');
+        this.innerText = isAuto ? "AUTO ON" : "AUTO OFF";
+        if (isAuto && !isSpinning) handleSpin();
+    });
+}
+
+// অটো স্পিন কন্টিনিউ করার ফাংশন
+function checkNextAuto() {
+    if (isAuto && !isSpinning) {
+        setTimeout(handleSpin, isTurbo ? 300 : 1200);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", loadBatch);

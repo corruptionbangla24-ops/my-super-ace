@@ -38,14 +38,17 @@ function renderBoard(reels) {
     for (let c = 0; c < 5; c++) {
         let reelEl = document.getElementById(`reel-${c}`);
         reelEl.innerHTML = '';
-        reels[c].forEach(row => {
+        reels[c].forEach((row, index) => {
             let cell = document.createElement('div');
-            cell.className = 'cell';
+            cell.className = 'card-cell card-dropping'; // এখানেও ক্লাটি যোগ করুন
+            // একটু গ্যাপ দিয়ে দিয়ে এক একটা কার্ড পড়বে (Waterfall Effect)
+            cell.style.animationDelay = `${(c * 0.1) + (index * 0.05)}s`; 
             cell.innerHTML = `<img src="${row.s}">`;
             reelEl.appendChild(cell);
         });
     }
 }
+
 
 function changeBet(val) {
     if (isSpinning) return;

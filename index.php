@@ -16,6 +16,11 @@
                 <span class="lbl">BALANCE</span>
                 <span id="balance">1739076.40</span>
             </div>
+            <!-- index.php এ ব্যালেন্স বক্সের ঠিক নিচে এটি দিন -->
+<div id="fs-info" style="display:none; color:#ffd700; font-weight:bold; font-size:14px; text-align:center;">
+    FREE SPINS: <span id="fs-count">0</span>
+</div>
+
             <button class="top-btn">Sound: ON</button>
         </div>
 

@@ -139,3 +139,24 @@ async function processWinChain(winData, level = 1) {
         }
     }
 }
+// animations.js এর শেষে এটি দিন
+function triggerScatterDrama(scatterPos) {
+    if (!scatterPos) return;
+    if (typeof playS === 'function') playS('scatter'); // স্কাটার এলার্ট শব্দ
+    
+    // স্ক্রিন কাঁপানোর জন্য ক্লাস (CSS এ নিচে দিচ্ছি)
+    let board = document.querySelector('.board-grid, .game-board');
+    if (board) board.classList.add('shake-screen');
+    
+    // স্কাটার কার্ডগুলো ঝলকানি দিবে
+    scatterPos.forEach(pos => {
+        let [r, c] = pos.split(',');
+        let card = document.getElementById(`reel-${r}`).children[c];
+        if (card) card.classList.add('scatter-glow');
+    });
+
+    setTimeout(() => {
+        if (board) board.classList.remove('shake-screen');
+        document.querySelectorAll('.scatter-glow').forEach(el => el.classList.remove('scatter-glow'));
+    }, 3000);
+}

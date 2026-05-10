@@ -1,7 +1,17 @@
-// ১. কার্ড নীল বর্ডারে হাইলাইট করা (১০২৪ উপায়ের জন্য)
-function highlightWinningCards(winPos) {
+/**
+ * ১. কার্ড হাইলাইট করা (উইনিং পজিশন অনুযায়ী)
+ */
+function highlightWinningCards(winPos, winAmount) {
     if (!winPos) return;
-    playS('win');
+
+    // স্মার্ট সাউন্ড: বড় উইন হলে 'bigwin', ছোট হলে 'win' বাজবে
+    if (typeof playS === 'function') {
+        if (winAmount >= (currentBet * 5)) {
+            playS('bigwin');
+        } else {
+            playS('win');
+        }
+    }
 
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
@@ -12,10 +22,12 @@ function highlightWinningCards(winPos) {
     });
 }
 
-// ২. কার্ড উধাও (Vanish/Explode) করা
+/**
+ * ২. কার্ড উধাও করা (Explosion Effect)
+ */
 function vanishWinningCards(winPos) {
     if (!winPos) return;
-    playS('stop');
+    if (typeof playS === 'function') playS('stop'); // কার্ড ফাটার শব্দ
 
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
@@ -28,12 +40,12 @@ function vanishWinningCards(winPos) {
     });
 }
 
-// ৩. নতুন কার্ড ওপর থেকে নেমে ফিলআপ হওয়ার এনিমেশন
+/**
+ * ৩. নতুন কার্ড উপর থেকে পড়া (Falling Animation)
+ */
 function fillUpNewCards(winPos, nextCombo) {
     if (!winPos || !nextCombo) return;
-    
-    // কার্ড পড়ার শব্দ বাজানো
-    if (typeof playS === 'function') playS('stop');
+    if (typeof playS === 'function') playS('stop'); // কার্ড পড়ার শব্দ
 
     winPos.forEach(pos => {
         let [r, c] = pos.split(',');
@@ -43,8 +55,6 @@ function fillUpNewCards(winPos, nextCombo) {
             if (nextCombo[r] && nextCombo[r][c]) {
                 // নতুন ইমেজ বসানো
                 card.innerHTML = `<img src="${nextCombo[r][c].s}">`;
-                
-                // উধাও হওয়ার ক্লাস মুছে পড়ার ক্লাস যোগ করা
                 card.classList.remove('explode');
                 card.classList.add('card-dropping'); 
                 
@@ -55,22 +65,17 @@ function fillUpNewCards(winPos, nextCombo) {
             }
         }
     });
-
-    if (typeof playS === 'function') {
-        // অতিরিক্ত কোনো লজিক থাকলে এখানে দিতে পারেন
-    }
 }
 
-
-// ৪. ওপরে থাকা মাল্টিপ্লায়ার (x1, x2, x3, x5) হলুদ বাটন কন্ট্রোল করার ম্যাজিক
+/**
+ * ৪. মাল্টিপ্লায়ার লাইট কন্ট্রোল (x1, x2, x3, x5)
+ */
 function updateMultiplierDisplay(level) {
-    // সব বাটন থেকে একটিভ ক্লাস সরানো
     ['x1', 'x2', 'x3', 'x5'].forEach(id => {
         let el = document.getElementById(id);
         if (el) el.classList.remove('active');
     });
 
-    // বর্তমান কম্বো লেভেল অনুযায়ী লাইট জ্বালানো
     let currentId = level === 1 ? 'x1' : (level === 2 ? 'x2' : (level === 3 ? 'x3' : 'x5'));
     let activeEl = document.getElementById(currentId);
     if (activeEl) {
@@ -78,82 +83,59 @@ function updateMultiplierDisplay(level) {
     }
 }
 
-// ৫. মূল চেইন রিঅ্যাকশন ইঞ্জিন (Recursive Loop)
+/**
+ * ৫. মাস্টার চেইন প্রসেসর (Recursive Chain Reaction)
+ */
 async function processWinChain(winData, level = 1) {
+    // যদি কোনো উইন না থাকে, তবে চেইন শেষ
     if (!winData || !winData.win_pos || winData.win_pos.length === 0) {
         isSpinning = false;
-        updateMultiplierDisplay(1); // চেইন শেষ হলে আবার x1-এ ব্যাক করবে
+        // ১ সেকেন্ড পর মাল্টিপ্লায়ার আবার x1 এ ফিরে যাবে
+        setTimeout(() => updateMultiplierDisplay(1), 1000);
         return;
     }
 
-    // মাল্টিপ্লায়ার লাইট সচল করা
+    // ১. ওপরের মাল্টিপ্লায়ার লাইট আপডেট
     updateMultiplierDisplay(level);
 
-    // A. কার্ড হাইলাইট করা
-    highlightWinningCards(winData.win_pos);
-    if (typeof playS === 'function') playS('win');
-            // আপনার বর্তমান ৮০ নম্বর লাইন
-        if (typeof playS === 'function') {
-            
-            // নতুন যোগ করা লজিক (বিগ উইন চেক)
-            if (winData.win >= (currentBet * 5)) {
-                playS('bigwin');
-            } else {
-                playS('win');
-            }
-            
-        } // ৮০ নম্বর লাইনের শেষ অংশ
+    // ২. কার্ড হাইলাইট ও উইন সাউন্ড
+    highlightWinningCards(winData.win_pos, winData.win);
+    await new Promise(res => setTimeout(res, isTurbo ? 300 : 800));
 
-    await new Promise(res => setTimeout(res, 800));
-
-    // B. কার্ড ভ্যানিশ করা
+    // ৩. কার্ড উধাও করা
     vanishWinningCards(winData.win_pos);
-    await new Promise(res => setTimeout(res, 500));
+    await new Promise(res => setTimeout(res, isTurbo ? 200 : 500));
 
-    // C. নতুন কার্ড ফিলআপ
+    // ৪. নতুন কার্ড ওপর থেকে পড়া
     fillUpNewCards(winData.win_pos, winData.next_combo);
-    await new Promise(res => setTimeout(res, 500));
+    await new Promise(res => setTimeout(res, isTurbo ? 200 : 500));
 
-    // D. টাকা গোনার রিয়েল-টাইম এনিমেশন (মাল্টিপ্লায়ার সহ গুণফল)
-    if (winData.win > 0) {
-        let winEl = document.getElementById('win-amount');
-        if (winEl) {
-            let startWin = parseFloat(winEl.innerText) || 0;
-            let currentMulti = level === 1 ? 1 : (level === 2 ? 2 : (level === 3 ? 3 : 5));
-            let endWin = parseFloat(winData.total_win_so_far || winData.win) * currentMulti;
-            let duration = 800, startTime = null;
-
-            function countWin(currentTime) {
-                if (!startTime) startTime = currentTime;
-                let progress = currentTime - startTime;
-                let currentWin = Math.min(startWin + (endWin - startWin) * (progress / duration), endWin);
-                winEl.innerText = currentWin.toFixed(2);
-                if (progress < duration) {
-                    requestAnimationFrame(countWin);
-                } else {
-                    winEl.innerText = endWin.toFixed(2);
-                }
-            }
-            requestAnimationFrame(countWin);
-        }
+    // ৫. উইন অ্যামাউন্ট ক্যালকুলেশন ও ডিসপ্লে (মাল্টিপ্লায়ার সহ)
+    let winEl = document.getElementById('win-amount');
+    if (winEl && winData.win > 0) {
+        let currentMulti = level === 1 ? 1 : (level === 2 ? 2 : (level === 3 ? 3 : 5));
+        let stepWin = parseFloat(winData.total_win_so_far || winData.win) * currentMulti;
+        winEl.innerText = stepWin.toFixed(2);
     }
 
-    // E. আনলিমিটেড লুপ: যদি ডাটাবেস থেকে পরবর্তী কম্বো পাঠানো হয়ে থাকে
+    // ৬. জাদুর লুপ: যদি আরও চেইন উইন বাকি থাকে
     if (winData.next_win_data) {
-        // ১১১ নম্বর লাইনে এটি বসান
-await new Promise(res => setTimeout(res, isTurbo ? 200 : 800));
-
-        let nextLevel = Math.min(level + 1, 4); // ৪ নম্বর লেভেল মানে x5 বাটন
-        await processWinChain(winData.next_win_data, nextLevel); 
+        // টার্বো মোডে চেইন খুব দ্রুত চলবে
+        await new Promise(res => setTimeout(res, isTurbo ? 200 : 1000));
+        
+        let nextLevel = Math.min(level + 1, 4); // লেভেল ৪ মানে x5 বাটন
+        await processWinChain(winData.next_win_data, nextLevel);
     } else {
-        // সব চেইন বিক্রিয়া শেষ হলে টাটকা ব্যালেন্স মেইন বক্সে সিঙ্ক করা
+        // সব চেইন শেষ হলে ফাইনাল ব্যালেন্স আপডেট
         if (winData.balance) {
             let balEl = document.getElementById('balance');
             if (balEl) balEl.innerText = parseFloat(winData.balance).toFixed(2);
         }
         isSpinning = false;
-        if (typeof checkNextAuto === 'function') checkNextAuto();
-
-        setTimeout(() => updateMultiplierDisplay(1), 1000); // পুনরায় x1-এ ব্যাক
+        
+        // অটো স্পিন মোড অন থাকলে পরের স্পিন শুরু হবে
+        if (typeof checkNextAuto === 'function') {
+            checkNextAuto();
+        }
     }
 }

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JILI SUPER ACE - OFFICIAL 1024 WAYS SLOTS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 👑 ওপরে JILI অফিশিয়াল ডাইনামিক ওodds ল্যাডার সিঁড়ি প্যানেল -->
+    <div class="top-wooden-ladder" id="jili-ladder-container">
+        <div class="ladder-node-item active" id="step-x1" data-val="1">X1</div>
+        <div class="ladder-node-item" id="step-x2" data-val="2">X2</div>
+        <div class="ladder-node-item" id="step-x3" data-val="3">X3</div>
+        <div class="ladder-node-item" id="step-x5" data-val="5">X5</div>
+    </div>
+
+    <!-- 🏟️ ১,০২৪ WAYS নোটিশ ব্যানার এবং মাঝখানে ফিক্সড BUY BONUS বাটন -->
+    <div class="ways-wooden-holder">
+        <div class="ways-label">1024 WAYS</div>
+        <div class="feature-buy-wood-btn" id="bonus-buy-btn" onclick="buyJiliAceBonusRound()">BUY BONUS</div>
+        <div class="ways-label">1024 WAYS</div>
+    </div>
+
+    <!-- 🏟️ অরিজিনাল JILI SUPER ACE ৫x৪ ফুল গ্রিড এরিনা (১০০% বর্ডার-টু-বর্ডার লক) -->
+    <div class="grid-stadium-canvas" id="jili-canvas-grid">
+        <div class="column-pipe-node" id="col-0">
+            <div class="card-slot-box col-h-4" id="slot-0-0"></div>
+            <div class="card-slot-box col-h-4" id="slot-0-1"></div>
+            <div class="card-slot-box col-h-4" id="slot-0-2"></div>
+            <div class="card-slot-box col-h-4" id="slot-0-3"></div>
+        </div>
+        <div class="column-pipe-node" id="col-1">
+            <div class="card-slot-box col-h-4" id="slot-1-0"></div>
+            <div class="card-slot-box col-h-4" id="slot-1-1"></div>
+            <div class="card-slot-box col-h-4" id="slot-1-2"></div>
+            <div class="card-slot-box col-h-4" id="slot-1-3"></div>
+        </div>
+        <div class="column-pipe-node" id="col-2">
+            <div class="card-slot-box col-h-4" id="slot-2-0"></div>
+            <div class="card-slot-box col-h-4" id="slot-2-1"></div>
+            <div class="card-slot-box col-h-4" id="slot-2-2"></div>
+            <div class="card-slot-box col-h-4" id="slot-2-3"></div>
+        </div>
+        <div class="column-pipe-node" id="col-3">
+            <div class="card-slot-box col-h-4" id="slot-3-0"></div>
+            <div class="card-slot-box col-h-4" id="slot-3-1"></div>
+            <div class="card-slot-box col-h-4" id="slot-3-2"></div>
+            <div class="card-slot-box col-h-4" id="slot-3-3"></div>
+        </div>
+        <div class="column-pipe-node" id="col-4">
+            <div class="card-slot-box col-h-4" id="slot-4-0"></div>
+            <div class="card-slot-box col-h-4" id="slot-4-1"></div>
+            <div class="card-slot-box col-h-4" id="slot-4-2"></div>
+            <div class="card-slot-box col-h-4" id="slot-4-3"></div>
+        </div>
+    </div>
+
+    <!-- 📢 মিডল বার উইজেট ডিসপ্লে প্যানেল -->
+    <div class="center-dashboard-status">
+        <div class="status-panel-sub"><div class="status-lbl">WIN</div><div class="status-val" id="win-display">Tk0.00</div></div>
+        <div class="status-panel-sub"><div class="status-lbl">BALANCE</div><div class="status-val" id="wallet-display">Tk0.00</div></div>
+        <div class="status-panel-sub"><div class="status-lbl">BET</div><div class="status-val" id="bet-display">Tk2.00</div></div>
+    </div>
+
+    <!-- 🎛️ নিচের মেইন কন্ট্রোল ফুটার প্যানেল বার -->
+    <div class="bottom-metal-controls">
+        <div class="action-flex-pack">
+            <div class="turbo-circle-btn" id="turbo-btn" onclick="toggleTurbo()">⚡</div>
+            <button class="stake-nav-btn" onclick="adjustBet('minus')">-</button>
+            <div class="grand-spin-wheel-btn" id="spin-btn" onclick="handleJiliSuperAceSpinRoll()">
+                <div class="spin-arrow-icon"></div>
+            </div>
+            <button class="stake-nav-btn" onclick="adjustBet('plus')">+</button>
+            <div class="auto-text-btn" id="auto-btn" onclick="toggleAuto()">AUTO</div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "logged_in_player";
+        const urlWallet = urlParams.get('wallet') || "main";
+        const SERVER_URL = window.location.origin;
+
+        let balance = 0.00;
+        let currentBet = 2; // জিলি অফিশিয়াল মিনিমাম বেট ২৳ লক
+        let isSpinning = false;
+        let isAuto = false;
+        let isTurbo = false;
+        let autoInterval = null;
+        let isFreeSpinModeActive = false;
+
+        const symbolImagesMap = {
+            "JILI_WILD": "Jili_Wild.png",
+            "JILI_SCATTER": "Jili_Scatter.png",
+            "CARD_ACE": "Card_Ace.png",
+            "CARD_KING": "Card_King.png",
+            "CARD_QUEEN": "Card_Queen.png",
+            "CARD_JACK": "Card_Jack.png",
+            "GOLDEN_ACE": "Golden_Ace.png",
+            "GOLDEN_KING": "Golden_King.png",
+            "GOLDEN_QUEEN": "Golden_Queen.png",
+            "GOLDEN_JACK": "Golden_Jack.png",
+            "SPADE_CLUB": "Spade_Club.png",
+            "HEART_DIAMOND": "Heart_Diamond.png"
+        };
+
+        function setupJiliImageGrid() {
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 4; row++) {
+                    let box = document.getElementById(`slot-${col}-${row}`);
+                    if (box) {
+                        box.innerHTML = `<img src="Card_Ace.png" class="symbol-img-node" style="width:100% !important; height:100% !important; object-fit:cover !important; display:block !important;" alt="jili">`;
+                    }
+                }
+            }
+        }
+        setupJiliImageGrid();
+
+        async function fetchLivePlayerBalanceSync() {
+            try {
+                const res = await fetch(`${SERVER_URL}/api/slot-balance?userId=${urlUserId}&wallet=${urlWallet}&gameName=superace`);
+                const data = await res.json();
+                if (data && data.success) {
+                    balance = parseFloat(data.balance);
+                    if (!isNaN(balance)) {
+                        document.getElementById("wallet-display").innerText = `Tk${balance.toFixed(2)}`;
+                    }
+                }
+            } catch (e) {}
+        }
+        fetchLivePlayerBalanceSync();
+
+        function adjustBet(action) {
+            if (isSpinning) return;
+            if (action === 'minus') {
+                if (currentBet > 2 && currentBet <= 10) currentBet -= 1;
+                else if (currentBet > 10 && currentBet <= 100) currentBet -= 10;
+                else if (currentBet > 100) currentBet -= 100;
+            } else if (action === 'plus') {
+                if (currentBet < 10) currentBet += 1;
+                else if (currentBet >= 10 && currentBet < 100) currentBet += 10;
+                else if (currentBet >= 100 && currentBet < 5000) currentBet += 100;
+            }
+            if (currentBet < 2) currentBet = 2;
+            if (currentBet > 5000) currentBet = 5000;
+            document.getElementById("bet-display").innerText = `Tk${currentBet.toFixed(2)}`;
+            playAudio('click');
+        }
+
+        function toggleTurbo() {
+            isTurbo = !isTurbo;
+            document.getElementById("turbo-btn").classList.toggle('active', isTurbo);
+            playAudio('click');
+        }
+
+        function toggleAuto() {
+            isAuto = !isAuto;
+            document.getElementById("auto-btn").classList.toggle('active', isAuto);
+            if (isAuto && !isSpinning) handleJiliSuperAceSpinRoll();
+            playAudio('click');
+        }
+
+        async function buyJiliAceBonusRound() {
+            if (isSpinning) return;
+            playAudio('click');
+            const cost = currentBet * 50;
+            if (!confirm(`🎉 ওস্তাদ! আপনি কি Tk${cost.toFixed(2)} দিয়ে ১০টি অরিজিনাল JILI ফ্রি স্পিন বোনাস রাউন্ড কিনতে চান?`)) return;
+            
+            try {
+                const response = await fetch(`${SERVER_URL}/api/slot-buy-feature`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: urlUserId, amount: parseFloat(currentBet), wallet: urlWallet })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    playAudio('megawin'); 
+                    alert(data.message);
+                    fetchLivePlayerBalanceSync();
+                    if (!isSpinning) handleJiliSuperAceSpinRoll();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) { alert("🚨 নেটওয়ার্ক জ্যাম ওস্তাদ!"); }
+        }
+
+        // 🎰 [🎰 ডাইনামিক মাল্টি-ক্যাস্কেড চেইন রেন্ডারিং এনিমেশন ইঞ্জিন]
+        function animateJiliOfficialGrid(serverGameData) {
+            let targetPayload = serverGameData.gameData || serverGameData;
+            let cascadeSteps = targetPayload.cascadeSteps || []; 
+            let activeRealBalance = serverGameData.balance !== undefined ? serverGameData.balance : (targetPayload.balance !== undefined ? targetPayload.balance : balance);
+
+            let spinsLeft = targetPayload.freeSpinsLeft || 0;
+            // ওריজিনাল জিলি ফ্রি স্পিন মোড ডিটেক্টর ও লাইটিং সিঙ্ক লক!
+            if (spinsLeft > 0 || targetPayload.status === "free_spin_triggered") {
+                isFreeSpinModeActive = true;
+                updateJiliLadderUIForFreeSpinMode();
+            } else {
+                isFreeSpinModeActive = false;
+                updateJiliLadderUIForNormalMode();
+            }
+
+            resetJiliMultiplierGlow();
+            removeWinningLineGlows();
+            playAudio('spin');
+
+            // 🚀 [১০০০০০% নো-ব্লর ফাস্ট শাফলিং]: র্যান্ডম ইমেজ শাফলিং হবে কিন্তু ১ চুলও ঘোলা হবে না! ৪K শার্পনেস লক!
+            let shuffleCount = 0;
+            let maxShuffle = isTurbo ? 4 : 10;
+            
+            let shuffleInterval = setInterval(() => {
+                for (let col = 0; col < 5; col++) {
+                    for (let row = 0; row < 4; row++) {
+                        let box = document.getElementById(`slot-${col}-${row}`);
+                        if (box) {
+                            let keys = Object.keys(symbolImagesMap);
+                            let randSym = keys[Math.floor(Math.random() * keys.length)];
+                            if ((col === 0 || col === 4) && randSym.startsWith("GOLDEN_")) randSym = "CARD_ACE";
+                            let file = symbolImagesMap[randSym];
+                            box.innerHTML = `<img src="${file}" class="symbol-img-node" style="width:100% !important; height:100% !important; object-fit:cover !important; display:block !important; filter: none !important; image-rendering: -webkit-optimize-contrast !important; image-rendering: crisp-edges !important;" alt="jili">`;
+                        }
+                    }
+                }
+                shuffleCount++;
+                if (shuffleCount >= maxShuffle) {
+                    clearInterval(shuffleInterval);
+                    processCascadeChainSequence();
+                }
+            }, 40);
+
+            function processCascadeChainSequence() {
+                if (cascadeSteps.length === 0) {
+                    renderMatrixGrid(targetPayload.finalReelsResultMatrix);
+                    playAudio('stop');
+                    playAudio('wheel');
+                    
+                    let finalBal = parseFloat(activeRealBalance);
+                    if (!isNaN(finalBal)) {
+                        document.getElementById("wallet-display").innerText = `Tk${finalBal.toFixed(2)}`;
+                    }
+                    stopJiliSuperAceState(targetPayload);
+                    return;
+                }
+
+                let currentStepIndex = 0;
+
+                function executeNextCascadeChain() {
+                    if (currentStepIndex >= cascadeSteps.length) {
+                        renderMatrixGrid(targetPayload.finalReelsResultMatrix);
+                        playAudio('stop');
+
+                        let finalBal = parseFloat(activeRealBalance);
+                        if (!isNaN(finalBal)) {
+                            document.getElementById("wallet-display").innerText = `Tk${finalBal.toFixed(2)}`;
+                        }
+                        displayCinematicWinCounter(targetPayload.winAmount, targetPayload.winMultiplier);
+                        stopJiliSuperAceState(targetPayload);
+                        return;
+                    }
+
+                    let currentStepData = cascadeSteps[currentStepIndex];
+                    
+                    renderMatrixGrid(currentStepData.matrix);
+                    playAudio('stop');
+
+                    if (targetPayload.status === "free_spin_triggered" && currentStepIndex === 0) {
+                        playAudio('scatter');
+                    }
+
+                    highlightWinningLineBoxes(currentStepData.matrix);
+                    playAudio('win');
+
+                    updateJiliMultiplierGlowByLabel(currentStepData.multiplierLabel);
+                    document.getElementById("win-display").innerText = `Tk${parseFloat(currentStepData.stepWin).toFixed(2)}`;
+
+                    setTimeout(() => {
+                        vanishWinningLineBoxes(currentStepData.matrix);
+                        playAudio('stop');
+
+                        setTimeout(() => {
+                            currentStepIndex++;
+                            executeNextCascadeChain(); 
+                        }, 250); 
+                    }, 1100); 
+                }
+
+                executeNextCascadeChain();
+            }
+        }
+
+        function renderMatrixGrid(matrix) {
+            if (!matrix) return;
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 4; row++) {
+                    let box = document.getElementById(`slot-${col}-${row}`);
+                    if (box && matrix[col] && matrix[col][row]) {
+                        let sym = matrix[col][row];
+                        let file = symbolImagesMap[sym] || "Card_Ace.png";
+                        box.innerHTML = `<img src="${file}" class="symbol-img-node" style="width:100% !important; height:100% !important; object-fit:cover !important; display:block !important; filter: none !important; image-rendering: -webkit-optimize-contrast !important; image-rendering: crisp-edges !important; image-rendering: pixelated !important; -webkit-transform-style: preserve-3d !important; transform: translateZ(0) !important;" alt="${sym}">`;
+                    }
+                }
+            }
+        }
+
+        function highlightWinningLineBoxes(matrix) {
+            removeWinningLineGlows();
+            let winSym = getWinningSymbolFromMatrix(matrix);
+            
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 4; row++) {
+                    let box = document.getElementById(`slot-${col}-${row}`);
+                    let sym = (matrix && matrix[col]) ? matrix[col][row] : "";
+                    let cleanWinSym = winSym.replace("GOLDEN_", "CARD_");
+                    let cleanSym = sym.replace("GOLDEN_", "CARD_");
+                    
+                    if (box && (cleanSym === cleanWinSym || sym === "JILI_WILD" || sym === "GOLDEN_WILD") && winSym !== "") {
+                        box.style.setProperty('border', '3px solid #ffaa00', 'important');
+                        box.style.setProperty('box-shadow', 'inset 0 0 15px #ff5500', 'important');
+                        box.style.setProperty('-webkit-transform-style', 'preserve-3d', 'important');
+                        box.style.setProperty('transform', 'translateZ(0) scale(1.02)', 'important');
+                        
+                        let img = box.querySelector('img');
+                        if (img) {
+                            img.style.setProperty('filter', 'none', 'important');
+                            img.style.setProperty('image-rendering', '-webkit-optimize-contrast', 'important');
+                        }
+                    }
+                }
+            }
+        }
+
+        function vanishWinningLineBoxes(matrix) {
+            let winSym = getWinningSymbolFromMatrix(matrix);
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 4; row++) {
+                    let box = document.getElementById(`slot-${col}-${row}`);
+                    let sym = (matrix && matrix[col]) ? matrix[col][row] : "";
+                    let cleanWinSym = winSym.replace("GOLDEN_", "CARD_");
+                    let cleanSym = sym.replace("GOLDEN_", "CARD_");
+                    if (box && (cleanSym === cleanWinSym || sym === "JILI_WILD" || sym === "GOLDEN_WILD") && winSym !== "") {
+                        box.innerHTML = ""; 
+                        box.style.setProperty('background', 'radial-gradient(circle, #ff5500 0%, #000 70%)', 'important');
+                        box.style.setProperty('border', '2px solid #241308', 'important');
+                        box.style.setProperty('box-shadow', 'none', 'important');
+                    }
+                }
+            }
+        }
+
+        function getWinningSymbolFromMatrix(matrix) {
+            if(!matrix) return "";
+            for (let c = 0; c < 3; c++) {
+                if (matrix[c]) {
+                    for (let r = 0; r < matrix[c].length; r++) {
+                        let s = matrix[c][r];
+                        if (s !== "JILI_WILD" && s !== "GOLDEN_WILD" && s !== "JILI_SCATTER") return s;
+                    }
+                }
+            }
+            return "";
+        }
+
+        function removeWinningLineGlows() {
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 4; row++) {
+                    let box = document.getElementById(`slot-${col}-${row}`);
+                    if (box) {
+                        box.style.setProperty('border', '2px solid #241308', 'important');
+                        box.style.setProperty('box-shadow', 'inset 0 0 15px rgba(0,0,0,0.95)', 'important');
+                        box.style.setProperty('background', 'linear-gradient(180deg, #0f0703 0%, #050201 100%)', 'important');
+                        box.style.setProperty('transform', 'none', 'important');
+                        let img = box.querySelector('img');
+                        if (img) {
+                            img.style.setProperty('filter', 'none', 'important');
+                            img.style.setProperty('transform', 'none', 'important');
+                        }
+                    }
+                }
+            }
+        }
+
+        function displayCinematicWinCounter(targetWin, multiplier) {
+            let winDisplay = document.getElementById("win-display");
+            let start = 0;
+            let step = targetWin / 20;
+            
+            if (multiplier >= 6) {
+                playAudio('megawin');
+                winDisplay.style.color = "#ffea00";
+            } else if (multiplier >= 3) {
+                playAudio('bigwin');
+                winDisplay.style.color = "#ffe082";
+            }
+            let counterCrypto = setInterval(() => {
+                start += step;
+                if (start >= targetWin) {
+                    clearInterval(counterCrypto);
+                    start = targetWin;
+                }
+                winDisplay.innerText = `Tk${parseFloat(start).toFixed(2)}`;
+            }, 25);
+        }
+
+        function updateJiliMultiplierGlowByLabel(label) {
+            resetJiliMultiplierGlow();
+            let cleanVal = label.replace("X", "");
+            
+            let nodes = document.querySelectorAll(".ladder-node-item");
+            nodes.forEach(n => {
+                if (n.getAttribute("data-val") === cleanVal) {
+                    n.className = "ladder-node-item active";
+                }
+            });
+        }
+
+        function resetJiliMultiplierGlow() {
+            let nodes = document.querySelectorAll(".ladder-node-item");
+            nodes.forEach((n, idx) => {
+                n.className = idx === 0 ? "ladder-node-item active" : "ladder-node-item";
+            });
+        }
+
+        function updateJiliLadderUIForFreeSpinMode() {
+            let container = document.getElementById("jili-ladder-container");
+            container.innerHTML = `
+                <div class="ladder-node-item active" id="step-x2" data-val="2">X2</div>
+                <div class="ladder-node-item" id="step-x4" data-val="4">X4</div>
+                <div class="ladder-node-item" id="step-x6" data-val="6">X6</div>
+                <div class="ladder-node-item" id="step-x10" data-val="10">X10</div>
+            `;
+            container.style.borderColor = "#ff5500";
+            document.getElementById("bonus-buy-btn").style.display = "none";
+        }
+
+        function updateJiliLadderUIForNormalMode() {
+            let container = document.getElementById("jili-ladder-container");
+            container.innerHTML = `
+                <div class="ladder-node-item active" id="step-x1" data-val="1">X1</div>
+                <div class="ladder-node-item" id="step-x2" data-val="2">X2</div>
+                <div class="ladder-node-item" id="step-x3" data-val="3">X3</div>
+                <div class="ladder-node-item" id="step-x5" data-val="5">X5</div>
+            `;
+            container.style.borderColor = "#54341b";
+            document.getElementById("bonus-buy-btn").style.display = "inline-block";
+        }
+
+        async function handleJiliSuperAceSpinRoll() {
+            if (isSpinning) return; 
+            isSpinning = true;
+            document.getElementById("spin-btn").style.opacity = "0.5";
+            playAudio('bet');
+
+            try {
+                const response = await fetch(`${SERVER_URL}/api/slot-spin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: urlUserId, amount: parseFloat(currentBet), wallet: urlWallet })
+                });
+                const serverRes = await response.json();
+                if (serverRes.success) {
+                    animateJiliOfficialGrid(serverRes);
+                } else {
+                    alert(serverRes.message || "❌ ব্যালেন্স অপ্রতুল ওস্তাদ!");
+                    stopJiliSuperAceState();
+                }
+            } catch (err) { stopJiliSuperAceState(); }
+        }
+
+        function stopJiliSuperAceState(payload) {
+            isSpinning = false;
+            document.getElementById("spin-btn").style.opacity = "1";
+            let spinsLeft = payload && payload.freeSpinsLeft ? payload.freeSpinsLeft : 0;
+            if (isAuto || spinsLeft > 0) {
+                autoInterval = setTimeout(() => { handleJiliSuperAceSpinRoll(); }, 1500);
+            }
+        }
+
+        const slotSounds = {
+            bg: new Audio('background.mp3'),
+            click: new Audio('click5.mp3'),
+            bet: new Audio('bet5.mp3'),
+            spin: new Audio('spin5.mp3'),
+            stop: new Audio('stop5.mp3'),
+            scatter: new Audio('scatter5.mp3'), 
+            win: new Audio('win5.mp3'),
+            wheel: new Audio('wheel5.mp3'),
+            bigwin: new Audio('bigwin5.mp3'),
+            megawin: new Audio('megawin5.mp3')
+        };
+
+        Object.values(slotSounds).forEach(s => {
+            s.load();
+            s.addEventListener('error', (e) => {});
+        });
+        
+        document.addEventListener('click', () => {
+            try {
+                slotSounds.bg.loop = true;
+                slotSounds.bg.volume = 0.4;
+                slotSounds.bg.play().catch(e => {});
+            } catch(e) {}
+        }, { once: true });
+
+        function playAudio(type) {
+            try {
+                if (slotSounds[type]) {
+                    slotSounds[type].currentTime = 0;
+                    slotSounds[type].play().catch(e => {});
+                }
+            } catch(e) {}
+        }
+    </script>
+</body>
+</html>
+
+            

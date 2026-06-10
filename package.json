@@ -1,0 +1,21 @@
+{
+  "name": "jili-super-ace-official-server",
+  "version": "1.0.0",
+  "description": "JILI Super Ace 1024-WAYS Dynamic Casino Slot Multi-Cascade Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "PORT=8888 node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "axios": "^1.7.2",
+    "path": "^0.12.7"
+  },
+  "author": "Casino Kingpin",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

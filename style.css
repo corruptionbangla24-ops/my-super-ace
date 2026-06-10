@@ -1,0 +1,353 @@
+/* ===================================================================================
+   🃏 JILI SUPER ACE - 10000000000% EXACT OFFICIAL 1024-WAYS VISUAL STYLESHEET
+   =================================================================================== */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1e140f; /* 👈 বেস হালকা ডার্ক খয়েরী কালার লক */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* 🔒 [মেগা কিলার হেডার BLOKER]: লবির মেইন হেডারের সাথে ডাবল বক্স জ্যাম ওয়ান-শটে সাফ! */
+.header {
+    display: none !important;
+}
+
+/* 🏟️ ক্যাসিনো মেইন এরিনা - সুপ্রীম হালকা খয়েরী (Light Golden Brown/Taupe) রাজকীয় চাদর সিঙ্ক */
+body {
+    /* 🎯 [হালকা খয়েরী মেগা গ্রেডিয়েন্ট]: মাঝখানের অংশ হালকা চকলেট-খয়েরী এবং চারপাশটা নিখুঁত কফি খয়েরী শেড ওস্তাদ! */
+    background: radial-gradient(circle at center, #5c4033 0%, #2b1d16 60%, #170f0b 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    position: relative;
+}
+
+/* 👑 [🔒 JILI গোল্ডেন ওodds ল্যাডার প্যানেল বর্ম 🔒]:
+   স্ক্রিনের ওপরের সমান্তরাল খয়েরী-মেটালিক গ্লো ফ্রেম মেকার! */
+.top-wooden-ladder {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 96%;
+    max-width: 460px;
+    margin: 12px auto 0 auto;
+    padding: 12px 15px; 
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #422e24 0%, #261913 100%); /* খয়েরী ম্যাচিং প্যানেল */
+    border: 2px solid #5c4235;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.85), inset 0 1px 3px rgba(255,255,255,0.08);
+    z-index: 10;
+    position: relative;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ladder-node-item {
+    font-size: 16px;
+    font-weight: 900;
+    color: #8a6f62; /* খয়েরী সাব-টেক্সট গ্লো */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    padding: 3px 14px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* ⚡ [ওরিজিনাল JILI একটিভ ওodds ল্যাডার ডাইনামিক নিওন ফ্লাশ গোল্ডেন গলো মোড!] */
+.ladder-node-item.active {
+    background: linear-gradient(180deg, #fff3cc 0%, #ffaa00 50%, #e67300 100%) !important;
+    color: #000000 !important;
+    font-size: 20px !important; 
+    font-weight: 950 !important;
+    transform: scale(1.18); 
+    box-shadow: 0 0 15px #ffaa00, inset 0 1px 2px #fff;
+    text-shadow: none !important;
+    animation: jiliPulseGlow 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes jiliPulseGlow {
+    0% { transform: scale(1.14); filter: brightness(1.0); }
+    100% { transform: scale(1.22); filter: brightness(1.25); }
+}
+
+/* 🏟️ ১,০২৪ WAYS দুই সাইডের অফিশিয়াল নোটিশ ব্যানার এবং মাঝখানে ফ্লেক্স উইজেট */
+.ways-wooden-holder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 100%;
+    max-width: 460px;
+    margin: 8px auto 0 auto; 
+    padding: 0 12px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.ways-label {
+    font-size: 12px;
+    font-weight: 900;
+    color: #ffd700;
+    background: linear-gradient(180deg, #3b281f 0%, #1c120e 100%);
+    padding: 5px 16px;
+    border-radius: 6px;
+    border: 1px solid #543b2e;
+    text-shadow: 1px 1px 2px #000;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+}
+
+/* BUY BONUS (FEATURE BUY) বাটন ওপরের ফ্রেম মাঝখানে ফিক্সড প্লেসমেন্ট স্টাইলিং */
+.feature-buy-wood-btn {
+    background: linear-gradient(180deg, #d32f2f 0%, #7b1fa2 100%);
+    border: 2px solid #ff4081;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 950;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(211,47,47,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+    cursor: pointer;
+    line-height: 1.2;
+    min-width: 110px;
+    box-sizing: border-box;
+    display: inline-block;
+    transition: transform 0.1s ease;
+    letter-spacing: 0.5px;
+}
+.feature-buy-wood-btn:active { transform: scale(0.94); }
+
+/* 🏟️ [🔒 মেইন JILI ৫x৪ এরিনা কন্টেইনার টাইট লক বর্ম বুস্টার 🔒]: */
+.grid-stadium-canvas {
+    display: flex;
+    justify-content: space-between;
+    width: 98%; 
+    max-width: 480px; 
+    height: 400px !important; 
+    margin: 12px auto;
+    padding: 6px;
+    box-sizing: border-box;
+    background: rgba(28, 18, 14, 0.85); /* ডিপ খয়েরী ব্যাকগ্রাউন্ড ম্যাট ফিনিশ */
+    border: 2.5px solid #4f3629;
+    border-radius: 16px;
+    position: relative;
+    z-index: 5;
+    overflow: hidden !important; 
+}
+
+/* ডাইনামিক ৫-কলাম ট্র্যাকার পাইপলাইন */
+.column-pipe-node {
+    width: 19.5%; 
+    display: flex;
+    flex-direction: column;
+    gap: 5px; 
+    height: 100%;
+    justify-content: center;
+    position: relative;
+}
+
+/* ওরিজিনাল JILI ক্যাসিনো কার্ডের ব্যাকগ্রাউন্ড ডার্ক মেটালিক খোপ */
+.card-slot-box {
+    background: linear-gradient(180deg, #1f140f 0%, #0a0604 100%); /* তাসের ভেতরের খোপেও খয়েরী থিম */
+    border: 1.5px solid #3b281f;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+    box-sizing: border-box;
+    overflow: hidden; 
+    padding: 0px !important; 
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ৫x৪ অফিশিয়াল রুলস অনুযায়ী প্রতিটা খোপের হাইট কাটায় কাটায় ফিক্সড ২৪% লকিং চ্যাম! */
+.col-h-4 { height: 24% !important; }
+
+/* 🚀 [🔒 আল্টিমেট ৪K আল্ট্রা-শার্প নো-ব্লর ড্রাইভার বর্ম 🔒] */
+.card-slot-box img, .symbol-img-node {
+    width: 100% !important;  
+    height: 100% !important; 
+    object-fit: cover !important; 
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+
+    /* 🎯 ৪K এন্টি-ব্লর কিলার ফর্মুলা */
+    image-rendering: -webkit-optimize-contrast !important; 
+    image-rendering: crisp-edges !important;
+    image-rendering: pixelated !important;
+    -webkit-transform-style: preserve-3d !important; 
+    transform: translateZ(0) !important; 
+    will-change: transform !important; 
+    
+    filter: none !important; 
+    transition: transform 0.12s ease;
+}
+
+/* ⚡ জিলি ওয়াইল্ড ও গোল্ডেন ওয়াইল্ড কার্ড এনিমেশন */
+.card-slot-box img[alt="JILI_WILD"], .card-slot-box img[alt="GOLDEN_WILD"] {
+    animation: jiliWildPulse 0.4s ease-in-out infinite alternate !important;
+    border-radius: 6px;
+}
+
+@keyframes jiliWildPulse {
+    0% { transform: scale(0.97) translate3d(0,0,0) !important; }
+    100% { transform: scale(1.04) translate3d(0,0,0) !important; }
+}
+
+/* 📢 JILI মিডল বার ড্যাশবোর্ড উইজেট */
+.center-dashboard-status {
+    width: 96%;
+    max-width: 460px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #3d2920 0%, #1c120e 100%);
+    border: 2px solid #543b2e;
+    border-radius: 12px;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.status-panel-sub { text-align: center; flex: 1; }
+.status-lbl { font-size: 11px; color: #8a6f62; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 2px; text-transform: uppercase; }
+.status-val { font-size: 17px; font-weight: 900; color: #ffffff; text-shadow: 1px 1px 2px #000; font-family: monospace; }
+
+/* 🎛️ একদম নিচের মেটালিক কন্ট্রোল ফুটার */
+.bottom-metal-controls {
+    background: #0d0806;
+    border-top: 2px solid #21150f;
+    padding: 18px 24px 45px 24px; 
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.9);
+    z-index: 100;
+}
+
+.action-flex-pack {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* বিদ্যুৎ চমকানো টার্বো বাটন চ্যাম */
+.turbo-circle-btn {
+    background: linear-gradient(180deg, #1c130e 0%, #0a0604 100%);
+    border: 2px solid #3b281f;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffaa00; /* খয়েরীর সাথে গোল্ডেন বিদ্যুৎ লাক্সারি কম্বিনেশন */
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    transition: all 0.15s ease;
+}
+
+.turbo-circle-btn.active {
+    background: radial-gradient(circle, #ffe082 0%, #ff9100 100%);
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255,145,0,0.7);
+}
+
+/* プラスマイナス 🎛️ স্টেক নব */
+.stake-nav-btn {
+    background: transparent;
+    color: #ffaa00;
+    font-size: 28px;
+    font-weight: 900;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 3px #000;
+}
+
+/* 🚀 মাঝখানের মেগা JILI অফিশিয়াল গোল্ডেন চাকা বোতাম */
+.grand-spin-wheel-btn {
+    width: 76px;
+    height: 76px;
+    background: radial-gradient(circle, #ffffff 0%, #ffcc00 50%, #cc6600 100%);
+    border: 4px solid #fffb00;
+    border-radius: 50%;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.9), inset 0 2px 5px rgba(255,255,255,0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease;
+}
+.grand-spin-wheel-btn:active { transform: scale(0.92); }
+
+.spin-arrow-icon {
+    width: 36px;
+    height: 36px;
+    border: 6px solid #1a0f00;
+    border-radius: 50%;
+    border-top-color: transparent;
+    box-sizing: border-box;
+    transform: rotate(45deg);
+}
+
+/* AUTO টেক্সট বোতাম চ্যাম */
+.auto-text-btn {
+    background: linear-gradient(180deg, #1c130e 0%, #0a0604 100%);
+    border: 2px solid #3b281f;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffaa00;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.auto-text-btn.active {
+    background: radial-gradient(circle, #ffe082 0%, #ff9100 100%);
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255,145,0,0.7);
+}
+
+/* 🌀 [ঘূর্ণন এনিমেশন লুপ - ওরিজিনাল জিলি সুপার এস নো-ব্লর প্রোটোকল] */
+.drop-cascading-blur {
+    animation: jiliCascadeDropAnim 0.08s linear infinite !important; 
+}
+
+@keyframes jiliCascadeDropAnim {
+    0% { transform: translateY(-12px) translate3d(0,0,0) !important; filter: none !important; opacity: 1.0 !important; } 
+    50% { transform: translateY(12px) translate3d(0,0,0) !important; filter: none !important; opacity: 1.0 !important; }
+    100% { transform: translateY(-12px) translate3d(0,0,0) !important; filter: none !important; opacity: 1.0 !important; }
+}
+

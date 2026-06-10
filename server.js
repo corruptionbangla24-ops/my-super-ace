@@ -39,8 +39,8 @@ const jiliGridRowsCount = 4;
 
 // 🔒 [🔒 ওরিজিনাল JILI ৪-স্টেজ ডাইনামিক ক্যাস্কেড মাল্টিপ্লায়ার ল্যাডার চ্যাম লক 🔒]:
 // নরমাল রাউন্ডে ১, ২, ৩, ৫ গুণিতক এবং ফ্রি স্পিনে ২, ৪, 6, ১০ গুণিতকের কোর ম্যাথ ইনজেকশন!
-const jiliNormalMultiplierLadder =;
-const jiliFreeSpinMultiplierLadder =;
+const jiliNormalMultiplierLadder =[1,2,3,5];
+const jiliFreeSpinMultiplierLadder =[2,4,6,10];
 
 // হেল্পার ফাংশন: মেইন সাইটের এপিআই প্রসেসিং জ্যাম দূর করার জন্য কিলার আক্সিওস ক্লায়েন্ট প্রোটোকল
 async function sendSecureApiRequestToMainPlatform(payload) {

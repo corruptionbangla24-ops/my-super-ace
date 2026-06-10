@@ -283,7 +283,7 @@ app.post('/api/slot-spin', async (req, res) => {
             isFreeSpinRound: isCurrentSpinFree
         }
     });
-}
+
 
 // FEATURE BUY বোনাস রাউন্ড রাউট (অরিজিনাল সুপার এস ৫০ গুণ মূল্যে ফ্রি স্পিন বাই লক)
 app.post('/api/slot-buy-feature', async (req, res) => {

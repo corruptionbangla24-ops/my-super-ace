@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 // ✅ মেইন প্ল্যাটফর্ম এপিআই ডোমেইন লিঙ্ক গেটওয়ে লক 
-const MAIN_SITE_URL = "https://onrender.com"; 
+const MAIN_SITE_URL = "https://betlover247.onrender.com"; 
 
 // 🃏 অরিজিনাল JILI Super Ace ১০টি অফিশিয়াল কার্ড সিম্বল পুল (গোল্ডেন সংস্করণ সহ)
 const jiliSuperAceSymbolsPool = [
@@ -313,5 +313,5 @@ app.get('/', (req, res) => { res.sendFile(path.resolve(__dirname, 'index.html'))
 io.on('connection', (socket) => {});
 
 // ⚡ কাস্টম নোড সার্ভার পোর্ট গেটওয়ে ৪০০০০ পোর্টে লাইভ অন ফায়ার!
-const PORT = process.env.PORT || 40000; 
+const PORT = process.env.PORT || 8888; 
 server.listen(PORT, () => { console.log(`🃏 JILI Super Ace Official 1024-WAYS Cascade Active on port ${PORT}`); });
